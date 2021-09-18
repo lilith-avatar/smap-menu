@@ -1,6 +1,7 @@
 --- Require each module used in the Global.Module directory in advance and define it as a global variable
 --- @module Module Defines
 --- @copyright Lilith Games, Avatar Team
+--- @author ropztao
 
 local MenuKit = {}
 
@@ -77,19 +78,19 @@ function RequireFramework()
     _G.MetaData = Menu.Framework.MetaData
 end
 
---- 引用Manifest
+--- Reference Manifest
 function RequireManifest()
     Menu.Manifest = {}
     Menu.Manifest.Common = require(PATH_ROOT .. 'Common/Manifest')
     Menu.Manifest.Client = require(PATH_ROOT .. 'Client/Manifest')
 end
 
---- 加载Common脚本
+--- Load Common scripts
 function InitCommonModules()
     Menu.Util.Mod.LoadManifest(_G, Menu.Manifest.Common, Menu.Manifest.Common.ROOT_PATH)
 end
 
---- 开始AvaKit
+--- Start AvaKit
 function MenuKit.Start()
     if started then
         return
@@ -99,10 +100,10 @@ function MenuKit.Start()
     InitMenuKit()
 end
 
---- 启动客户端
+--- Start client
 function MenuKit.StartClient()
     MenuKit.Start()
-    wait() --间隔1帧
+    wait() --1 frame interval
     print('MenuKit.Framework.Client.Main:Run()')
     Menu.Framework.Client.Main:Run()
 end
