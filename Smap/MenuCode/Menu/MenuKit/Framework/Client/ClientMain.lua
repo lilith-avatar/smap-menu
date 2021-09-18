@@ -1,13 +1,11 @@
 --- 游戏客户端主逻辑
 --- @module Game Manager, Client-side
---- @copyright Lilith Games, Avatar Team
+--- @copyright Lilith Games, Menutar Team
 --- @author Yuancheng Zhang
 local Client = {}
 
 -- 缓存全局变量
-local Ava = Ava
-local Heartbeat = Ava.Framework.Client.Heartbeat
-local DataSync = Ava.Framework.Client.DataSync
+local Menu = Menu
 
 -- 已经初始化，正在运行
 local initialized, running = false, false
@@ -20,16 +18,15 @@ local initDefaultList, initList, updateList = {}, {}, {}
 
 --- 运行客户端
 function Client:Run()
-    print('[AvaKit][Client] Run()')
+    print('[MenuKit][Client] Run()')
     InitClient()
     StartUpdate()
 end
 
 --- 停止Update
 function Client:Stop()
-    print('[AvaKit][Client] Stop()')
+    print('[MenuKit][Client] Stop()')
     running = false
-    Heartbeat.Stop()
 end
 
 --! Private
@@ -39,11 +36,9 @@ function InitClient()
     if initialized then
         return
     end
-    print('[AvaKit][Client] InitClient()')
+    print('[MenuKit][Client] InitClient()')
     RequireClientModules()
     InitRandomSeed()
-    InitHeartbeat()
-    InitDataSync()
     InitClientCustomEvents()
     GenInitAndUpdateList()
     RunInitDefault()
@@ -53,24 +48,9 @@ end
 
 --- 加载客户端模块
 function RequireClientModules()
-    print('[AvaKit][Client] RequireClientModules()')
-    _G.C.Events = Ava.Manifest.Client.Events
-    Ava.Util.Mod.LoadManifest(_G.C, Ava.Manifest.Client, Ava.Manifest.Client.ROOT_PATH, list)
-end
-
---- 初始化心跳包
-function InitHeartbeat()
-    assert(Heartbeat, '[AvaKit][Client][Heartbeat] 找不到Ava.Framework.Client.Heartbeat,请联系endaye')
-    Heartbeat.Init()
-end
-
---- 初始化数据同步
-function InitDataSync()
-    if not Ava.Config.DataSyncStart then
-        return
-    end
-    assert(DataSync, '[AvaKit][Server][DataSync] 找不到ServerDataSync,请联系endaye')
-    DataSync.Init()
+    print('[MenuKit][Client] RequireClientModules()')
+    _G.C.Events = Menu.Manifest.Client.Events
+    Menu.Util.Mod.LoadManifest(_G.C, Menu.Manifest.Client, Menu.Manifest.Client.ROOT_PATH, list)
 end
 
 --- 初始化客户端的CustomEvent
@@ -90,9 +70,9 @@ end
 --- 生成需要Init和Update的模块列表
 function GenInitAndUpdateList()
     -- print(table.dump(list))
-    Ava.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
-    Ava.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
-    Ava.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
+    Menu.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
+    Menu.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
+    Menu.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
 end
 
 --- 执行默认的Init方法
@@ -116,15 +96,9 @@ end
 
 --- 开始Update
 function StartUpdate()
-    print('[AvaKit][Client] StartUpdate()')
-    assert(not running, '[AvaKit][Client] StartUpdate() 正在运行')
-
+    print('[MenuKit][Client] StartUpdate()')
+    assert(not running, '[MenuKit][Client] StartUpdate() 正在运行')
     running = true
-
-    -- 开启心跳
-    if Ava.Config.HeartbeatStart then
-        invoke(Heartbeat.Start)
-    end
 
     local dt = 0 -- delta time 每帧时间
     local tt = 0 -- total time 游戏总时间

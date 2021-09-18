@@ -14,9 +14,9 @@ local LOOP_MAX = 15 -- Manifest最多层级深度
 --- @param _res 资源路径
 --- @param _list 模块清单
 function ModuleUtil.LoadManifest(_root, _manifest, _res, _list)
-    assert(_root, '[AvaKit][ModuleUtil] _root is WRONG')
-    assert(_manifest and _manifest.Modules, '[AvaKit][ModuleUtil] _manifest is WRONG')
-    assert(_res, '[AvaKit][ModuleUtil] _res does NOT exist')
+    assert(_root, '[MenuKit][ModuleUtil] _root is WRONG')
+    assert(_manifest and _manifest.Modules, '[MenuKit][ModuleUtil] _manifest is WRONG')
+    assert(_res, '[MenuKit][ModuleUtil] _res does NOT exist')
 
     -- 读取Manifest，并生成一个require array
     local node, subNode, mod = {rt = _root, man = _manifest, res = _res}
@@ -59,7 +59,7 @@ function ModuleUtil.LoadManifest(_root, _manifest, _res, _list)
 
     -- Require Module脚本
     for k, v in ipairs(arr) do
-        --print(string.format('[AvaKit][Load][%02d] %s, %s', k, v.name, v.res))
+        --print(string.format('[MenuKit][Load][%02d] %s, %s', k, v.name, v.res))
         v.rt[v.name] = require(v.res)
         if _list then
             table.insert(_list, v.rt[v.name])

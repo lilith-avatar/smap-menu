@@ -3,7 +3,7 @@
 --- @copyright Lilith Games, Avatar Team
 local Manifest = {}
 
-Manifest.ROOT_PATH = 'Lua/Common/'
+Manifest.ROOT_PATH = 'Menu/Common/'
 
 Manifest.Modules = {
     {
@@ -15,7 +15,6 @@ Manifest.Modules = {
     {
         Name = 'Xls',
         Modules = {
-            'ActAnim',
             'Example',
             'GlobalSetting'
         }
@@ -23,10 +22,7 @@ Manifest.Modules = {
     {
         Name = 'Util',
         Modules = {
-            'Uuid',
-            'SoundUtil',
-            'CloudLogUtil',
-            'TimeUtil'
+            'CloudLogUtil'
         }
     }
 }

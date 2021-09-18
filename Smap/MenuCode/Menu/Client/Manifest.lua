@@ -3,7 +3,7 @@
 --- @copyright Lilith Games, Avatar Team
 local Manifest = {}
 
-Manifest.ROOT_PATH = 'Lua/Client/'
+Manifest.ROOT_PATH = 'Menu/Client/'
 
 Manifest.Events = {
     'NoticeEvent'

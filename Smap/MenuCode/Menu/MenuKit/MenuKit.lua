@@ -5,7 +5,7 @@
 local MenuKit = {}
 
 local PATH_ROOT = 'Menu/'
-local PATH_MENUKIT = 'Menu/MenuKit'
+local PATH_MENUKIT = 'Menu/MenuKit/'
 local PATH_LUA_EXT = PATH_MENUKIT .. 'LuaExt/'
 local PATH_UTIL = PATH_MENUKIT .. 'Util/'
 local PATH_FRAMEWORK = PATH_MENUKIT .. 'Framework/'
@@ -63,13 +63,10 @@ end
 function RequireFramework()
     -- Framework
     Menu.Framework = {}
-    Menu.Framework.MetaData = require(PATH_FRAMEWORK .. 'MetaData')
 
     -- Client
     Menu.Framework.Client = {}
     Menu.Framework.Client.Base = require(PATH_CLIENT .. 'ClientBase')
-    Menu.Framework.Client.DataSync = require(PATH_CLIENT .. 'ClientDataSync')
-    Menu.Framework.Client.Heartbeat = require(PATH_CLIENT .. 'ClientHeartbeat')
     Menu.Framework.Client.Main = require(PATH_CLIENT .. 'ClientMain')
 
     --FIXME:
@@ -78,6 +75,36 @@ function RequireFramework()
     _G.Data.Player = {}
     _G.Data.Players = {}
     _G.MetaData = Menu.Framework.MetaData
+end
+
+--- 引用Manifest
+function RequireManifest()
+    Menu.Manifest = {}
+    Menu.Manifest.Common = require(PATH_ROOT .. 'Common/Manifest')
+    Menu.Manifest.Client = require(PATH_ROOT .. 'Client/Manifest')
+end
+
+--- 加载Common脚本
+function InitCommonModules()
+    Menu.Util.Mod.LoadManifest(_G, Menu.Manifest.Common, Menu.Manifest.Common.ROOT_PATH)
+end
+
+--- 开始AvaKit
+function MenuKit.Start()
+    if started then
+        return
+    end
+    print('[MenuKit] Start()')
+    InitLuaExt()
+    InitMenuKit()
+end
+
+--- 启动客户端
+function MenuKit.StartClient()
+    MenuKit.Start()
+    wait() --间隔1帧
+    print('MenuKit.Framework.Client.Main:Run()')
+    Menu.Framework.Client.Main:Run()
 end
 
 return MenuKit
