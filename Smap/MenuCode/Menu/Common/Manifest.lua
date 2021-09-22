@@ -15,8 +15,7 @@ Manifest.Modules = {
     {
         Name = 'Xls',
         Modules = {
-            'Example',
-            'GlobalSetting'
+            'BtnBaseTable',
         }
     },
     {
