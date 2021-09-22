@@ -9,7 +9,6 @@
 local BtnBaseTableXls = {
     [1] = {
         BtnBaseComponentId = 1,
-        StepNum = 1,
         Name = 'BtnClose',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
@@ -17,11 +16,12 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.9, 1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255)
+        Color = Color(255,  255,  255,  255),
+        BorderColor = Color(255,  255,  255,  255),
+        Texture = 'MenuRes/Icon_x\''
     },
     [2] = {
         BtnBaseComponentId = 2,
-        StepNum = 2,
         Name = 'BtnGame',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
@@ -29,11 +29,12 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.8, 0.9),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255)
+        Color = Color(255,  255,  255,  255),
+        BorderColor = Color(255,  255,  255,  255),
+        Texture = 'MenuRes/Icon_Game\''
     },
     [3] = {
         BtnBaseComponentId = 3,
-        StepNum = 3,
         Name = 'BtnSetting',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
@@ -41,11 +42,12 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.67, 0.77),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255)
+        Color = Color(255,  255,  255,  255),
+        BorderColor = Color(255,  255,  255,  255),
+        Texture = 'MenuRes/Icon_Setting\''
     },
     [4] = {
         BtnBaseComponentId = 4,
-        StepNum = 4,
         Name = 'BtnClot',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
@@ -53,11 +55,12 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.54, 0.64),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255)
+        Color = Color(255,  255,  255,  255),
+        BorderColor = Color(255,  255,  255,  255),
+        Texture = 'MenuRes/Icon_Clot\''
     },
     [5] = {
         BtnBaseComponentId = 5,
-        StepNum = 5,
         Name = 'BtnShot',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
@@ -65,11 +68,12 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.41, 0.51),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255)
+        Color = Color(255,  255,  255,  255),
+        BorderColor = Color(255,  255,  255,  255),
+        Texture = 'MenuRes/Icon_Shot\''
     },
     [6] = {
         BtnBaseComponentId = 6,
-        StepNum = 6,
         Name = 'BtnQuit',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
@@ -77,7 +81,9 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0, 0.1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255)
+        Color = Color(255,  255,  255,  255),
+        BorderColor = Color(255,  255,  255,  255),
+        Texture = 'MenuRes/Icon_Quit\''
     }
 }
 
