@@ -19,3 +19,4 @@ Project/*.config
 *.vscode/
 Smap/avatar-ava-test.smap
 *.code-workspace
+*ava-x2l*
