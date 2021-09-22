@@ -49,10 +49,8 @@ function RequireUtils()
     Menu.Util.LuaJson = require(PATH_UTIL .. 'LuaJson')
     Menu.Util.Net = require(PATH_UTIL .. 'Net')
     Menu.Util.Event = require(PATH_UTIL .. 'Event')
-    Menu.Util.Time = require(PATH_UTIL .. 'Time')
 
     -- Init Utils
-    Menu.Util.Time.Init()
 
     --FIXME: for backward compatibility
     _G.ModuleUtil = Menu.Util.Mod

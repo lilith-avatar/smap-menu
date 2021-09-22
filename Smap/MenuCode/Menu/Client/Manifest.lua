@@ -9,6 +9,14 @@ Manifest.Events = {
     'NoticeEvent'
 }
 
-Manifest.Modules = {}
+Manifest.Modules = {
+    {
+        Name = 'MenuLogic',
+        Modules = {
+            'CtrBase',
+            'CtrGui'
+        }
+    }
+}
 
 return Manifest
