@@ -42,6 +42,10 @@ function CtrGui:GuiInit()
     for k,v in pairs(self.btnCfg) do
         self[k] = world:CreateObject('UiButtonObject', tostring(v.Name), self.BtnBase)
         UiAssignment(k,v)
+        self[k..'Icon'] = world:CreateObject('UiImageObject', k..'Icon', self[k])
+        self[k..'Icon'].AnchorsX = norSize
+        self[k..'Icon'].AnchorsY = norSize
+        self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Icon_'..string.gsub(k, 'Btn', ''))
     end
 
     invoke(function()
@@ -65,14 +69,8 @@ end
 function CtrGui:SizeCorrection()
     local firComponent = self.BtnBase:GetChildren()[1]
     local fixedAnchorsxMin = 1- (self.BtnBase.FinalSize.y * (firComponent.AnchorsY.y - firComponent.AnchorsY.x)) / self.BtnBase.FinalSize.x
-    local strV
     for k,v in pairs(self.BtnBase:GetChildren()) do
-        v.AnchorsX = Vector2(fixedAnchorsxMin, v.AnchorsX.y)
-        strV = tostring(v)
-        self[strV..'Icon'] = world:CreateObject('UiImageObject', strV..'Icon', v)
-        self[strV..'Icon'].AnchorsX = norSize
-        self[strV..'Icon'].AnchorsY = norSize
-        self[strV..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Icon_'..string.gsub(strV, 'Btn', ''))
+        v.AnchorsX = Vector2(fixedAnchorsxMin, v.AnchorsX.y)       
     end
 end
 
