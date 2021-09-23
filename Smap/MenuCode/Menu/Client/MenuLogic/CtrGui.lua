@@ -32,9 +32,22 @@ end
 ---节点申明
 function CtrGui:GuiInit()
     self.root = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
-    --self.root:SetActive(false)
+
+    ---menu开关
+    self.BtnSwitch = world:CreateObject('UiImageObject', 'BtnSwitch', self.root)
+    for i = 4,1,-1 do
+        self['point'..1] = world:CreateObject('UiFigureObject', 'point'..1, self.BtnSwitch)
+    end
+    self.BtnSwitch.Color = self.rootCfg.BtnBase.Color
+    self.BtnSwitch.AnchorsY = Vector2(self.rootCfg.BtnBase.AnchorsY.y, self.rootCfg.ImgBase.AnchorsY.y)
+    local fixedXmin = self.root.Size.y * (self.BtnSwitch.AnchorsY.y - self.BtnSwitch.AnchorsY.x) / self.root.Size.x
+    self.BtnSwitch.AnchorsX = Vector2(fixedXmin ,self.rootCfg.BtnBase.AnchorsX.y)
+
+
     self.ImgBase = world:CreateObject('UiImageObject', 'ImgBase', self.root)
     self.BtnBase = world:CreateObject('UiFigureObject', 'BtnBase', self.root)
+    self.ImgBase:SetActive(false)
+    self.BtnBase:SetActive(false)
     for m,n in pairs(self.rootCfg) do
         UiAssignment(m,n)
     end
@@ -47,7 +60,7 @@ function CtrGui:GuiInit()
         self[k..'Icon'].AnchorsY = norSize
         self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Icon_'..string.gsub(k, 'Btn', ''))
     end
-
+    
     invoke(function()
         self:SizeCorrection()
     end,0.1)
