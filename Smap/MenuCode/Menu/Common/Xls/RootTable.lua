@@ -11,24 +11,22 @@ local RootTableXls = {
         Name = 'ImgBase',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.1, 0.4),
-        AnchorsY = Vector2(0.1, 0.9),
+        AnchorsX = Vector2(0.1, 0.5),
+        AnchorsY = Vector2(0.02, 0.98),
         Angle = 0.0,
         Offset = Vector2(0, 0),
         Color = Color(255,  255,  255,  255),
-        BorderColor = Color(255,  255,  255,  255),
-        Texture = 'MenuRes/Icon_Base\''
+        Texture = 'MenuRes/Icon_Base'
     },
     BtnBase = {
         Name = 'BtnBase',
         Size = Vector2(0, 0),
-        Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.05, 0.1),
-        AnchorsY = Vector2(0.1, 0.9),
+        Pivot = Vector2(0, 0),
+        AnchorsX = Vector2(0, 0.1),
+        AnchorsY = Vector2(0.02, 0.98),
         Angle = 0.0,
         Offset = Vector2(0, 0),
         Color = Color(255,  255,  255,  0),
-        BorderColor = Color(255,  255,  255,  0),
         Texture = ''
     }
 }
