@@ -4,7 +4,7 @@
 local  CtrGui,this = ModuleUtil.New('CtrGui', ClientBase)
 
 local norSize, isOpen, isChosen = Vector2(0.25,0.75), false, false
-
+local durT, easeCur = 0.3, 4
 local function UiAssignment(k,v)
     for i,j in pairs(v) do
         if i == 'Texture' then
@@ -36,6 +36,11 @@ local function SwitchTextureCtr(_tar, _tab, _tex)
             v.Texture = ResourceManager.GetTexture('MenuRes/'.._tex)
         end
     end
+end
+
+---Interpolation
+local function Lerp(a, b, f)
+    return a + (b - a) * f
 end
 
 ---初始化
@@ -92,6 +97,11 @@ function CtrGui:GuiInit()
         self:SizeCorrection()
     end,0.1)
 
+    self.imgWidth = self.rootCfg.ImgBase.AnchorsX.y - self.rootCfg.ImgBase.AnchorsX.x
+    self.btnHeight = self.rootCfg.BtnBase.AnchorsY.y - self.rootCfg.BtnBase.AnchorsY.x
+    self.ImgBase.AnchorsX = Vector2(self.BtnSwitch.AnchorsX.x, self.BtnSwitch.AnchorsX.x + self.imgWidth)
+    self.BtnBase.AnchorsY = Vector2(self.BtnSwitch.AnchorsY.y - self.btnHeight, self.BtnSwitch.AnchorsY.y)
+    self.ImgBase.Color = Color(255,255,255,0)
     self.FunBtnTab = {}
     for k,v in pairs(self.BtnBase:GetChildren()) do
         if v.Name ~= 'BtnQuit' then
@@ -110,10 +120,10 @@ function CtrGui:ListenerInit()
         else 
             isOpen = true 
         end
-        self.ImgBase:SetActive(isOpen)
-        self.BtnBase:SetActive(isOpen)
+        self:BaseStateRefresh(isOpen)
     end)
 
+    ---左侧功能按钮的底板资源替换
     for k,v in pairs(self.FunBtnTab) do
         v.OnClick:Connect(function()
             if tostring(v.Texture) == 'Icon_Idle' then
@@ -122,7 +132,48 @@ function CtrGui:ListenerInit()
             end
         end)
     end
-    
+
+    --todo quit的二级弹窗
+end
+
+---底板状态的更新
+---涉及到水平和竖直锚点，透明度， 开关
+function CtrGui:BaseStateRefresh()
+    if isOpen then
+        self.ImgBase:SetActive(isOpen)
+        self.BtnBase:SetActive(isOpen)
+        self:AniEffect(self.ImgBase, 
+        {AnchorsX = Vector2(self.BtnSwitch.AnchorsX.y, self.BtnSwitch.AnchorsX.y + self.imgWidth),
+         Color = Color(255, 255, 255, 255)}, durT)
+        self:AniEffect(self.BtnBase, 
+        {AnchorsY = Vector2(self.BtnSwitch.AnchorsY.x - self.btnHeight, self.BtnSwitch.AnchorsY.x)}, durT)
+        for k,v in pairs(self.BtnBase:GetChildren()) do
+            self:AniEffect(v, {Color = Color(255, 255, 255, 255)}, durT)
+            self:AniEffect(v[v.Name..'Icon'], {Color = Color(255, 255, 255, 255)}, durT)
+        end
+    else
+        self:AniEffect(self.ImgBase, 
+        {AnchorsX = Vector2(self.BtnSwitch.AnchorsX.x, self.BtnSwitch.AnchorsX.x + self.imgWidth),
+         Color = Color(255, 255, 255, 0)}, durT)
+        self:AniEffect(self.BtnBase, 
+        {AnchorsY = Vector2(self.BtnSwitch.AnchorsY.y - self.btnHeight, self.BtnSwitch.AnchorsY.y)}, durT)
+        for k,v in pairs(self.BtnBase:GetChildren()) do
+            self:AniEffect(v, {Color = Color(255, 255, 255, 0)}, durT)
+            self:AniEffect(v[v.Name..'Icon'], {Color = Color(255, 255, 255, 0)}, durT)
+        end
+    end
+end
+
+---动效
+function CtrGui:AniEffect(_obj, _tab, _dur)
+    local Tweener = Tween:TweenProperty(_obj, _tab, _dur, easeCur)
+    Tweener:Play()
+    Tweener.OnComplete:Connect(function()
+        if not isOpen then
+            self.ImgBase:SetActive(isOpen)
+            self.BtnBase:SetActive(isOpen)
+        end
+    end)
 end
 
 ---Update函数
