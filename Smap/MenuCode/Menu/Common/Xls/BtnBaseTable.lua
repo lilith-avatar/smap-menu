@@ -7,60 +7,65 @@
 --- source file: ./Xls/UiInfoTable.xlsx
 
 local BtnBaseTableXls = {
-    BtnGame = {
-        Name = 'BtnGame',
+    BtnClose = {
+        Name = 'BtnClose',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.1, 1),
-        AnchorsY = Vector2(0.9, 1),
+        AnchorsX = Vector2(0, 1),
+        AnchorsY = Vector2(0.87, 1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255),
-        Texture = 'MenuRes/Icon_Selected'
+        Color = Color(255,  255,  25,  255),
+        Texture = 'MenuRes/Btn_Idle',
+        Id = 0
+    },
+    BtnGaming = {
+        Name = 'BtnGaming',
+        Size = Vector2(0, 0),
+        Pivot = Vector2(0.5, 0.5),
+        AnchorsX = Vector2(0, 1),
+        AnchorsY = Vector2(0.74, 0.87),
+        Angle = 0.0,
+        Offset = Vector2(0, 0),
+        Color = Color(255,  255,  25,  255),
+        Texture = 'MenuRes/Btn_Selected',
+        Id = 1
     },
     BtnSetting = {
         Name = 'BtnSetting',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.1, 1),
-        AnchorsY = Vector2(0.77, 0.87),
+        AnchorsX = Vector2(0, 1),
+        AnchorsY = Vector2(0.61, 0.74),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255),
-        Texture = 'MenuRes/Icon_Idle'
+        Color = Color(255,  255,  25,  255),
+        Texture = 'MenuRes/Btn_Idle',
+        Id = 2
     },
-    BtnClot = {
-        Name = 'BtnClot',
+    BtnDressUp = {
+        Name = 'BtnDressUp',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.1, 1),
-        AnchorsY = Vector2(0.64, 0.74),
+        AnchorsX = Vector2(0, 1),
+        AnchorsY = Vector2(0.48, 0.61),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255),
-        Texture = 'MenuRes/Icon_Idle'
-    },
-    BtnShot = {
-        Name = 'BtnShot',
-        Size = Vector2(0, 0),
-        Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.1, 1),
-        AnchorsY = Vector2(0.51, 0.61),
-        Angle = 0.0,
-        Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255),
-        Texture = 'MenuRes/Icon_Idle'
+        Color = Color(255,  255,  25,  255),
+        Texture = 'MenuRes/Btn_Idle',
+        Id = 3
     },
     BtnQuit = {
         Name = 'BtnQuit',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.1, 1),
-        AnchorsY = Vector2(0, 0.1),
+        AnchorsX = Vector2(0, 1),
+        AnchorsY = Vector2(0, 0.13),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  255),
-        Texture = 'MenuRes/Icon_IdleQ'
+        Color = Color(255,  255,  25,  255),
+        Texture = 'MenuRes/Btn_Idle',
+        Id = -1
     }
 }
 

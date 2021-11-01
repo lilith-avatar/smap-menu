@@ -14,7 +14,7 @@ Manifest.Modules = {
         Name = 'MenuLogic',
         Modules = {
             'CtrBase',
-            'CtrGui'
+            'MenuDisplay',
         }
     }
 }

@@ -4,7 +4,7 @@
 local MenuMgr,this = ModuleUtil.New('MenuMgr', ServerBase)
 ---初始化
 function MenuMgr:Init()
-    print('tets')
+    Game.ShowSystemBar(false)
 end
 
 return MenuMgr

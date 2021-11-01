@@ -1,0 +1,169 @@
+---@module MenuDisplay
+---@copyright Lilith Games, Avatar Team
+---@author ropztao
+local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
+
+local norSize, isOpen, isChosen = Vector2(0.25,0.75), false, false
+local durT, easeCur = 0.3, 4
+local function UiAssignment(k,v)
+    for i,j in pairs(v) do
+        if i == 'Texture' then
+            MenuDisplay[k][i] = ResourceManager.GetTexture(j)
+        elseif i == 'Name' then
+        elseif i == 'Id' then
+        else
+            MenuDisplay[k][i] = j
+        end
+    end
+end
+
+---开关节点控制器
+---@param _bool 期望的布尔值
+---@param _tarTab 目标表格
+---@param _spNode 排除节点
+local function SwitchNodeCtr(_bool, _tarTab, _spNode)
+	for k,v in pairs(_tarTab) do
+		if v == _spNode then
+			v:SetActive(not _bool)
+		else
+			v:SetActive(_bool)
+		end
+    end
+end
+
+local function SwitchTextureCtr(_tar, _tab, _tex)
+    for k,v in pairs(_tab) do
+        if v ~= _tar then
+            v.Texture = ResourceManager.GetTexture('MenuRes/'.._tex)
+        end
+    end
+end
+
+local function ShaBi(_tar)
+    _tar.Size = Vector2(1,0)
+    _tar.Size = Vector2(0,0)
+end
+
+---初始化
+function MenuDisplay:Init()
+    self:DataInit()
+    self:GuiInit()
+end
+
+---数据变量初始化
+function MenuDisplay:DataInit()
+    self.rootCfg = Xls.RootTable
+    self.btnCfg = Xls.BtnBaseTable
+end
+
+---节点申明
+function MenuDisplay:GuiInit()
+    ---创建Menu根节点
+    self.MenuGui = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
+
+    ---创建第一层按钮
+    self.BtnSwitch = world:CreateObject('UiButtonObject', 'BtnSwitch', self.MenuGui)
+    self.BtnMicOut = world:CreateObject('UiButtonObject', 'BtnMicOut', self.MenuGui)
+    ShaBi(self.BtnSwitch)
+    ShaBi(self.BtnMicOut)
+    self.BtnSwitch.AnchorsX = Vector2(self.rootCfg.ImgBase.AnchorsX.x, self.rootCfg.ImgBase.AnchorsX.x + 0.03)
+    local fixedYmin = 1 - self.MenuGui.Size.X * (self.BtnSwitch.AnchorsX.y - self.BtnSwitch.AnchorsX.x) / self.MenuGui.Size.y
+    self.BtnSwitch.AnchorsY = Vector2(fixedYmin, self.rootCfg.ImgBase.AnchorsY.y)
+    self.BtnMicOut.AnchorsY = self.BtnSwitch.AnchorsY
+    self.BtnMicOut.AnchorsX = Vector2(self.BtnSwitch.AnchorsX.x + 0.05, self.BtnSwitch.AnchorsX.y + 0.05)
+
+    ---信息底板
+    self.ImgBase = world:CreateObject('UiImageObject', 'ImgBase', self.MenuGui)
+    ShaBi(self.ImgBase)
+    ---按钮底板
+    self.BtnBase = world:CreateObject('UiFigureObject', 'BtnBase', self.ImgBase)
+    ShaBi(self.BtnBase)
+    self.ImgBase:SetActive(false)
+
+    ---ui赋值
+    for m,n in pairs(self.rootCfg) do
+        UiAssignment(m,n)
+    end
+
+    ---按钮生成和图标设置
+    for k,v in pairs(self.btnCfg) do
+        self[k] = world:CreateObject('UiButtonObject', tostring(v.Name), self.BtnBase)
+        UiAssignment(k,v)
+        self[k..'Icon'] = world:CreateObject('UiImageObject', k..'Icon', self[k])
+        self[k..'Icon'].RaycastTarget = false
+        --todo fix size
+        self[k..'Icon'].Size = Vector2(72,72)
+        self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', ''))
+    end
+
+    invoke(function()
+        self:SizeCorrection()
+    end,0.1)
+
+    self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
+    self:ListenerInit()
+end
+
+---事件绑定初始化
+function MenuDisplay:ListenerInit()
+    self.BtnSwitch.OnClick:Connect(function() 
+        isOpen = true
+        self.ImgBase:SetActive(isOpen)
+    end)
+
+    self.BtnClose.OnClick:Connect(function()
+        isOpen = false
+        self.ImgBase:SetActive(isOpen)
+    end)
+
+    ---左侧功能按钮的底板资源替换
+    for k,v in pairs(self.FunBtnTab) do
+        v.OnClick:Connect(function()
+            if tostring(v.Texture) == 'Btn_Idle' then
+                v.Texture = ResourceManager.GetTexture('MenuRes/Btn_Selected')
+                SwitchTextureCtr(v, self.FunBtnTab, 'Btn_Idle')
+            end
+        end)
+    end
+    --todo quit的二级弹窗
+end
+
+---底板状态的更新
+---涉及到水平和竖直锚点，透明度， 开关
+function MenuDisplay:BaseStateRefresh()
+
+end
+
+---动效
+function MenuDisplay:AniEffect(_obj, _tab, _dur)
+    local Tweener = Tween:TweenProperty(_obj, _tab, _dur, easeCur)
+    Tweener:Play()
+    Tweener.OnComplete:Connect(function()
+        if not isOpen then
+            self.ImgBase:SetActive(isOpen)
+            self.BtnBase:SetActive(isOpen)
+        end
+    end)
+end
+
+---Update函数
+function MenuDisplay:Update()
+
+end
+
+---左边栏Btn大小和位置适配
+---确保Btn的icon是正方形，两两间距为0个单位
+---icon的纵向比不变，AnchorsX的Max值不变
+function MenuDisplay:SizeCorrection()
+    local firComponent = self.BtnBase:GetChildren()[1]
+    local fixedAnchorsxMin = (self.BtnBase.FinalSize.x * (firComponent.AnchorsX.y - firComponent.AnchorsX.x)) / self.BtnBase.FinalSize.y
+    for k,v in pairs(self.btnCfg) do
+        if v.Id == -1 then
+            self[k].AnchorsY = Vector2(0, fixedAnchorsxMin) 
+        else
+            self[k].AnchorsY = Vector2(1 - (v.Id + 1)*fixedAnchorsxMin, 1 - v.Id*fixedAnchorsxMin)    
+        end
+    end
+end
+
+return MenuDisplay
