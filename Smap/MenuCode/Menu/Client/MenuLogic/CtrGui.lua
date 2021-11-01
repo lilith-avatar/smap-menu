@@ -38,9 +38,9 @@ local function SwitchTextureCtr(_tar, _tab, _tex)
     end
 end
 
----Interpolation
-local function Lerp(a, b, f)
-    return a + (b - a) * f
+local function ShaBi(_tar)
+    _tar.Size = Vector2(1,0)
+    _tar.Size = Vector2(0,0)
 end
 
 ---初始化
@@ -57,23 +57,26 @@ end
 
 ---节点申明
 function CtrGui:GuiInit()
-    self.root = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
+    ---创建Menu根节点
+    self.MenuGui = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
 
-    ---menu开关
-    self.BtnSwitch = world:CreateObject('UiButtonObject', 'BtnSwitch', self.root)
-    -- self.BtnSwitch.Color = self.rootCfg.BtnBase.Color
-    self.BtnSwitch.AnchorsY = Vector2(self.rootCfg.BtnBase.AnchorsY.y, self.rootCfg.ImgBase.AnchorsY.y)
-    local fixedXmin = self.root.Size.y * (self.BtnSwitch.AnchorsY.y - self.BtnSwitch.AnchorsY.x) / self.root.Size.x
-    self.BtnSwitch.AnchorsX = Vector2(fixedXmin ,self.rootCfg.BtnBase.AnchorsX.y)
-    --todo 等编辑器bug修好再接着做这部分逻辑
-    for i = 4,1,-1 do
-        self['point'..i] = world:CreateObject('UiFigureObject', 'point'..1, self.BtnSwitch)
-    end
+    ---创建第一层按钮
+    self.BtnSwitch = world:CreateObject('UiButtonObject', 'BtnSwitch', self.MenuGui)
+    self.BtnMicOut = world:CreateObject('UiButtonObject', 'BtnMicOut', self.MenuGui)
+    ShaBi(self.BtnSwitch)
+    ShaBi(self.BtnMicOut)
+    self.BtnSwitch.AnchorsX = Vector2(self.rootCfg.BtnBase.AnchorsX.x, self.rootCfg.BtnBase.AnchorsX.y)
+    local fixedYmin = 1 - self.MenuGui.Size.X * (self.BtnSwitch.AnchorsX.y - self.BtnSwitch.AnchorsX.x) / self.MenuGui.Size.y
+    self.BtnSwitch.AnchorsY = Vector2(fixedYmin, self.rootCfg.ImgBase.AnchorsY.y)
+    self.BtnMicOut.AnchorsY = self.BtnSwitch.AnchorsY
+    self.BtnMicOut.AnchorsX = Vector2(self.BtnSwitch.AnchorsX.x + 0.05, self.BtnSwitch.AnchorsX.y + 0.05)
 
     ---信息底板
-    self.ImgBase = world:CreateObject('UiImageObject', 'ImgBase', self.root)
+    self.ImgBase = world:CreateObject('UiImageObject', 'ImgBase', self.MenuGui)
+    ShaBi(self.ImgBase)
     ---按钮底板
-    self.BtnBase = world:CreateObject('UiFigureObject', 'BtnBase', self.root)
+    self.BtnBase = world:CreateObject('UiFigureObject', 'BtnBase', self.MenuGui)
+    ShaBi(self.BtnBase)
     self.ImgBase:SetActive(false)
     self.BtnBase:SetActive(false)
 
@@ -188,6 +191,7 @@ function CtrGui:SizeCorrection()
     local firComponent = self.BtnBase:GetChildren()[1]
     local fixedAnchorsxMin = 1- (self.BtnBase.FinalSize.y * (firComponent.AnchorsY.y - firComponent.AnchorsY.x)) / self.BtnBase.FinalSize.x
     for k,v in pairs(self.BtnBase:GetChildren()) do
+        ShaBi(v)
         v.AnchorsX = Vector2(fixedAnchorsxMin, v.AnchorsX.y)       
     end
 end

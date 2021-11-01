@@ -11,6 +11,7 @@ local PATH_LUA_EXT = PATH_MENUKIT .. 'LuaExt/'
 local PATH_UTIL = PATH_MENUKIT .. 'Util/'
 local PATH_FRAMEWORK = PATH_MENUKIT .. 'Framework/'
 local PATH_CLIENT = PATH_MENUKIT .. 'Framework/Client/'
+local PATH_SERVER = PATH_MENUKIT .. 'Framework/Server/'
 
 local started = false
 
@@ -38,6 +39,7 @@ function InitGlobal()
     _G.Menu = {}
     _G.Data = {}
     _G.C = {}
+    _G.S = {}
 end
 
 --- Reference tool module
@@ -68,8 +70,14 @@ function RequireFramework()
     Menu.Framework.Client.Base = require(PATH_CLIENT .. 'ClientBase')
     Menu.Framework.Client.Main = require(PATH_CLIENT .. 'ClientMain')
 
+    -- Server
+    Menu.Framework.Server = {}
+    Menu.Framework.Server.Base = require(PATH_SERVER .. 'ServerBase')
+    Menu.Framework.Server.Main = require(PATH_SERVER .. 'ServerMain')
+
     --FIXME:
     _G.ClientBase = Menu.Framework.Client.Base
+    _G.ServerBase = Menu.Framework.Server.Base
     _G.Data.Global = {}
     _G.Data.Player = {}
     _G.Data.Players = {}
@@ -81,6 +89,7 @@ function RequireManifest()
     Menu.Manifest = {}
     Menu.Manifest.Common = require(PATH_ROOT .. 'Common/Manifest')
     Menu.Manifest.Client = require(PATH_ROOT .. 'Client/Manifest')
+    Menu.Manifest.Server = require(PATH_ROOT .. 'Server/Manifest')
 end
 
 --- Load Common scripts
@@ -104,6 +113,14 @@ function MenuKit.StartClient()
     wait() --1 frame interval
     print('MenuKit.Framework.Client.Main:Run()')
     Menu.Framework.Client.Main:Run()
+end
+
+--- Start server
+function MenuKit.StartServer()
+    MenuKit.Start()
+    wait() --间隔1帧
+    print('MenuKit.Framework.Server.Main:Run()')
+    Menu.Framework.Server.Main:Run()
 end
 
 return MenuKit
