@@ -15,7 +15,7 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.87, 1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  25,  255),
+        Color = Color(255,  255,  255,  255),
         Texture = 'MenuRes/Btn_Idle',
         Id = 0
     },
@@ -27,7 +27,7 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.74, 0.87),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  25,  255),
+        Color = Color(255,  255,  255,  255),
         Texture = 'MenuRes/Btn_Selected',
         Id = 1
     },
@@ -39,7 +39,7 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.61, 0.74),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  25,  255),
+        Color = Color(255,  255,  255,  255),
         Texture = 'MenuRes/Btn_Idle',
         Id = 2
     },
@@ -51,7 +51,7 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0.48, 0.61),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  25,  255),
+        Color = Color(255,  255,  255,  255),
         Texture = 'MenuRes/Btn_Idle',
         Id = 3
     },
@@ -63,7 +63,7 @@ local BtnBaseTableXls = {
         AnchorsY = Vector2(0, 0.13),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  25,  255),
+        Color = Color(255,  255,  255,  255),
         Texture = 'MenuRes/Btn_Idle',
         Id = -1
     }

@@ -6,51 +6,43 @@
 --- @see X2L Tool: https://github.com/lilith-avatar/avatar-ava-xls2lua
 --- source file: ./Xls/UiInfoTable.xlsx
 
-local RootTableXls = {
-    ImgBase = {
-        Name = 'ImgBase',
+local DisplayBaseTableXls = {
+    ImgGaming = {
+        Name = 'ImgGaming',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.01, 0.41),
-        AnchorsY = Vector2(0.02, 0.98),
-        Angle = 0.0,
-        Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  180),
-        Texture = 'MenuRes/Img_Menu'
-    },
-    BtnBase = {
-        Name = 'BtnBase',
-        Size = Vector2(0, 0),
-        Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0, 0.15),
+        AnchorsX = Vector2(0, 1),
         AnchorsY = Vector2(0, 1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255, 255, 255, 0),
-        Texture = ''
+        Color = Color(255,  255, 255, 0),
+        Texture = '',
+        Id = 1
     },
-    SplitLine = {
-        Name = 'SplitLine',
+    ImgSetting = {
+        Name = 'ImgSetting',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.15, 0.155),
+        AnchorsX = Vector2(0, 1),
         AnchorsY = Vector2(0, 1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(141, 141, 141, 180),
-        Texture = ''
+        Color = Color(255,  255, 255, 0),
+        Texture = '',
+        Id = 2
     },
-    DisplayBase = {
-        Name = 'DisplayBase',
+    ImgDressUp = {
+        Name = 'ImgDressUp',
         Size = Vector2(0, 0),
         Pivot = Vector2(0.5, 0.5),
-        AnchorsX = Vector2(0.15, 1),
+        AnchorsX = Vector2(0, 1),
         AnchorsY = Vector2(0, 1),
         Angle = 0.0,
         Offset = Vector2(0, 0),
-        Color = Color(255,  255,  255,  0),
-        Texture = ''
+        Color = Color(255,  255, 255, 0),
+        Texture = '',
+        Id = 3
     }
 }
 
-return RootTableXls
+return DisplayBaseTableXls

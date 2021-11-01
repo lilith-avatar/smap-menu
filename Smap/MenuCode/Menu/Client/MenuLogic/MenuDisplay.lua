@@ -55,6 +55,7 @@ function MenuDisplay:DataInit()
     self.rootCfg = Xls.RootTable
     self.btnCfg = Xls.BtnBaseTable
     self.btnOutCfg = Xls.BtnOutTable
+    self.displayCfg = Xls.DisplayBaseTable
 end
 
 ---节点申明
@@ -78,10 +79,17 @@ function MenuDisplay:GuiInit()
     self.ImgBase:SetActive(false)
     ---分割线
     self.SplitLine = world:CreateObject('UiFigureObject', 'SplitLine', self.ImgBase)
-
+    ---功能底板
+    self.DisplayBase = world:CreateObject('UiFigureObject', 'DisplayBase', self.ImgBase)
     ---ui赋值
     for m,n in pairs(self.rootCfg) do
         UiAssignment(m,n)
+    end
+
+    ---功能面板生成
+    for k,v in pairs(self.displayCfg) do
+        self[k] = world:CreateObject('UiFigureObject', tostring(v.Name), self.DisplayBase)
+        UiAssignment(k,v)
     end
 
     ---按钮生成和图标设置
@@ -100,6 +108,7 @@ function MenuDisplay:GuiInit()
     end,0.1)
 
     self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
+    self.FunDisplayTab = {self.ImgGaming, self.ImgSetting, self.ImgDressUp}
     self:ListenerInit()
 end
 
@@ -108,11 +117,15 @@ function MenuDisplay:ListenerInit()
     self.BtnMenu.OnClick:Connect(function() 
         isOpen = true
         self.ImgBase:SetActive(isOpen)
+        self.BtnMenu:SetActive(not isOpen)
+        self.BtnVoice:SetActive(not isOpen)
     end)
 
     self.BtnClose.OnClick:Connect(function()
         isOpen = false
         self.ImgBase:SetActive(isOpen)
+        self.BtnMenu:SetActive(not isOpen)
+        self.BtnVoice:SetActive(not isOpen)
     end)
 
     ---左侧功能按钮的底板资源替换
