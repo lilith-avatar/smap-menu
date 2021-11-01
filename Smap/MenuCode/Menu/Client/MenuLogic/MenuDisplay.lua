@@ -17,6 +17,18 @@ local function UiAssignment(k,v)
     end
 end
 
+local function TextAssignment(k,v)
+    for i,j in pairs(v) do
+        if i == 'Texture' then
+            MenuDisplay[k][i] = ResourceManager.GetTexture(j)
+        elseif i == 'Name' then
+        elseif i == 'Id' then
+        else
+            MenuDisplay[k][i] = j
+        end
+    end
+end
+
 ---开关节点控制器
 ---@param _bool 期望的布尔值
 ---@param _tarTab 目标表格
@@ -35,6 +47,7 @@ local function SwitchTextureCtr(_tar, _tab, _tex)
     for k,v in pairs(_tab) do
         if v ~= _tar then
             v.Texture = ResourceManager.GetTexture('MenuRes/'.._tex)
+            v:GetChild(tostring(v.Name)..'Icon').Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(v.Name, 'Btn', ''))
         end
     end
 end
@@ -56,6 +69,7 @@ function MenuDisplay:DataInit()
     self.btnCfg = Xls.BtnBaseTable
     self.btnOutCfg = Xls.BtnOutTable
     self.displayCfg = Xls.DisplayBaseTable
+    self.settingCfg = Xls.SettingTable
 end
 
 ---节点申明
@@ -100,7 +114,11 @@ function MenuDisplay:GuiInit()
         self[k..'Icon'].RaycastTarget = false
         --todo fix size
         self[k..'Icon'].Size = Vector2(90,90)
-        self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', ''))
+        if k ~= 'BtnGaming' then 
+            self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', ''))
+        else
+            self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', '')..'_1')
+        end
     end
 
     invoke(function()
@@ -133,6 +151,7 @@ function MenuDisplay:ListenerInit()
         v.OnClick:Connect(function()
             if tostring(v.Texture) == 'Btn_Idle' then
                 v.Texture = ResourceManager.GetTexture('MenuRes/Btn_Selected')
+                v:GetChild(tostring(v.Name)..'Icon').Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(v.Name, 'Btn', '')..'_1')
                 SwitchTextureCtr(v, self.FunBtnTab, 'Btn_Idle')
             end
         end)
@@ -177,5 +196,13 @@ function MenuDisplay:SizeCorrection()
         end
     end
 end
+
+---setting界面
+function MenuDisplay:LoadSettingDisplay()
+    for k,v in pairs(self.settingCfg) do
+        self[k] = world:CreateObject(v.ClassName, k, self[v.ParentName])
+    end
+end
+
 
 return MenuDisplay
