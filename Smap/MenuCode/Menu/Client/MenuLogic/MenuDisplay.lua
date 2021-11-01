@@ -54,6 +54,7 @@ end
 function MenuDisplay:DataInit()
     self.rootCfg = Xls.RootTable
     self.btnCfg = Xls.BtnBaseTable
+    self.btnOutCfg = Xls.BtnOutTable
 end
 
 ---节点申明
@@ -62,15 +63,11 @@ function MenuDisplay:GuiInit()
     self.MenuGui = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
 
     ---创建第一层按钮
-    self.BtnSwitch = world:CreateObject('UiButtonObject', 'BtnSwitch', self.MenuGui)
-    self.BtnMicOut = world:CreateObject('UiButtonObject', 'BtnMicOut', self.MenuGui)
-    ShaBi(self.BtnSwitch)
-    ShaBi(self.BtnMicOut)
-    self.BtnSwitch.AnchorsX = Vector2(self.rootCfg.ImgBase.AnchorsX.x, self.rootCfg.ImgBase.AnchorsX.x + 0.03)
-    local fixedYmin = 1 - self.MenuGui.Size.X * (self.BtnSwitch.AnchorsX.y - self.BtnSwitch.AnchorsX.x) / self.MenuGui.Size.y
-    self.BtnSwitch.AnchorsY = Vector2(fixedYmin, self.rootCfg.ImgBase.AnchorsY.y)
-    self.BtnMicOut.AnchorsY = self.BtnSwitch.AnchorsY
-    self.BtnMicOut.AnchorsX = Vector2(self.BtnSwitch.AnchorsX.x + 0.05, self.BtnSwitch.AnchorsX.y + 0.05)
+    self.BtnMenu = world:CreateObject('UiButtonObject', 'BtnMenu', self.MenuGui)
+    self.BtnVoice = world:CreateObject('UiButtonObject', 'BtnVoice', self.MenuGui)
+    for k,v in pairs(self.btnOutCfg) do
+        UiAssignment(k,v)
+    end
 
     ---信息底板
     self.ImgBase = world:CreateObject('UiImageObject', 'ImgBase', self.MenuGui)
@@ -79,6 +76,8 @@ function MenuDisplay:GuiInit()
     self.BtnBase = world:CreateObject('UiFigureObject', 'BtnBase', self.ImgBase)
     ShaBi(self.BtnBase)
     self.ImgBase:SetActive(false)
+    ---分割线
+    self.SplitLine = world:CreateObject('UiFigureObject', 'SplitLine', self.ImgBase)
 
     ---ui赋值
     for m,n in pairs(self.rootCfg) do
@@ -92,7 +91,7 @@ function MenuDisplay:GuiInit()
         self[k..'Icon'] = world:CreateObject('UiImageObject', k..'Icon', self[k])
         self[k..'Icon'].RaycastTarget = false
         --todo fix size
-        self[k..'Icon'].Size = Vector2(72,72)
+        self[k..'Icon'].Size = Vector2(90,90)
         self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', ''))
     end
 
@@ -106,7 +105,7 @@ end
 
 ---事件绑定初始化
 function MenuDisplay:ListenerInit()
-    self.BtnSwitch.OnClick:Connect(function() 
+    self.BtnMenu.OnClick:Connect(function() 
         isOpen = true
         self.ImgBase:SetActive(isOpen)
     end)

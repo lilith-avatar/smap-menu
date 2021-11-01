@@ -28,6 +28,17 @@ local RootTableXls = {
         Offset = Vector2(0, 0),
         Color = Color(255,  255,  255,  0),
         Texture = ''
+    },
+    SplitLine = {
+        Name = 'SplitLine',
+        Size = Vector2(0, 0),
+        Pivot = Vector2(0.5, 0.5),
+        AnchorsX = Vector2(0.15, 0.155),
+        AnchorsY = Vector2(0, 1),
+        Angle = 0.0,
+        Offset = Vector2(0, 0),
+        Color = nil,
+        Texture = ''
     }
 }
 
