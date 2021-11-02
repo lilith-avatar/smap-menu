@@ -3,38 +3,12 @@
 ---@author ropztao
 local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
 
-local norSize, isOpen, isChosen = Vector2(0.25,0.75), false, false
-local durT, easeCur = 0.3, 4
-local function UiAssignment(k,v)
-    for i,j in pairs(v) do
-        if i == 'Texture' then
-            MenuDisplay[k][i] = ResourceManager.GetTexture(j)
-        elseif i == 'Name' then
-        elseif i == 'Id' then
-        elseif i == 'ClassName' then
-        else
-            MenuDisplay[k][i] = j
-        end
-    end
-end
-
-local function TextAssignment(k,v)
-    for i,j in pairs(v) do
-        if i == 'Texture' then
-            MenuDisplay[k][i] = ResourceManager.GetTexture(j)
-        elseif i == 'Name' then
-        elseif i == 'Id' then
-        else
-            MenuDisplay[k][i] = j
-        end
-    end
-end
-
+local isOpen, easeCur = false, 4
 ---开关节点控制器
 ---@param _bool 期望的布尔值
 ---@param _tarTab 目标表格
 ---@param _spNode 排除节点
-local function SwitchNodeCtr(_bool, _tarTab, _spNode)
+local function SwitchNodeCtr(_spNode, _tarTab, _bool)
 	for k,v in pairs(_tarTab) do
 		if v == _spNode then
 			v:SetActive(not _bool)
@@ -53,9 +27,12 @@ local function SwitchTextureCtr(_tar, _tab, _tex)
     end
 end
 
-local function ShaBi(_tar)
-    _tar.Size = Vector2(1,0)
-    _tar.Size = Vector2(0,0)
+local function SwitchDisplayCtr(_tar, _tab, _bool)
+    for k,v in pairs(_tab) do
+        if v ~= _tar then
+            v:SetActive(_bool)
+        end
+    end
 end
 
 ---初始化
@@ -89,69 +66,6 @@ function MenuDisplay:GuiInit()
     self:ListenerInit()
 end
 
----节点申明
-function MenuDisplay:GuiInit2()
-    ---创建Menu根节点
-    self.MenuGui = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
-
-    ---创建第一层按钮
-    self.BtnMenu = world:CreateObject('UiButtonObject', 'BtnMenu', self.MenuGui)
-    self.BtnVoice = world:CreateObject('UiButtonObject', 'BtnVoice', self.MenuGui)
-    for k,v in pairs(self.btnOutCfg) do
-        UiAssignment(k,v)
-    end
-
-    ---信息底板
-    self.ImgBase = world:CreateObject('UiImageObject', 'ImgBase', self.MenuGui)
-    ShaBi(self.ImgBase)
-    ---按钮底板
-    self.BtnBase = world:CreateObject('UiFigureObject', 'BtnBase', self.ImgBase)
-    ShaBi(self.BtnBase)
-    self.ImgBase:SetActive(false)
-    ---分割线
-    self.SplitLine = world:CreateObject('UiFigureObject', 'SplitLine', self.ImgBase)
-    ---功能底板
-    self.DisplayBase = world:CreateObject('UiFigureObject', 'DisplayBase', self.ImgBase)
-    ---ui赋值
-    for m,n in pairs(self.rootCfg) do
-        UiAssignment(m,n)
-    end
-
-    ---功能面板生成
-    for k,v in pairs(self.displayCfg) do
-        self[k] = world:CreateObject('UiFigureObject', tostring(v.Name), self.DisplayBase)
-        UiAssignment(k,v)
-    end
-
-    ---按钮生成和图标设置
-    for k,v in pairs(self.btnCfg) do
-        self[k] = world:CreateObject('UiButtonObject', tostring(v.Name), self.BtnBase)
-        UiAssignment(k,v)
-        self[k..'Icon'] = world:CreateObject('UiImageObject', k..'Icon', self[k])
-        self[k..'Icon'].RaycastTarget = false
-        --todo fix size
-        self[k..'Icon'].Size = Vector2(90,90)
-        if k ~= 'BtnGaming' then 
-            self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', ''))
-        else
-            self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', '')..'_1')
-        end
-    end
-
-    ---生成功能图标
-    --self:LoadSettingDisplay()
-
-    ---字体加载
-
-    invoke(function()
-        self:SizeCorrection()
-    end,0.1)
-
-    self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
-    self.FunDisplayTab = {self.ImgGaming, self.ImgSetting, self.ImgDressUp}
-    self:ListenerInit()
-end
-
 ---事件绑定初始化
 function MenuDisplay:ListenerInit()
     self.BtnMenu.OnClick:Connect(function() 
@@ -172,19 +86,26 @@ function MenuDisplay:ListenerInit()
     for k,v in pairs(self.FunBtnTab) do
         v.OnClick:Connect(function()
             if tostring(v.Texture) == 'Btn_Idle' then
+                ---按钮本身贴图替换
                 v.Texture = ResourceManager.GetTexture('MenuRes/Btn_Selected')
                 v:GetChild(tostring(v.Name)..'Icon').Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(v.Name, 'Btn', '')..'_1')
                 SwitchTextureCtr(v, self.FunBtnTab, 'Btn_Idle')
+
+                ---显示对应功能面板
+                SwitchNodeCtr(self[string.gsub(v.Name, 'Btn', 'Img')], self.FunDisplayTab, false)
             end
         end)
     end
     --todo quit的二级弹窗
-end
+    self.BtnQuit.OnClick:Connect(function()
+        self.BtnTouch:SetActive(true)
+        self.ImgPopUps:SetActive(true)
+    end)
 
----底板状态的更新
----涉及到水平和竖直锚点，透明度， 开关
-function MenuDisplay:BaseStateRefresh()
-
+    self.BtnTouch.OnClick:Connect(function()
+        self.BtnTouch:SetActive(false)
+        self.ImgPopUps:SetActive(false)
+    end)
 end
 
 ---动效
@@ -193,8 +114,7 @@ function MenuDisplay:AniEffect(_obj, _tab, _dur)
     Tweener:Play()
     Tweener.OnComplete:Connect(function()
         if not isOpen then
-            self.ImgBase:SetActive(isOpen)
-            self.BtnBase:SetActive(isOpen)
+            
         end
     end)
 end
@@ -218,17 +138,5 @@ function MenuDisplay:SizeCorrection()
         end
     end
 end
-
----setting界面
-function MenuDisplay:LoadSettingDisplay()
-    for k,v in pairs(self.settingCfg) do
-        self[v.Name] = world:CreateObject(v.ClassName, v.Name, self[v.ParentName])
-        UiAssignment(v.Name,v)
-        wait()
-    end
-
-    self.TextAutoSet.XAlignment = '1'
-end
-
 
 return MenuDisplay
