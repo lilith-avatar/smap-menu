@@ -19,7 +19,7 @@ Manifest.Modules = {
             'RootTable',
             'BtnOutTable',
             'DisplayBaseTable',
-            'SettingsTable'
+            'SettingTable'
         }
     },
     {

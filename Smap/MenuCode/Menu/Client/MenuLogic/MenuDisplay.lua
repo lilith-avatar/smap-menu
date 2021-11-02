@@ -11,6 +11,7 @@ local function UiAssignment(k,v)
             MenuDisplay[k][i] = ResourceManager.GetTexture(j)
         elseif i == 'Name' then
         elseif i == 'Id' then
+        elseif i == 'ClassName' then
         else
             MenuDisplay[k][i] = j
         end
@@ -74,6 +75,22 @@ end
 
 ---节点申明
 function MenuDisplay:GuiInit()
+    self.MenuGui = world:CreateInstance('MenuGui', 'MenuGui', world.Local)
+    for k,v in pairs(self.MenuGui:GetDescendants()) do
+        self[v.Name] = v
+    end
+
+    invoke(function()
+        self:SizeCorrection()
+    end,0.1)
+
+    self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
+    self.FunDisplayTab = {self.ImgGaming, self.ImgSetting, self.ImgDressUp}
+    self:ListenerInit()
+end
+
+---节点申明
+function MenuDisplay:GuiInit2()
     ---创建Menu根节点
     self.MenuGui = world:CreateObject('UiScreenUiObject', 'MenuGui', world.Local)
 
@@ -120,6 +137,11 @@ function MenuDisplay:GuiInit()
             self[k..'Icon'].Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(k, 'Btn', '')..'_1')
         end
     end
+
+    ---生成功能图标
+    --self:LoadSettingDisplay()
+
+    ---字体加载
 
     invoke(function()
         self:SizeCorrection()
@@ -200,8 +222,12 @@ end
 ---setting界面
 function MenuDisplay:LoadSettingDisplay()
     for k,v in pairs(self.settingCfg) do
-        self[k] = world:CreateObject(v.ClassName, k, self[v.ParentName])
+        self[v.Name] = world:CreateObject(v.ClassName, v.Name, self[v.ParentName])
+        UiAssignment(v.Name,v)
+        wait()
     end
+
+    self.TextAutoSet.XAlignment = '1'
 end
 
 
