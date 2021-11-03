@@ -3,7 +3,7 @@
 ---@author ropztao
 local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
 
-local isOpen, easeCur = false, 4
+local isOpen, easeCur, isMute = false, 4, true
 ---开关节点控制器
 ---@param _bool 期望的布尔值
 ---@param _tarTab 目标表格
@@ -68,6 +68,16 @@ end
 
 ---事件绑定初始化
 function MenuDisplay:ListenerInit()
+    self:OpenAndClose()
+    ---左侧功能按钮的底板资源替换
+    self:ResourceReplace()
+
+    self:GamingBind()
+    self:SettingBind()
+    self:QuitBind()
+end
+
+function MenuDisplay:OpenAndClose()
     self.BtnMenu.OnClick:Connect(function() 
         isOpen = true
         self.ImgBase:SetActive(isOpen)
@@ -82,7 +92,11 @@ function MenuDisplay:ListenerInit()
         self.BtnVoice:SetActive(not isOpen)
     end)
 
-    ---左侧功能按钮的底板资源替换
+    
+end
+
+---左侧功能按钮的底板资源替换
+function MenuDisplay:ResourceReplace()
     for k,v in pairs(self.FunBtnTab) do
         v.OnClick:Connect(function()
             if tostring(v.Texture) == 'Btn_Idle' then
@@ -96,7 +110,48 @@ function MenuDisplay:ListenerInit()
             end
         end)
     end
-    --todo quit的二级弹窗
+end
+
+function MenuDisplay:GamingBind()
+    self.BtnMuteAll.OnClick:Connect(function()
+        if isMute then
+            isMute = false
+            self.BtnMuteAll.TextColor = Color(233,7,6,255)
+            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
+        else
+            isMute = true
+            self.BtnMuteAll.TextColor = Color(38,121,217,255)
+            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
+        end
+    end)
+end
+
+function MenuDisplay:SettingBind()
+    self.GraphicSetTextTab = {self.TextHigh,self.TextMedium,self.TextLow}
+    self.GraphicSetBtnTab = {self.BtnHigh,self.BtnMedium,self.BtnLow}
+
+    self.TextShut.OnEnter:Connect(function()
+        self.BtnShut:SetActive(true)
+        self.BtnOpen:SetActive(false)
+        self.GraphicMask:SetActive(false)
+    end)
+
+    self.TextOpen.OnEnter:Connect(function()
+        self.BtnShut:SetActive(false)
+        self.BtnOpen:SetActive(true)
+        self.GraphicMask:SetActive(true)
+
+    end)
+
+    for k,v in pairs(self.GraphicSetTextTab) do
+        v.OnEnter:Connect(function()
+            SwitchNodeCtr(self[string.gsub(v.Name, 'Text', 'Btn')], self.GraphicSetBtnTab, false)
+        end)
+    end
+end
+
+function MenuDisplay:QuitBind()
+    ---Quit的二级弹窗
     self.BtnQuit.OnClick:Connect(function()
         self.BtnTouch:SetActive(true)
         self.ImgPopUps:SetActive(true)
@@ -105,6 +160,15 @@ function MenuDisplay:ListenerInit()
     self.BtnTouch.OnClick:Connect(function()
         self.BtnTouch:SetActive(false)
         self.ImgPopUps:SetActive(false)
+    end)
+
+    self.BtnCancel.OnClick:Connect(function()
+        self.BtnTouch:SetActive(false)
+        self.ImgPopUps:SetActive(false)
+    end)
+
+    self.BtnOk.OnClick:Connect(function()
+        Game.Quit()
     end)
 end
 
