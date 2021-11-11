@@ -44,11 +44,7 @@ end
 
 ---数据变量初始化
 function MenuDisplay:DataInit()
-    self.rootCfg = Xls.RootTable
-    self.btnCfg = Xls.BtnBaseTable
-    self.btnOutCfg = Xls.BtnOutTable
-    self.displayCfg = Xls.DisplayBaseTable
-    self.settingCfg = Xls.SettingTable
+
 end
 
 ---节点申明
@@ -57,10 +53,6 @@ function MenuDisplay:GuiInit()
     for k,v in pairs(self.MenuGui:GetDescendants()) do
         self[v.Name] = v
     end
-
-    invoke(function()
-        --self:SizeCorrection()
-    end,0.1)
 
     self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
     self.FunDisplayTab = {self.ImgGaming, self.ImgSetting, self.ImgDressUp}
@@ -199,21 +191,6 @@ function MenuDisplay:Update()
 
 end
 
----左边栏Btn大小和位置适配
----确保Btn的icon是正方形，两两间距为0个单位
----icon的纵向比不变，AnchorsX的Max值不变
-function MenuDisplay:SizeCorrection()
-    local firComponent = self.BtnBase:GetChildren()[1]
-    local fixedAnchorsxMin = (self.BtnBase.FinalSize.x * (firComponent.AnchorsX.y - firComponent.AnchorsX.x)) / self.BtnBase.FinalSize.y
-    for k,v in pairs(self.btnCfg) do
-        if v.Id == -1 then
-            self[k].AnchorsY = Vector2(0, fixedAnchorsxMin) 
-        else
-            self[k].AnchorsY = Vector2(1 - (v.Id + 1)*fixedAnchorsxMin, 1 - v.Id*fixedAnchorsxMin)    
-        end
-    end
-end
-
 function MenuDisplay:ChangeTexture(_player, _tarObj)
     -- 获得玩家uid
     local uid = _player.UserId
@@ -229,17 +206,16 @@ function MenuDisplay:ChangeTexture(_player, _tarObj)
     PlayerHub.GetPlayerProfile(uid, callback)
 end
 
-local tempPlayerTab = {}
 ---玩家表更新
-function MenuDisplay:NoticeEvent2Handler(_playerTab)
-    for k,v in pairs(_playerTab) do
-        table.insert(tempPlayerTab,v)
-    end
-
-    for i,j in pairs(tempPlayerTab) do
+function MenuDisplay:NoticeEventHandler(_playerTab)
+    for i,j in pairs(_playerTab) do
         self:ChangeTexture(j, self['ImgHead'..i])
     end
-    tempPlayerTab = {}
+end
+
+---玩家状态存储更新
+function MenuDisplay:PlayerActionChange()
+
 end
 
 return MenuDisplay

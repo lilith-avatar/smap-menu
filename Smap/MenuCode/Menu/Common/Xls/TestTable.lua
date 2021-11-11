@@ -6,7 +6,7 @@
 --- @see X2L Tool: https://github.com/lilith-avatar/avatar-ava-xls2lua
 --- source file: ./Xls/UiInfoTable.xlsx
 
-local RootTableXls = {
+local TestTableXls = {
     ImgBase = {
         Name = 'ImgBase',
         Size = Vector2(0, 0),
@@ -53,4 +53,4 @@ local RootTableXls = {
     }
 }
 
-return RootTableXls
+return TestTableXls
