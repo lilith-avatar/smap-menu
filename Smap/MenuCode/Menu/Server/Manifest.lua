@@ -5,7 +5,9 @@ local Manifest = {}
 
 Manifest.ROOT_PATH = 'Menu/Server/'
 
-Manifest.Events = {}
+Manifest.Events = {
+    
+}
 
 Manifest.Modules = {
     {

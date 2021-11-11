@@ -37,6 +37,7 @@ end
 
 ---初始化
 function MenuDisplay:Init()
+    Game.ShowSystemBar(false)
     self:DataInit()
     self:GuiInit()
 end
@@ -58,7 +59,7 @@ function MenuDisplay:GuiInit()
     end
 
     invoke(function()
-        self:SizeCorrection()
+        --self:SizeCorrection()
     end,0.1)
 
     self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
@@ -81,15 +82,15 @@ function MenuDisplay:OpenAndClose()
     self.BtnMenu.OnClick:Connect(function() 
         isOpen = true
         self.ImgBase:SetActive(isOpen)
-        self.BtnMenu:SetActive(not isOpen)
-        self.BtnVoice:SetActive(not isOpen)
+        self.ImgMenu:SetActive(not isOpen)
+        self.ImgVoice:SetActive(not isOpen)
     end)
 
     self.BtnClose.OnClick:Connect(function()
         isOpen = false
         self.ImgBase:SetActive(isOpen)
-        self.BtnMenu:SetActive(not isOpen)
-        self.BtnVoice:SetActive(not isOpen)
+        self.ImgMenu:SetActive(not isOpen)
+        self.ImgVoice:SetActive(not isOpen)
     end)
 
     
@@ -115,20 +116,23 @@ end
 function MenuDisplay:GamingBind()
     self.BtnMuteAll.OnClick:Connect(function()
         if isMute then
-            isMute = false
-            self.BtnMuteAll.TextColor = Color(233,7,6,255)
+            isMute = false         
             self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
+            self.BtnMuteAll.TextColor = Color(222,69,119,230)
         else
             isMute = true
-            self.BtnMuteAll.TextColor = Color(38,121,217,255)
             self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
+            self.BtnMuteAll.TextColor = Color(38,121,217,255)
         end
     end)
 end
 
 function MenuDisplay:SettingBind()
     self.GraphicSetTextTab = {self.TextHigh,self.TextMedium,self.TextLow}
-    self.GraphicSetBtnTab = {self.BtnHigh,self.BtnMedium,self.BtnLow}
+    self.GraphicSetBtnTab = {}
+    self.GraphicSetBtnTab[1] = self.BtnHigh
+    self.GraphicSetBtnTab[2] = self.BtnMedium
+    self.GraphicSetBtnTab[3] = self.BtnLow
 
     self.TextShut.OnEnter:Connect(function()
         self.BtnShut:SetActive(true)
@@ -140,7 +144,7 @@ function MenuDisplay:SettingBind()
         self.BtnShut:SetActive(false)
         self.BtnOpen:SetActive(true)
         self.GraphicMask:SetActive(true)
-
+        Game.SetQualityLevel(0)
     end)
 
     for k,v in pairs(self.GraphicSetTextTab) do
@@ -148,6 +152,13 @@ function MenuDisplay:SettingBind()
             SwitchNodeCtr(self[string.gsub(v.Name, 'Text', 'Btn')], self.GraphicSetBtnTab, false)
         end)
     end
+
+    for i,j in pairs(self.GraphicSetBtnTab) do
+        j.OnClick:Connect(function()
+            Game.SetQualityLevel(i)
+        end)
+    end
+
 end
 
 function MenuDisplay:QuitBind()
@@ -201,6 +212,34 @@ function MenuDisplay:SizeCorrection()
             self[k].AnchorsY = Vector2(1 - (v.Id + 1)*fixedAnchorsxMin, 1 - v.Id*fixedAnchorsxMin)    
         end
     end
+end
+
+function MenuDisplay:ChangeTexture(_player, _tarObj)
+    -- 获得玩家uid
+    local uid = _player.UserId
+
+    local Img_Head = MenuDisplay[_tarObj]
+
+    -- GetPlayerProfile的回调函数
+    local callback = function(_profile)
+        Img_Head.Texture = _profile.HeadPortrait
+    end
+
+    -- 获取当前玩家的Profile信息
+    PlayerHub.GetPlayerProfile(uid, callback)
+end
+
+local tempPlayerTab = {}
+---玩家表更新
+function MenuDisplay:NoticeEvent2Handler(_playerTab)
+    for k,v in pairs(_playerTab) do
+        table.insert(tempPlayerTab,v)
+    end
+
+    for i,j in pairs(tempPlayerTab) do
+        self:ChangeTexture(j, self['ImgHead'..i])
+    end
+    tempPlayerTab = {}
 end
 
 return MenuDisplay
