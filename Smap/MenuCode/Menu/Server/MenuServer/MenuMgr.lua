@@ -23,7 +23,7 @@ function MenuMgr:OnPlayerAdded(_player)
     table.insert(self.playerTab, _player)
     invoke(function()
         NetUtil.Broadcast('NoticeEvent', self.playerTab)
-    end,0.3)
+    end,2)
 end
 
 function MenuMgr:OnPlayerRemoved(_player)
@@ -34,7 +34,7 @@ function MenuMgr:OnPlayerRemoved(_player)
     end
     invoke(function()
         NetUtil.Broadcast('NoticeEvent', self.playerTab)
-    end,0.3)
+    end,2)
 end
 
 return MenuMgr

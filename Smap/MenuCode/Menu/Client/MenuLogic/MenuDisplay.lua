@@ -84,8 +84,6 @@ function MenuDisplay:OpenAndClose()
         self.ImgMenu:SetActive(not isOpen)
         self.ImgVoice:SetActive(not isOpen)
     end)
-
-    
 end
 
 ---左侧功能按钮的底板资源替换
@@ -150,7 +148,6 @@ function MenuDisplay:SettingBind()
             Game.SetQualityLevel(i)
         end)
     end
-
 end
 
 function MenuDisplay:QuitBind()
@@ -209,6 +206,8 @@ end
 ---玩家表更新
 function MenuDisplay:NoticeEventHandler(_playerTab)
     for i,j in pairs(_playerTab) do
+        print(i,j)
+        wait(1)
         self:ChangeTexture(j, self['ImgHead'..i])
     end
 end
