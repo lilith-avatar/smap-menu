@@ -68,6 +68,7 @@ function MenuDisplay:ListenerInit()
     self:GamingBind()
     self:SettingBind()
     self:QuitBind()
+    self:InputBind()
 end
 
 function MenuDisplay:OpenAndClose()
@@ -172,6 +173,12 @@ function MenuDisplay:QuitBind()
     end)
 end
 
+function MenuDisplay:InputBind()
+    self.InputFieldIm.OnInputEnd:Connect(function(_text)
+        self:PlayerInGameIm(_text)
+    end)
+end
+
 ---动效
 function MenuDisplay:AniEffect(_obj, _tab, _dur)
     local Tweener = Tween:TweenProperty(_obj, _tab, _dur, easeCur)
@@ -214,6 +221,22 @@ end
 
 ---玩家状态存储更新
 function MenuDisplay:PlayerActionChange()
+
+end
+
+---游戏内IM
+function MenuDisplay:PlayerInGameIm(_text)
+    local textMessage = _text
+    NetUtil.Fire_S('InGamingImEvent', localPlayer, textMessage)
+
+
+    ---重置输入栏
+    self.InputFieldIm.Text = ''
+end
+
+---消息更新
+function MenuDisplay:NormalImEventHandler(_content)
+
 
 end
 
