@@ -134,7 +134,7 @@ function MenuDisplay:SettingBind()
         self.BtnShut:SetActive(false)
         self.BtnOpen:SetActive(true)
         self.GraphicMask:SetActive(true)
-        Game.SetQualityLevel(0)
+        Game.SetFPSQuality(0)
     end)
 
     for k,v in pairs(self.GraphicSetTextTab) do
@@ -145,7 +145,7 @@ function MenuDisplay:SettingBind()
 
     for i,j in pairs(self.GraphicSetBtnTab) do
         j.OnClick:Connect(function()
-            Game.SetQualityLevel(i)
+            Game.SetFPSQuality(i)
         end)
     end
 end
