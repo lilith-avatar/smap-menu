@@ -231,10 +231,10 @@ end
 
 function MenuDisplay:AdjustHeadPos(_tarTab, _playerTab)
     for k,v in pairs(_tarTab) do
-        print(k,v)
         self['ImgHead'..k].Texture = _playerTab[v]
         self['FigBg'..k]:SetActive(true)
         self['FigBg'..k].PlayerInfo.Value = v.UserId
+        self['TextName'..k].Text = v.Name
     end
     self['FigBg'..(#_tarTab + 1)]:SetActive(false)
 end
