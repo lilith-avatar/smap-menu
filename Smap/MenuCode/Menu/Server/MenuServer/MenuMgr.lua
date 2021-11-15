@@ -19,22 +19,33 @@ function MenuMgr:DataInit()
     self.playerTab = {}
 end
 
-function MenuMgr:OnPlayerAdded(_player)
-    table.insert(self.playerTab, _player)
+function MenuMgr:OnPlayerAdded(_player)    
+    self:GetPlayerProfile(_player)
+
+    self.playerTab[_player.UserId] = {
+        headPortrait = self.headPortrait,
+        instance = _player
+    }
+
     invoke(function()
         NetUtil.Broadcast('NoticeEvent', self.playerTab)
-    end,2)
+    end,1)
 end
 
 function MenuMgr:OnPlayerRemoved(_player)
-    for k,v in pairs(self.playerTab) do
-        if v == _player then
-            table.remove(self.playerTab, k)
-        end
-    end
+    self.playerTab[_player.UserId] = {}
+
     invoke(function()
         NetUtil.Broadcast('NoticeEvent', self.playerTab)
-    end,2)
+    end,1)
+end
+
+function MenuMgr:GetPlayerProfile(_player)
+    self.callback = function(_profile)
+        self.headPortrait = _profile.HeadPortrait
+    end
+
+    PlayerHub.GetPlayerProfile(_player.UserId, self.callback)
 end
 
 return MenuMgr

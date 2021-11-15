@@ -6,7 +6,9 @@ local Manifest = {}
 Manifest.ROOT_PATH = 'Menu/Client/'
 
 Manifest.Events = {
-    'NoticeEvent'
+    'NoticeEvent', 
+    'NormalImEvent', 
+    'DeveloperBroadcastEvent'
 }
 
 Manifest.Modules = {
@@ -15,6 +17,8 @@ Manifest.Modules = {
         Modules = {
             'CtrBase',
             'MenuDisplay',
+            'MenuCtr', 
+            'MenuApi'
         }
     }
 }

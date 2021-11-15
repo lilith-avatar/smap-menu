@@ -1,11 +1,11 @@
 ---@module MenuCtr
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao
-local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
+local  MenuCtr,this = ModuleUtil.New('MenuCtr', ClientBase)
 
 ---初始化
-function MenuDisplay:Init()
+function MenuCtr:Init()
     
 end
 
-return MenuDisplay
+return MenuCtr

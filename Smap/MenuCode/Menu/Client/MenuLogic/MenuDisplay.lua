@@ -121,9 +121,9 @@ end
 function MenuDisplay:SettingBind()
     self.GraphicSetTextTab = {self.TextHigh,self.TextMedium,self.TextLow}
     self.GraphicSetBtnTab = {}
-    self.GraphicSetBtnTab[1] = self.BtnHigh
+    self.GraphicSetBtnTab[3] = self.BtnHigh
     self.GraphicSetBtnTab[2] = self.BtnMedium
-    self.GraphicSetBtnTab[3] = self.BtnLow
+    self.GraphicSetBtnTab[1] = self.BtnLow
 
     self.TextShut.OnEnter:Connect(function()
         self.BtnShut:SetActive(true)
@@ -212,10 +212,13 @@ end
 
 ---玩家表更新
 function MenuDisplay:NoticeEventHandler(_playerTab)
-    for i,j in pairs(_playerTab) do
-        print(i,j)
-        wait(1)
-        self:ChangeTexture(j, self['ImgHead'..i])
+    local headImgTab = {}
+    for k,v in pairs(_playerTab) do
+        table.insert(headImgTab, k)
+    end
+    for i,j in pairs(headImgTab) do
+        if i > 12 then return end
+        self['ImgHead'..i].Texture = _playerTab[j].headPortrait
     end
 end
 
@@ -237,6 +240,15 @@ end
 ---消息更新
 function MenuDisplay:NormalImEventHandler(_content)
 
+end
+
+---收到游戏开发者的消息
+function MenuDisplay:DeveloperBroadcastEventHandler(_content)
+
+end
+
+---创建消息函数
+function MenuDisplay:CreateMessage()
 
 end
 

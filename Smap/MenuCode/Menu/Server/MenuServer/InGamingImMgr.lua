@@ -31,7 +31,6 @@ function InGamingIm:SendToChat(_content)
                 NetUtil.Fire_C('NormalImEvent', v, _content)
             end
         end
-
     elseif self.sender == 'Developer' then
         NetUtil.Broadcast('DeveloperBroadcastEvent', _content)
     end
