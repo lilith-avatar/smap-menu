@@ -74,17 +74,20 @@ end
 function MenuDisplay:OpenAndClose()
     self.BtnMenu.OnClick:Connect(function() 
         isOpen = true
-        self.ImgBase:SetActive(isOpen)
-        self.ImgMenu:SetActive(not isOpen)
-        self.ImgVoice:SetActive(not isOpen)
+        self:DisableCtr(isOpen)
     end)
 
     self.BtnClose.OnClick:Connect(function()
         isOpen = false
-        self.ImgBase:SetActive(isOpen)
-        self.ImgMenu:SetActive(not isOpen)
-        self.ImgVoice:SetActive(not isOpen)
+        self:DisableCtr(isOpen)
     end)
+end
+
+function MenuDisplay:DisableCtr(isOpen)
+    self.ImgBase:SetActive(isOpen)
+    self.ImgMenu:SetActive(not isOpen)
+    self.ImgVoice:SetActive(not isOpen)
+    self.ImgIm:SetActive(not isOpen)
 end
 
 ---左侧功能按钮的底板资源替换
@@ -210,16 +213,30 @@ function MenuDisplay:ChangeTexture(_player, _tarObj)
     PlayerHub.GetPlayerProfile(uid, callback)
 end
 
----玩家表更新
-function MenuDisplay:NoticeEventHandler(_playerTab)
-    local headImgTab = {}
-    for k,v in pairs(_playerTab) do
-        table.insert(headImgTab, k)
+local headImgCache, length = {}, nil
+function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    length = #_playerList
+    if _isAdded then
+        headImgCache = _playerList
+        self:AdjustHeadPos(headImgCache, _playerTab)   
+    else
+        for k,v in pairs(headImgCache) do
+            if v == _changedPlayer then
+                table.remove(headImgCache, k)
+            end
+        end
+        self:AdjustHeadPos(headImgCache, _playerTab)
     end
-    for i,j in pairs(headImgTab) do
-        if i > 12 then return end
-        self['ImgHead'..i].Texture = _playerTab[j].headPortrait
+end
+
+function MenuDisplay:AdjustHeadPos(_tarTab, _playerTab)
+    for k,v in pairs(_tarTab) do
+        print(k,v)
+        self['ImgHead'..k].Texture = _playerTab[v]
+        self['FigBg'..k]:SetActive(true)
+        self['FigBg'..k].PlayerInfo.Value = v.UserId
     end
+    self['FigBg'..(#_tarTab + 1)]:SetActive(false)
 end
 
 ---玩家状态存储更新
@@ -231,7 +248,6 @@ end
 function MenuDisplay:PlayerInGameIm(_text)
     local textMessage = _text
     NetUtil.Fire_S('InGamingImEvent', localPlayer, textMessage)
-
 
     ---重置输入栏
     self.InputFieldIm.Text = ''
