@@ -3,7 +3,7 @@
 ---@author ropztao
 local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
 
-local isOpen, easeCur, isMute = false, 4, true
+local isOpen, easeCur, isMute, isOn = false, 4, true, true
 ---开关节点控制器
 ---@param _bool 期望的布尔值
 ---@param _tarTab 目标表格
@@ -62,6 +62,7 @@ end
 ---事件绑定初始化
 function MenuDisplay:ListenerInit()
     self:OpenAndClose()
+    self:SwitchLocalVoice()
     ---左侧功能按钮的底板资源替换
     self:ResourceReplace()
 
@@ -83,11 +84,27 @@ function MenuDisplay:OpenAndClose()
     end)
 end
 
+function MenuDisplay:SwitchLocalVoice()
+    self.BtnVoice.OnClick:Connect(function()
+        if isOn then
+            self.BtnVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_OFF')
+            isOn = false
+        else
+            self.BtnVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_ON')
+            isOn = true
+        end
+        NetUtil.Fire_C('MuteSpecificPlayerEvent', localPlayer, localPlayer, isOn)
+    end)
+end
+
 function MenuDisplay:DisableCtr(isOpen)
     self.ImgBase:SetActive(isOpen)
     self.ImgMenu:SetActive(not isOpen)
     self.ImgVoice:SetActive(not isOpen)
-    self.ImgIm:SetActive(not isOpen)
+    if isOpen then
+        self.ImgIm:SetActive(not isOpen)
+        self.BtnImUps:SetActive(not isOpen)
+    end
 end
 
 ---左侧功能按钮的底板资源替换
@@ -124,9 +141,9 @@ end
 function MenuDisplay:SettingBind()
     self.GraphicSetTextTab = {self.TextHigh,self.TextMedium,self.TextLow}
     self.GraphicSetBtnTab = {}
-    self.GraphicSetBtnTab[3] = self.BtnHigh
+    self.GraphicSetBtnTab[1] = self.BtnHigh
     self.GraphicSetBtnTab[2] = self.BtnMedium
-    self.GraphicSetBtnTab[1] = self.BtnLow
+    self.GraphicSetBtnTab[3] = self.BtnLow
 
     self.TextShut.OnEnter:Connect(function()
         self.BtnShut:SetActive(true)
@@ -180,6 +197,16 @@ function MenuDisplay:InputBind()
     self.InputFieldIm.OnInputEnd:Connect(function(_text)
         self:PlayerInGameIm(_text)
     end)
+
+    self.BtnImUps.OnClick:Connect(function()
+        self.BtnImUps:SetActive(false)
+        self.ImgIm:SetActive(true)
+    end)
+
+    self.BtnArrow.OnClick:Connect(function()
+        self.BtnImUps:SetActive(true)
+        self.ImgIm:SetActive(false)
+    end)
 end
 
 ---动效
@@ -216,6 +243,7 @@ end
 local headImgCache, length = {}, nil
 function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     length = #_playerList
+    self.TextPlayNum.Text = 'Player('..length..')'
     if _isAdded then
         headImgCache = _playerList
         self:AdjustHeadPos(headImgCache, _playerTab)   
@@ -256,6 +284,9 @@ end
 ---消息更新
 function MenuDisplay:NormalImEventHandler(_content)
 
+
+
+    ---收到消息时前端界面有三种状态
 end
 
 ---收到游戏开发者的消息

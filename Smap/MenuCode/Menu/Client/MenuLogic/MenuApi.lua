@@ -8,4 +8,10 @@ function MenuApi:Init()
     
 end
 
+function MenuApi:DeveloperOfficialMsg(_content)
+    NetUtil.Fire_S('InGamingImEvent', 'Developer', _content)
+end
+
+
+
 return MenuApi

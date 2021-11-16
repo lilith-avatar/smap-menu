@@ -8,4 +8,16 @@ function MenuCtr:Init()
     
 end
 
+function MenuCtr:NoticeEventEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    self.playerList = _playerList
+end
+
+function MenuCtr:MuteAllEventHandler(_isMuted)
+    
+end
+
+function MenuCtr:MuteSpecificPlayerEventHandler(_specificPlayer, _isMuted)
+    
+end
+
 return MenuCtr

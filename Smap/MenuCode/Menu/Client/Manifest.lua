@@ -8,7 +8,9 @@ Manifest.ROOT_PATH = 'Menu/Client/'
 Manifest.Events = {
     'NoticeEvent', 
     'NormalImEvent', 
-    'DeveloperBroadcastEvent'
+    'DeveloperBroadcastEvent', 
+    'MuteAllEvent',
+    'MuteSpecificPlayerEvent'
 }
 
 Manifest.Modules = {
