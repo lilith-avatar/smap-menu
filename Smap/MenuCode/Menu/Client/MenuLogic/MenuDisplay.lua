@@ -3,7 +3,7 @@
 ---@author ropztao
 local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
 
-local isOpen, easeCur, isMute, isOn = false, 4, true, true
+local isOpen, easeCur, isMute, isOn, isDisplay = false, 4, true, true, false
 ---开关节点控制器
 ---@param _bool 期望的布尔值
 ---@param _tarTab 目标表格
@@ -63,13 +63,13 @@ end
 function MenuDisplay:ListenerInit()
     self:OpenAndClose()
     self:SwitchLocalVoice()
+    self:InputBind()
     ---左侧功能按钮的底板资源替换
     self:ResourceReplace()
 
     self:GamingBind()
     self:SettingBind()
     self:QuitBind()
-    self:InputBind()
 end
 
 function MenuDisplay:OpenAndClose()
@@ -87,23 +87,46 @@ end
 function MenuDisplay:SwitchLocalVoice()
     self.BtnVoice.OnClick:Connect(function()
         if isOn then
-            self.BtnVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_OFF')
+            self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_OFF')
             isOn = false
         else
-            self.BtnVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_ON')
+            self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_ON')
             isOn = true
         end
         NetUtil.Fire_C('MuteSpecificPlayerEvent', localPlayer, localPlayer, isOn)
     end)
 end
 
+function MenuDisplay:InputBind()
+    self.BtnImBubble.OnClick:Connect(function()
+        self:DisplayImgIm()
+    end)
+
+    self.BtnArrow.OnClick:Connect(function()
+        self:DisplayImgIm()
+    end)
+
+    self.InputFieldIm.OnInputEnd:Connect(function(_text)
+        self:PlayerInGameIm(_text)
+    end)
+end
+
+function MenuDisplay:DisplayImgIm()
+    if isDisplay then
+        isDisplay = false
+    else
+        isDisplay = true
+    end
+    self.ImgIm:SetActive(isDisplay)   
+end
+
 function MenuDisplay:DisableCtr(isOpen)
     self.ImgBase:SetActive(isOpen)
     self.ImgMenu:SetActive(not isOpen)
     self.ImgVoice:SetActive(not isOpen)
+    self.ImgImBubble:SetActive(not isOpen)
     if isOpen then
-        self.ImgIm:SetActive(not isOpen)
-        self.BtnImUps:SetActive(not isOpen)
+        self.ImgIm:SetActive(not isOpen)   
     end
 end
 
@@ -190,22 +213,6 @@ function MenuDisplay:QuitBind()
 
     self.BtnOk.OnClick:Connect(function()
         Game.Quit()
-    end)
-end
-
-function MenuDisplay:InputBind()
-    self.InputFieldIm.OnInputEnd:Connect(function(_text)
-        self:PlayerInGameIm(_text)
-    end)
-
-    self.BtnImUps.OnClick:Connect(function()
-        self.BtnImUps:SetActive(false)
-        self.ImgIm:SetActive(true)
-    end)
-
-    self.BtnArrow.OnClick:Connect(function()
-        self.BtnImUps:SetActive(true)
-        self.ImgIm:SetActive(false)
     end)
 end
 
