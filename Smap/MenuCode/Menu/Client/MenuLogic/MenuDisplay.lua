@@ -37,7 +37,7 @@ end
 
 ---初始化
 function MenuDisplay:Init()
-    Game.ShowSystemBar(false)
+    Game.ShowSystemBar(true)
     self:DataInit()
     self:GuiInit()
 end
@@ -54,8 +54,8 @@ function MenuDisplay:GuiInit()
         self[v.Name] = v
     end
 
-    self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
-    self.FunDisplayTab = {self.ImgGaming, self.ImgSetting, self.ImgDressUp}
+    self.FunBtnTab = {self.BtnGaming, self.BtnFriList, self.BtnSetting, self.BtnDressUp}
+    self.FunDisplayTab = {self.ImgGaming, self.ImgFriList, self.ImgSetting, self.ImgDressUp}
     self:ListenerInit()
 end
 
