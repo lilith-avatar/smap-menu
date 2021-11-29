@@ -1,11 +1,23 @@
 ---@module MenuCtr
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao
-local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
+local  MenuCtr,this = ModuleUtil.New('MenuCtr', ClientBase)
 
 ---初始化
-function MenuDisplay:Init()
+function MenuCtr:Init()
     
 end
 
-return MenuDisplay
+function MenuCtr:NoticeEventEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    self.playerList = _playerList
+end
+
+function MenuCtr:MuteAllEventHandler(_isMuted)
+    
+end
+
+function MenuCtr:MuteSpecificPlayerEventHandler(_specificPlayer, _isMuted)
+    
+end
+
+return MenuCtr

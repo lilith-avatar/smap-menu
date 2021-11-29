@@ -3,7 +3,7 @@
 ---@author ropztao
 local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
 
-local isOpen, easeCur, isMute = false, 4, true
+local isOpen, easeCur, isMute, isOn, isDisplay = false, 4, true, true, false
 ---开关节点控制器
 ---@param _bool 期望的布尔值
 ---@param _tarTab 目标表格
@@ -54,14 +54,16 @@ function MenuDisplay:GuiInit()
         self[v.Name] = v
     end
 
-    self.FunBtnTab = {self.BtnGaming, self.BtnSetting, self.BtnDressUp}
-    self.FunDisplayTab = {self.ImgGaming, self.ImgSetting, self.ImgDressUp}
+    self.FunBtnTab = {self.BtnGaming, self.BtnFriList, self.BtnSetting, self.BtnDressUp}
+    self.FunDisplayTab = {self.ImgGaming, self.ImgFriList, self.ImgSetting, self.ImgDressUp}
     self:ListenerInit()
 end
 
 ---事件绑定初始化
 function MenuDisplay:ListenerInit()
     self:OpenAndClose()
+    self:SwitchLocalVoice()
+    self:InputBind()
     ---左侧功能按钮的底板资源替换
     self:ResourceReplace()
 
@@ -73,17 +75,61 @@ end
 function MenuDisplay:OpenAndClose()
     self.BtnMenu.OnClick:Connect(function() 
         isOpen = true
-        self.ImgBase:SetActive(isOpen)
-        self.ImgMenu:SetActive(not isOpen)
-        self.ImgVoice:SetActive(not isOpen)
+        self:DisableCtr(isOpen)
     end)
 
     self.BtnClose.OnClick:Connect(function()
         isOpen = false
-        self.ImgBase:SetActive(isOpen)
-        self.ImgMenu:SetActive(not isOpen)
-        self.ImgVoice:SetActive(not isOpen)
+        self:DisableCtr(isOpen)
     end)
+
+    
+end
+
+function MenuDisplay:SwitchLocalVoice()
+    self.BtnVoice.OnClick:Connect(function()
+        if isOn then
+            self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_OFF')
+            isOn = false
+        else
+            self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_ON')
+            isOn = true
+        end
+        NetUtil.Fire_C('MuteSpecificPlayerEvent', localPlayer, localPlayer, isOn)
+    end)
+end
+
+function MenuDisplay:InputBind()
+    self.BtnImBubble.OnClick:Connect(function()
+        self:DisplayImgIm()
+    end)
+
+    self.BtnArrow.OnClick:Connect(function()
+        self:DisplayImgIm()
+    end)
+
+    self.InputFieldIm.OnInputEnd:Connect(function(_text)
+        self:PlayerInGameIm(_text)
+    end)
+end
+
+function MenuDisplay:DisplayImgIm()
+    if isDisplay then
+        isDisplay = false
+    else
+        isDisplay = true
+    end
+    self.ImgIm:SetActive(isDisplay)   
+end
+
+function MenuDisplay:DisableCtr(isOpen)
+    self.ImgBase:SetActive(isOpen)
+    self.ImgMenu:SetActive(not isOpen)
+    self.ImgVoice:SetActive(not isOpen)
+    self.ImgImBubble:SetActive(not isOpen)
+    if isOpen then
+        self.ImgIm:SetActive(not isOpen)   
+    end
 end
 
 ---左侧功能按钮的底板资源替换
@@ -134,7 +180,7 @@ function MenuDisplay:SettingBind()
         self.BtnShut:SetActive(false)
         self.BtnOpen:SetActive(true)
         self.GraphicMask:SetActive(true)
-        Game.SetQualityLevel(0)
+        Game.SetFPSQuality(0)
     end)
 
     for k,v in pairs(self.GraphicSetTextTab) do
@@ -145,9 +191,10 @@ function MenuDisplay:SettingBind()
 
     for i,j in pairs(self.GraphicSetBtnTab) do
         j.OnClick:Connect(function()
-            Game.SetQualityLevel(i)
+            Game.SetFPSQuality(i)
         end)
     end
+
 end
 
 function MenuDisplay:QuitBind()
@@ -203,17 +250,62 @@ function MenuDisplay:ChangeTexture(_player, _tarObj)
     PlayerHub.GetPlayerProfile(uid, callback)
 end
 
----玩家表更新
-function MenuDisplay:NoticeEventHandler(_playerTab)
-    for i,j in pairs(_playerTab) do
-        print(i,j)
-        wait(1)
-        self:ChangeTexture(j, self['ImgHead'..i])
+local headImgCache, length = {}, nil
+function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    length = #_playerList
+    self.TextPlayNum.Text = 'Player('..length..')'
+    if _isAdded then
+        headImgCache = _playerList
+        self:AdjustHeadPos(headImgCache, _playerTab)   
+    else
+        for k,v in pairs(headImgCache) do
+            if v == _changedPlayer then
+                table.remove(headImgCache, k)
+            end
+        end
+        self:AdjustHeadPos(headImgCache, _playerTab)
     end
+end
+
+function MenuDisplay:AdjustHeadPos(_tarTab, _playerTab)
+    for k,v in pairs(_tarTab) do
+        self['ImgHead'..k].Texture = _playerTab[v]
+        self['FigBg'..k]:SetActive(true)
+        self['FigBg'..k].PlayerInfo.Value = v.UserId
+        self['TextName'..k].Text = v.Name
+    end
+    self['FigBg'..(#_tarTab + 1)]:SetActive(false)
 end
 
 ---玩家状态存储更新
 function MenuDisplay:PlayerActionChange()
+
+end
+
+---游戏内IM
+function MenuDisplay:PlayerInGameIm(_text)
+    local textMessage = _text
+    NetUtil.Fire_S('InGamingImEvent', localPlayer, textMessage)
+
+    ---重置输入栏
+    self.InputFieldIm.Text = ''
+end
+
+---消息更新
+function MenuDisplay:NormalImEventHandler(_content)
+
+
+
+    ---收到消息时前端界面有三种状态
+end
+
+---收到游戏开发者的消息
+function MenuDisplay:DeveloperBroadcastEventHandler(_content)
+
+end
+
+---创建消息函数
+function MenuDisplay:CreateMessage()
 
 end
 
