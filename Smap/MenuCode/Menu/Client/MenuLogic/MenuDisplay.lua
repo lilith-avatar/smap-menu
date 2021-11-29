@@ -82,6 +82,8 @@ function MenuDisplay:OpenAndClose()
         isOpen = false
         self:DisableCtr(isOpen)
     end)
+
+    
 end
 
 function MenuDisplay:SwitchLocalVoice()
@@ -192,6 +194,7 @@ function MenuDisplay:SettingBind()
             Game.SetFPSQuality(i)
         end)
     end
+
 end
 
 function MenuDisplay:QuitBind()
