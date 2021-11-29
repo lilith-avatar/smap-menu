@@ -37,7 +37,7 @@ end
 
 ---初始化
 function MenuDisplay:Init()
-    Game.ShowSystemBar(true)
+    Game.ShowSystemBar(false)
     self:DataInit()
     self:GuiInit()
 end
