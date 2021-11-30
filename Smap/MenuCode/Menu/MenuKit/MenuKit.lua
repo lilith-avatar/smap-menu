@@ -50,7 +50,6 @@ function RequireUtils()
 
     --FIXME: for backward compatibility
     _G.ModuleUtil = Menu.Util.Mod
-    _G.JSON = Menu.Util.LuaJson
     _G.NetUtil = Menu.Util.Net
 end
 
@@ -97,7 +96,6 @@ function MenuKit.Start()
         return
     end
     print('[MenuKit] Start()')
-    InitLuaExt()
     InitMenuKit()
 end
 
