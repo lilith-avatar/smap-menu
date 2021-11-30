@@ -18,11 +18,6 @@ local started = false
 --- Initialize the Lua extension library
 function InitLuaExt()
     require(PATH_LUA_EXT .. 'GlobalExt')
-    require(PATH_LUA_EXT .. 'StringExt')
-    require(PATH_LUA_EXT .. 'TableExt')
-    require(PATH_LUA_EXT .. 'MathExt')
-    _G.Queue = require(PATH_LUA_EXT .. 'Queue')
-    _G.Stack = require(PATH_LUA_EXT .. 'Stack')
 end
 
 --- Initialize MenuKit
@@ -48,7 +43,6 @@ function RequireUtils()
 
     -- Require Utils
     Menu.Util.Mod = require(PATH_UTIL .. 'Module')
-    Menu.Util.LuaJson = require(PATH_UTIL .. 'LuaJson')
     Menu.Util.Net = require(PATH_UTIL .. 'Net')
     Menu.Util.Event = require(PATH_UTIL .. 'Event')
 

@@ -69,6 +69,10 @@ function ModuleUtil.LoadManifest(_root, _manifest, _res, _list)
     end
 end
 
+string.isnilorempty = function(inputStr)
+    return inputStr == nil or inputStr == ''
+end
+
 --- 将有包含特定方法的模块筛选出来，并放在一个table中
 --- @param _modules module列表
 --- @param @string _fn 方法名 function_name
