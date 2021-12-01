@@ -35,6 +35,33 @@ local function SwitchDisplayCtr(_tar, _tab, _bool)
     end
 end
 
+--- 计算 UTF8 字符串的长度，每一个中文算一个字符
+--- @param @string input
+--- @return @number cnt
+--- @usage example
+---      local input = "你好World"
+---      print(string.utf8len(input))
+---      >> 输出 7
+string.utf8len = function(input)
+    local len = string.len(input)
+    local left = len
+    local cnt = 0
+    local arr = {0, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc}
+    while left ~= 0 do
+        local tmp = string.byte(input, -left)
+        local i = #arr
+        while arr[i] do
+            if tmp >= arr[i] then
+                left = left - i
+                break
+            end
+            i = i - 1
+        end
+        cnt = cnt + 1
+    end
+    return cnt
+end
+
 ---初始化
 function MenuDisplay:Init()
     Game.ShowSystemBar(false)
@@ -319,12 +346,13 @@ function MenuDisplay:PlayerInGameIm(_text)
 end
 
 ---消息更新
-local messageCache = ''
+local messageCache, length = '', 0
 function MenuDisplay:NormalImEventHandler(_sender,_content)
-    if self.TextImContent.Text == nil then 
-        self.TextImContent.Text = _content
+    length = string.len((_sender.Name).._content)
+    if length < 20 then
+        self.TextImContent.Text = messageCache..'\n'..'['.._sender.Name..']'.._content
     else
-        self.TextImContent.Text = messageCache..'\n'.._content
+        self.TextImContent.Text = messageCache..'\n'..'['.._sender.Name..']'.._content
     end
     messageCache = self.TextImContent.Text
 

@@ -25,9 +25,7 @@ end
 function InGamingImMgr:SendToChat(_content)
     if self.sender.ClassName == "PlayerInstance" then
         for k,v in pairs(MenuMgr.playerList) do
-            if v ~= self.sender then
-                NetUtil.Fire_C('NormalImEvent', v, self.sender,_content)
-            end
+            NetUtil.Fire_C('NormalImEvent', v, self.sender,_content)
         end
     elseif self.sender == 'Developer' then
         for k,v in pairs(MenuMgr.playerList) do
