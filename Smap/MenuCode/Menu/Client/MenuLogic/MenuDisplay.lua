@@ -313,7 +313,6 @@ end
 function MenuDisplay:PlayerInGameIm(_text)
     local textMessage = _text
     NetUtil.Fire_S('InGamingImEvent', localPlayer, textMessage)
-    NetUtil.Fire_S('DeveloperBroadcastEvent', 'Developer', textMessage)
 
     ---重置输入栏
     self.InputFieldIm.Text = ''
