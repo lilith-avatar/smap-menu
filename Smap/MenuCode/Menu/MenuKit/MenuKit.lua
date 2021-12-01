@@ -17,7 +17,7 @@ local started = false
 
 --- Initialize the Lua extension library
 function InitLuaExt()
-    require(PATH_LUA_EXT .. 'GlobalExt')
+
 end
 
 --- Initialize MenuKit
@@ -45,12 +45,14 @@ function RequireUtils()
     Menu.Util.Mod = require(PATH_UTIL .. 'Module')
     Menu.Util.Net = require(PATH_UTIL .. 'Net')
     Menu.Util.Event = require(PATH_UTIL .. 'Event')
+    Menu.Util.LuaJson = require(PATH_UTIL .. 'LuaJson')
 
     -- Init Utils
 
     --FIXME: for backward compatibility
     _G.ModuleUtil = Menu.Util.Mod
     _G.NetUtil = Menu.Util.Net
+    _G.JSON = Menu.Util.LuaJson
 end
 
 --- Reference framework
@@ -97,6 +99,7 @@ function MenuKit.Start()
     end
     print('[MenuKit] Start()')
     InitMenuKit()
+    InitLuaExt()
 end
 
 --- Start client

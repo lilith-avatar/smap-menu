@@ -6,7 +6,7 @@ local Manifest = {}
 Manifest.ROOT_PATH = 'Menu/Server/'
 
 Manifest.Events = {
-    'InGamingImEvent'
+    'InGamingImEvent', 
     
 }
 

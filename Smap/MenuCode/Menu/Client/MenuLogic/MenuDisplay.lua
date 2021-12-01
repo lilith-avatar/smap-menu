@@ -313,22 +313,23 @@ end
 function MenuDisplay:PlayerInGameIm(_text)
     local textMessage = _text
     NetUtil.Fire_S('InGamingImEvent', localPlayer, textMessage)
+    NetUtil.Fire_S('DeveloperBroadcastEvent', 'Developer', textMessage)
 
     ---重置输入栏
     self.InputFieldIm.Text = ''
 end
 
 ---消息更新
-function MenuDisplay:NormalImEventHandler(_content)
-
-
+local messageCache = ''
+function MenuDisplay:NormalImEventHandler(_sender,_content)
+    if self.TextImContent.Text == nil then 
+        self.TextImContent.Text = _content
+    else
+        self.TextImContent.Text = messageCache..'\n'.._content
+    end
+    messageCache = self.TextImContent.Text
 
     ---收到消息时前端界面有三种状态
-end
-
----收到游戏开发者的消息
-function MenuDisplay:DeveloperBroadcastEventHandler(_content)
-
 end
 
 ---创建消息函数

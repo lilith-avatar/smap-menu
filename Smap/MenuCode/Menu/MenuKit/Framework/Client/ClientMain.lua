@@ -55,7 +55,9 @@ end
 
 --- 初始化客户端的CustomEvent
 function InitClientCustomEvents()
-    world:CreateObject('FolderObject', 'C_Event', localPlayer)
+    if localPlayer.C_Event == nil then
+        world:CreateObject('FolderObject', 'C_Event', localPlayer)
+    end
 
     -- 生成CustomEvent节点
     for _, evt in pairs(C.Events) do

@@ -8,7 +8,6 @@ Manifest.ROOT_PATH = 'Menu/Client/'
 Manifest.Events = {
     'NoticeEvent', 
     'NormalImEvent', 
-    'DeveloperBroadcastEvent', 
     'MuteAllEvent',
     'MuteSpecificPlayerEvent'
 }
