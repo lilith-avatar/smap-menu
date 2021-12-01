@@ -69,6 +69,7 @@ function MenuDisplay:ListenerInit()
 
     self:GamingBind()
     self:SettingBind()
+    self:FriListBind()
     self:QuitBind()
 end
 
@@ -128,7 +129,9 @@ function MenuDisplay:DisableCtr(isOpen)
     self.ImgVoice:SetActive(not isOpen)
     self.ImgImBubble:SetActive(not isOpen)
     if isOpen then
-        self.ImgIm:SetActive(not isOpen)   
+        self.ImgIm:SetActive(not isOpen)
+    else
+        self.ImgProfileBg:SetActive(isOpen)
     end
 end
 
@@ -161,6 +164,30 @@ function MenuDisplay:GamingBind()
             self.BtnMuteAll.TextColor = Color(38,121,217,255)
         end
     end)
+
+    for i = 1,12 do 
+        self['BtnMic'..i].OnClick:Connect(function()
+            self.ImgProfileHead.Texture = self['ImgHead'..i].Texture
+            self.TextProfileName.Text = self['TextName'..i].Text
+            self.ImgProfileBg:SetActive(true)
+        end)
+    end
+
+    self.BtnProfileCancel.OnClick:Connect(function()
+        self.ImgProfileBg:SetActive(false)
+    end)
+end
+
+function MenuDisplay:FriListBind()
+    self.BtnFriMore.OnClick:Connect(function()
+        self.ImgFriMoreBg:SetActive(true)
+    end)
+
+    for k,v in pairs(self.ImgFriMoreBg:GetChildren()) do
+        v.OnClick:Connect(function()
+            self.ImgFriMoreBg:SetActive(false)
+        end)
+    end
 end
 
 function MenuDisplay:SettingBind()

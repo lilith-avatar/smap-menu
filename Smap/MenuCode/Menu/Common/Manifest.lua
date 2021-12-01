@@ -12,19 +12,6 @@ Manifest.Modules = {
             'Const'
         }
     },
-    {
-        Name = 'Xls',
-        Modules = {
-            'TestTable',
-            
-        }
-    },
-    {
-        Name = 'Util',
-        Modules = {
-            'CloudLogUtil'
-        }
-    }
 }
 
 return Manifest
