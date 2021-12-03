@@ -54,9 +54,9 @@ function MenuMgr:GetPlayerProfile(_player)
     PlayerHub.GetPlayerProfile(_player.UserId, self.callback)
 end
 
-function MenuMgr:MuteLocalEventHandler(_player, _isOn)
+function MenuMgr:MuteLocalEventHandler(_playerId, _isOn)
     for k,v in pairs(self.playerList) do
-        NetUtil.Fire_C('MuteSpecificPlayerEvent', v, _player, _isOn)
+        NetUtil.Fire_C('MuteSpecificPlayerEvent', v, _playerId, _isOn)
     end
 end
 
