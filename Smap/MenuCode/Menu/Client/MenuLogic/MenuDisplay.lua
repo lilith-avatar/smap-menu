@@ -208,17 +208,85 @@ function MenuDisplay:GamingBind()
         end
         NetUtil.Fire_C('MuteSpecificPlayerEvent', localPlayer, mutedPlayerId, mutedPlayerTab[mutedPlayerId]['isMuted'])
     end)
+
+    self.BtnProfileAdd.OnClick:Connect(function()
+        NetUtil.Fire_C('AddFriendsEvent', localPlayer, mutedPlayerId)
+        self.BtnProfileAdd.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileAdded')
+    end)
 end
 
 function MenuDisplay:FriListBind()
-    self.BtnFriMore.OnClick:Connect(function()
-        self.ImgFriMoreBg:SetActive(true)
-    end)
+    
+end
 
-    for k,v in pairs(self.ImgFriMoreBg:GetChildren()) do
-        v.OnClick:Connect(function()
-            self.ImgFriMoreBg:SetActive(false)
+local function keyof(hashtable, value)
+    for k, v in pairs(hashtable) do
+        if v.Name == value then
+            return k
+        end
+    end
+    return nil
+end
+
+local friListCache, toCreateTab = {}, {}
+function MenuDisplay:GetFriendsListEventHandler(_list)
+    self.TextFriList.Text = 'Friends('..#_list..')'
+    toCreateTab = {}
+    ---找出节点是否与更新的list重复
+    ---nil说明未创建
+    ---k说明已创建
+    for i,j in pairs(_list) do
+        friListCache[i] = keyof(self.PnlFriList:GetChildren(), i)
+    end
+
+    for m,n in pairs(friListCache) do
+        if n == nil then
+            table.insert(toCreateTab, m)
+        end
+    end 
+
+    for k,v in pairs(toCreateTab) do
+        self[k] = world:CreateInstance('FigFriInfo', k, self.PnlFriList)
+        self[k].TextName.Text = v.Name
+        --todo
+        self[k].ImgHead.Texture = nil
+        self[k].TextGameName.Text = 'Playing'..v.GameName
+        if v.Status == 'PLAYING' then
+            self[k].BtnFriMore:SetActive(true)
+            self[k].BtnFriInviteOut:SetActive(false)
+            self[k].ImgInGame:SetActive(true)
+        else
+            self[k].BtnFriMore:SetActive(false)
+            self[k].BtnFriInviteOut:SetActive(true)
+            self[k].ImgInGame:SetActive(false)
+        end
+
+        self[k].BtnFriMore.OnClick:Connect(function()
+            if self[k].ImgFriMoreBg.ActiveSelf then
+                self[k].ImgFriMoreBg:SetActive(false)
+                self.BtnTouch:SetActive(false)
+            else
+                self[k].ImgFriMoreBg:SetActive(true)
+                self.BtnTouch:SetActive(true)
+            end
         end)
+
+        self[k].BtnFriInviteOut.OnClick:Connect(function()
+            NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k) 
+        end)
+
+        self[k].BtnFriInvite.OnClick:Connect(function()
+            NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k) 
+        end)
+
+        self[k].BtnFriJoin.OnClick:Connect(function()
+            --todo join
+            NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer) 
+        end)
+    end
+
+    for k,v in pairs(self.PnlFriList:GetChildren()) do
+        v.AnchorsY = Vector2(1-0.15*k,1.15-0.15*k)
     end
 end
 
@@ -266,6 +334,11 @@ function MenuDisplay:QuitBind()
     self.BtnTouch.OnClick:Connect(function()
         self.BtnTouch:SetActive(false)
         self.ImgPopUps:SetActive(false)
+        for k,v in pairs(self.PnlFriList) do
+            if v then
+                v.ImgFriMoreBg:SetActive(false)
+            end
+        end
     end)
 
     self.BtnCancel.OnClick:Connect(function()
@@ -351,7 +424,6 @@ function MenuDisplay:NormalImEventHandler(_sender,_content)
         self.ImgRedDot:SetActive(true)
     end
 end
-
 
 
 

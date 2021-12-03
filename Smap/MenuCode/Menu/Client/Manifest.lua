@@ -9,7 +9,11 @@ Manifest.Events = {
     'NoticeEvent', 
     'NormalImEvent', 
     'MuteAllEvent',
-    'MuteSpecificPlayerEvent'
+    'MuteSpecificPlayerEvent', 
+    'GetFriendsListEvent',
+    'InviteFriendToGameEvent',
+    'JoinFriendGameEvent',
+    'AddFriendsEvent'
 }
 
 Manifest.Modules = {
