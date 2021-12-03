@@ -99,6 +99,7 @@ function MenuDisplay:SwitchLocalVoice()
             self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_ON')
             isOn = true
         end
+        NetUtil.Fire_S('MuteLocalEvent', localPlayer, isOn)
     end)
 end
 

@@ -7,6 +7,7 @@ Manifest.ROOT_PATH = 'Menu/Server/'
 
 Manifest.Events = {
     'InGamingImEvent', 
+    'MuteLocalEvent'
     
 }
 
