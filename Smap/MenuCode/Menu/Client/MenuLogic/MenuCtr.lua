@@ -15,12 +15,12 @@ end
 
 function MenuCtr:MuteAllEventHandler(_isMuted)
     for k,v in pairs(self.playerTab) do
-        --VoiceManager.MuteDesignatedPlayer(k, _isMuted)
+        VoiceManager.MuteDesignatedPlayer(k, _isMuted)
     end
 end
 
 function MenuCtr:MuteSpecificPlayerEventHandler(_specificPlayer, _isMuted)
-    --VoiceManager.MuteDesignatedPlayer(_specificPlayer, _isMuted)
+    VoiceManager.MuteDesignatedPlayer(_specificPlayer, _isMuted)
 end
 
 return MenuCtr

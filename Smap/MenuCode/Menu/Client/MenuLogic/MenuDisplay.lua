@@ -121,8 +121,9 @@ function MenuDisplay:DisplayImgIm()
         isDisplay = false
     else
         isDisplay = true
+        self.ImgRedDot:SetActive(false)
     end
-    self.ImgIm:SetActive(isDisplay)   
+    self.ImgIm:SetActive(isDisplay)
 end
 
 function MenuDisplay:DisableCtr(isOpen)
@@ -156,10 +157,9 @@ end
 
 local function MuteAll(_isMuteAll)
     for k,v in pairs(mutedPlayerTab) do
-        mutedPlayerTab['isMuted'] = _isMuteAll
-
-        MenuDisplay['ImgMic'..mutedPlayerTab[k]['num']]:SetActive(not _isMuteAll)
-        MenuDisplay['ImgMic'..mutedPlayerTab[k]['num']].Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
+        v['isMuted'] = _isMuteAll
+        MenuDisplay['ImgMic'..v['num']]:SetActive(not _isMuteAll)
+        MenuDisplay['ImgMic'..v['num']].Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
     end
 end
 
@@ -169,7 +169,7 @@ function MenuDisplay:GamingBind()
             self.ImgProfileHead.Texture = self['ImgHead'..i].Texture
             self.TextProfileName.Text = self['TextName'..i].Text
             self.ImgProfileBg:SetActive(true)
-
+            mutedPlayerId = self['FigBg'..i].PlayerInfo.Value
             if mutedPlayerTab[mutedPlayerId]['isMuted'] then
                 self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
             else
@@ -239,7 +239,7 @@ function MenuDisplay:SettingBind()
         self.BtnShut:SetActive(false)
         self.BtnOpen:SetActive(true)
         self.GraphicMask:SetActive(true)
-        Game.SetFPSQuality(0)
+        Game.SetGraphicQuality(0)
     end)
 
     for k,v in pairs(self.GraphicSetTextTab) do
@@ -250,7 +250,7 @@ function MenuDisplay:SettingBind()
 
     for i,j in pairs(self.GraphicSetBtnTab) do
         j.OnClick:Connect(function()
-            Game.SetFPSQuality(i)
+            Game.SetGraphicQuality(i)
         end)
     end
 
@@ -294,22 +294,6 @@ function MenuDisplay:Update()
 
 end
 
-function MenuDisplay:ChangeTexture(_player, _tarObj)
-    -- 获得玩家uid
-    local uid = _player.UserId
-
-    local Img_Head = MenuDisplay[_tarObj]
-
-    -- GetPlayerProfile的回调函数
-    local callback = function(_profile)
-        Img_Head.Texture = _profile.HeadPortrait
-    end
-
-    -- 获取当前玩家的Profile信息
-    PlayerHub.GetPlayerProfile(uid, callback)
-end
-
-
 function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     length = #_playerList
     self.TextPlayNum.Text = 'Player('..length..')'
@@ -332,16 +316,13 @@ function MenuDisplay:AdjustHeadPos(_tarTab, _playerTab)
         self['FigBg'..k]:SetActive(true)
         self['FigBg'..k].PlayerInfo.Value = v.UserId
         self['TextName'..k].Text = v.Name
-        mutedInfo['isMuted'] = false
-        mutedInfo['num'] = k
-        mutedPlayerTab[v.UserId] = mutedInfo
+
+        mutedPlayerTab[v.UserId] = {
+            isMuted = false,
+            num = k
+        }
     end
     self['FigBg'..(#_tarTab + 1)]:SetActive(false)
-end
-
----玩家状态存储更新
-function MenuDisplay:PlayerActionChange()
-
 end
 
 ---游戏内IM
@@ -365,12 +346,13 @@ function MenuDisplay:NormalImEventHandler(_sender,_content)
     end
     messageCache = self.TextImContent.Text
 
-    ---收到消息时前端界面有三种状态
+    ---红点
+    if not self.ImgIm.ActiveSelf then
+        self.ImgRedDot:SetActive(true)
+    end
 end
 
----创建消息函数
-function MenuDisplay:CreateMessage()
 
-end
+
 
 return MenuDisplay
