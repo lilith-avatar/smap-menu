@@ -69,7 +69,7 @@ function MenuDisplay:ListenerInit()
     self:SwitchLocalVoice()
     self:InputBind()
     ---左侧功能按钮的底板资源替换
-    self:ResourceReplace()
+    self:ResourceReplaceAni()
 
     self:SettingBind()
     self:FriListBind()
@@ -164,6 +164,24 @@ function MenuDisplay:ResourceReplace()
                 ---显示对应功能面板
                 SwitchNodeCtr(self[string.gsub(v.Name, 'Btn', 'Img')], self.FunDisplayTab, false)
             end
+        end)
+    end
+end
+
+function MenuDisplay:ResourceReplaceAni()
+    for k,v in pairs(self.FunBtnTab) do
+        v.OnClick:Connect(function()
+            local aniTween = world:CreateObject('TweenObject', 'aniTween', self.BtnAniShadow)
+            aniTween.Properties = {AnchorsY = v.AnchorsY}
+            aniTween.Duration = 0.15
+            aniTween.EaseCurve = Enum.EaseCurve.Linear
+            aniTween:Play()
+            aniTween.OnComplete:Connect(function()
+                v:GetChild(tostring(v.Name)..'Icon').Texture = ResourceManager.GetTexture('MenuRes/Btn_'..string.gsub(v.Name, 'Btn', '')..'_1')
+                SwitchTextureCtr(v, self.FunBtnTab, 'Btn_Idle')
+                ---显示对应功能面板
+                SwitchNodeCtr(self[string.gsub(v.Name, 'Btn', 'Img')], self.FunDisplayTab, false)
+            end)
         end)
     end
 end
@@ -263,38 +281,38 @@ local function keyof(hashtable, value)
 end
 
 local friListCache, toCreateTab = {}, {}
+local function ClearChildren(_parent)
+    local children = _parent:GetChildren()
+    if #children == 0 then return end
+	for k, v in pairs(children) do
+		v:Destroy()
+	end
+end
+
 function MenuDisplay:GetFriendsListEventHandler(_list)
-    self.TextFriList.Text = 'Friends('..#_list..')'
-    toCreateTab = {}
-    ---找出节点是否与更新的list重复
-    ---nil说明未创建
-    ---k说明已创建
-    for i,j in pairs(_list) do
-        friListCache[i] = keyof(self.PnlFriList:GetChildren(), i)
+    local i = 0
+    for k,v in pairs(_list) do
+        i = i + 1
     end
-
-    for m,n in pairs(friListCache) do
-        if n == nil then
-            table.insert(toCreateTab, m)
-        end
-    end 
-
-    for k,v in pairs(toCreateTab) do
+    self.TextFriList.Text = 'Friends('..i..')'
+    ClearChildren(self.PnlFriList)
+    for k,v in pairs(_list) do
         self[k] = world:CreateInstance('FigFriInfo', k, self.PnlFriList)
         self[k].TextName.Text = v.Name
         --todo
         self[k].ImgHead.Texture = nil
-        self[k].TextGameName.Text = 'Playing'..v.GameName
         if v.Status == 'PLAYING' then
             self[k].BtnFriMore:SetActive(true)
             self[k].BtnFriInviteOut:SetActive(false)
-            self[k].ImgInGame:SetActive(true)
+            self[k].ImgHead.ImgInGame:SetActive(true)
+            self[k].TextGameName.Text = 'Playing'..v.GameName
+            self[k].TextName.AnchorsY = Vector2(0.7,0.7)
         else
             self[k].BtnFriMore:SetActive(false)
             self[k].BtnFriInviteOut:SetActive(true)
-            self[k].ImgInGame:SetActive(false)
+            self[k].ImgHead.ImgInGame:SetActive(false)
+            self[k].TextName.AnchorsY = Vector2(0.5,0.5)
         end
-
         self[k].BtnFriMore.OnClick:Connect(function()
             if self[k].ImgFriMoreBg.ActiveSelf then
                 self[k].ImgFriMoreBg:SetActive(false)
@@ -309,14 +327,15 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
             NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k) 
         end)
 
-        self[k].BtnFriInvite.OnClick:Connect(function()
+        self[k].ImgFriMoreBg.BtnFriInvite.OnClick:Connect(function()
             NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k) 
         end)
 
-        self[k].BtnFriJoin.OnClick:Connect(function()
+        self[k].ImgFriMoreBg.BtnFriJoin.OnClick:Connect(function()
             --todo join
             NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k) 
         end)
+
     end
 
     for k,v in pairs(self.PnlFriList:GetChildren()) do
