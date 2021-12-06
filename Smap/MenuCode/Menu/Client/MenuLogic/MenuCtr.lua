@@ -14,8 +14,10 @@ function MenuCtr:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _is
 end
 
 function MenuCtr:MuteAllEventHandler(_isMuted)
-    for k,v in pairs(self.playerTab) do
-        VoiceManager.MuteDesignatedPlayer(k, _isMuted)
+    for k,v in pairs(self.playerList) do
+        if v ~= localPlayer then
+            VoiceManager.MuteDesignatedPlayer(v.UserId, _isMuted)
+        end
     end
 end
 
@@ -45,12 +47,15 @@ function MenuCtr:InviteFriendToGameEventHandler(targetPlayerId)
     Friends.InvitePlayer(targetPlayerId,callback)
 end
 
-function MenuCtr:JoinFriendGameEventHandler()
-
+function MenuCtr:JoinFriendGameEventHandler(_player, _tarPlayerUserId)
+    
 end
 
-function MenuCtr:AddFriendsEventHandler()
+local callback1 = function(msg)
 
+end
+function MenuCtr:AddFriendsEventHandler(_playerId)
+    Friends.SendFriendRequest(_playerId, callback1)
 end
 
 return MenuCtr

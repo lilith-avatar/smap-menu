@@ -56,7 +56,7 @@ end
 
 function MenuMgr:MuteLocalEventHandler(_playerId, _isOn)
     for k,v in pairs(self.playerList) do
-        NetUtil.Fire_C('MuteSpecificPlayerEvent', v, _playerId, _isOn)
+        NetUtil.Fire_C('MuteSpecificPlayerEvent', v, _playerId, not _isOn)
     end
 end
 

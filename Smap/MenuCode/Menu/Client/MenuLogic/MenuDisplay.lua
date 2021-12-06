@@ -3,9 +3,10 @@
 ---@author ropztao
 local  MenuDisplay,this = ModuleUtil.New('MenuDisplay', ClientBase)
 
-local isOpen, easeCur, isMuteAll, isOn, isDisplay, mutedPlayerId = false, 4, true, true, false, nil
+local isOpen, easeCur, isMuteAll, isOn, isDisplay, mutedPlayerId = false, 4, false, true, false, nil
 local headImgCache, length = {}, nil
 local mutedPlayerTab, mutedInfo = {}, {}
+local friTab = {}
 
 ---开关节点控制器
 ---@param _bool 期望的布尔值
@@ -74,6 +75,17 @@ function MenuDisplay:ListenerInit()
     self:FriListBind()
     self:QuitBind()
     self:GamingBind()
+
+    local test = false
+    self.TestBtn.OnClick:Connect(function()
+        if test then
+            Game.ShowSystemBar(false)
+            test = false
+        else
+            Game.ShowSystemBar(true)
+            test = true
+        end
+    end)
 end
 
 function MenuDisplay:OpenAndClose()
@@ -156,10 +168,26 @@ function MenuDisplay:ResourceReplace()
     end
 end
 
+function MenuDisplay:ProfileBgFix(_playerId)
+    local theGuy = world:GetPlayerByUserId(_playerId)
+    if friTab[theGuy.Name] then
+        self.BtnProfileAdd:SetActive(false)
+        self.BtnProfileMute.AnchorsX = Vector2(0.5,0.5)
+    else
+        self.BtnProfileAdd:SetActive(true)
+        self.BtnProfileMute.AnchorsX = Vector2(0.7,0.7)
+    end
+
+    if theGuy == localPlayer then
+        self.BtnProfileAdd:SetActive(false)
+        self.BtnProfileMute.AnchorsX = Vector2(0.5,0.5)
+    end
+end
+
 local function MuteAll(_isMuteAll)
     for k,v in pairs(mutedPlayerTab) do
         v['isMuted'] = _isMuteAll
-        MenuDisplay['ImgMic'..v['num']]:SetActive(not _isMuteAll)
+        MenuDisplay['ImgMic'..v['num']]:SetActive(_isMuteAll)
         MenuDisplay['ImgMic'..v['num']].Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
     end
 end
@@ -167,26 +195,31 @@ end
 function MenuDisplay:GamingBind()
     for i = 1,12 do
         self['BtnMic'..i].OnClick:Connect(function()
+            self:ProfileBgFix(self['FigBg'..i].PlayerInfo.Value)
             self.ImgProfileHead.Texture = self['ImgHead'..i].Texture
             self.TextProfileName.Text = self['TextName'..i].Text
             self.ImgProfileBg:SetActive(true)
+            self.BtnTouch:SetActive(true)
             mutedPlayerId = self['FigBg'..i].PlayerInfo.Value
             if mutedPlayerTab[mutedPlayerId]['isMuted'] then
                 self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
             else
                 self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute')
             end
+            if isMuteAll then
+                self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
+            end
         end)
     end
     self.BtnMuteAll.OnClick:Connect(function()
         if isMuteAll then
-            isMuteAll = false  
-            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
-            self.BtnMuteAll.TextColor = Color(222,69,119,230)
+            isMuteAll = false
+            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
+            self.BtnMuteAll.TextColor = Color(38,121,217,255)   
         else
             isMuteAll = true
-            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
-            self.BtnMuteAll.TextColor = Color(38,121,217,255)
+            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
+            self.BtnMuteAll.TextColor = Color(222,69,119,230)   
         end
         MuteAll(isMuteAll)  
         NetUtil.Fire_C('MuteAllEvent', localPlayer, isMuteAll)
@@ -198,15 +231,15 @@ function MenuDisplay:GamingBind()
 
     self.BtnProfileMute.OnClick:Connect(function()
         if mutedPlayerTab[mutedPlayerId]['isMuted'] then
-            self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
-            mutedPlayerTab[mutedPlayerId]['isMuted'] = false
-            self['ImgMic'..mutedPlayerTab[mutedPlayerId]['num']]:SetActive(true)
-            self['ImgMic'..mutedPlayerTab[mutedPlayerId]['num']].Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
-        else
             self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute')
-            mutedPlayerTab[mutedPlayerId]['isMuted'] = true
-            self['ImgMic'..mutedPlayerTab[mutedPlayerId]['num']]:SetActive(false)
+            self['ImgMic'..mutedPlayerTab[mutedPlayerId]['num']].Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
+            self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
+            self.BtnMuteAll.TextColor = Color(38,121,217,255)      
+        else
+            self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
         end
+        mutedPlayerTab[mutedPlayerId]['isMuted'] = not mutedPlayerTab[mutedPlayerId]['isMuted']
+        self['ImgMic'..mutedPlayerTab[mutedPlayerId]['num']]:SetActive(mutedPlayerTab[mutedPlayerId]['isMuted'])
         NetUtil.Fire_C('MuteSpecificPlayerEvent', localPlayer, mutedPlayerId, mutedPlayerTab[mutedPlayerId]['isMuted'])
     end)
 
@@ -282,7 +315,7 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
 
         self[k].BtnFriJoin.OnClick:Connect(function()
             --todo join
-            NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer) 
+            NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k) 
         end)
     end
 
@@ -294,9 +327,9 @@ end
 function MenuDisplay:SettingBind()
     self.GraphicSetTextTab = {self.TextHigh,self.TextMedium,self.TextLow}
     self.GraphicSetBtnTab = {}
-    self.GraphicSetBtnTab[1] = self.BtnHigh
+    self.GraphicSetBtnTab[3] = self.BtnHigh
     self.GraphicSetBtnTab[2] = self.BtnMedium
-    self.GraphicSetBtnTab[3] = self.BtnLow
+    self.GraphicSetBtnTab[1] = self.BtnLow
 
     self.TextShut.OnEnter:Connect(function()
         self.BtnShut:SetActive(true)
@@ -335,11 +368,12 @@ function MenuDisplay:QuitBind()
     self.BtnTouch.OnClick:Connect(function()
         self.BtnTouch:SetActive(false)
         self.ImgPopUps:SetActive(false)
-        for k,v in pairs(self.PnlFriList) do
+        for k,v in pairs(self.PnlFriList:GetChildren()) do
             if v then
                 v.ImgFriMoreBg:SetActive(false)
             end
         end
+        self.ImgProfileBg:SetActive(false)
     end)
 
     self.BtnCancel.OnClick:Connect(function()
@@ -363,12 +397,8 @@ function MenuDisplay:AniEffect(_obj, _tab, _dur)
     end)
 end
 
----Update函数
-function MenuDisplay:Update()
-
-end
-
 function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    friTab = Friends.GetFriendshipList()
     length = #_playerList
     self.TextPlayNum.Text = 'Player('..length..')'
     if _isAdded then
@@ -413,7 +443,7 @@ local messageCache, length = '', 0
 function MenuDisplay:NormalImEventHandler(_sender,_content)
     length = string.len((_sender.Name).._content)
     if length < 20 then
-        self.TextImContent.Text = messageCache..'\n'.."<color=#d76700>"..'['.._sender.Name..']'.."</color>".._content
+        self.TextImContent.Text = messageCache..'\n'.."<color=#c8ffffff>"..'['.._sender.Name..']'.."</color>".._content
     else
         --todo 换行
         self.TextImContent.Text = messageCache..'\n'..'['.._sender.Name..']'.._content
@@ -425,7 +455,5 @@ function MenuDisplay:NormalImEventHandler(_sender,_content)
         self.ImgRedDot:SetActive(true)
     end
 end
-
-
 
 return MenuDisplay
