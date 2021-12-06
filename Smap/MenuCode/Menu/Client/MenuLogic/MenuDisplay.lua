@@ -285,7 +285,7 @@ local function ClearChildren(_parent)
     local children = _parent:GetChildren()
     if #children == 0 then return end
 	for k, v in pairs(children) do
-        v:Clear()
+        v.OnClick:Clear()
 		v:Destroy()
 	end
 end
