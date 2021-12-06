@@ -60,4 +60,8 @@ function MenuMgr:MuteLocalEventHandler(_playerId, _isOn)
     end
 end
 
+function MenuMgr:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
+
+end
+
 return MenuMgr

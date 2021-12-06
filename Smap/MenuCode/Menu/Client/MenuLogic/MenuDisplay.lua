@@ -173,7 +173,7 @@ function MenuDisplay:ResourceReplaceAni()
         v.OnClick:Connect(function()
             local aniTween = world:CreateObject('TweenObject', 'aniTween', self.BtnAniShadow)
             aniTween.Properties = {AnchorsY = v.AnchorsY}
-            aniTween.Duration = 0.15
+            aniTween.Duration = 0.1
             aniTween.EaseCurve = Enum.EaseCurve.Linear
             aniTween:Play()
             aniTween.OnComplete:Connect(function()
