@@ -285,6 +285,7 @@ local function ClearChildren(_parent)
     local children = _parent:GetChildren()
     if #children == 0 then return end
 	for k, v in pairs(children) do
+        v:Clear()
 		v:Destroy()
 	end
 end
@@ -402,17 +403,6 @@ function MenuDisplay:QuitBind()
 
     self.BtnOk.OnClick:Connect(function()
         Game.Quit()
-    end)
-end
-
----动效
-function MenuDisplay:AniEffect(_obj, _tab, _dur)
-    local Tweener = Tween:TweenProperty(_obj, _tab, _dur, easeCur)
-    Tweener:Play()
-    Tweener.OnComplete:Connect(function()
-        if not isOpen then
-            
-        end
     end)
 end
 

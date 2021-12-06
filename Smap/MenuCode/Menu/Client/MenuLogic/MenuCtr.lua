@@ -27,9 +27,6 @@ end
 
 function MenuCtr:GetFriendsList()
     local list = Friends.GetFriendInfos()
-    for playerID, friendInfo in pairs(list) do
-		print(playerID, friendInfo.Name, friendInfo.Status, friendInfo.GameID, friendInfo.GameName)
-    end
     NetUtil.Fire_C('GetFriendsListEvent', localPlayer, list)
 end
 
