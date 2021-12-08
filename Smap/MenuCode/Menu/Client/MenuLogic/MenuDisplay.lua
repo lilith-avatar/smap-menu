@@ -1,7 +1,12 @@
 ---@module MenuDisplay
 ---@copyright Lilith Games, Avatar Team
----@author ropztao
+---@author ropztao, Yuancheng Zhang
 local MenuDisplay, this = ModuleUtil.New('MenuDisplay', ClientBase)
+
+-- 本地变量
+local Enum, Vector2 = Enum, Vector2
+local world, localPlayer = world, localPlayer
+local ResourceManager, Game = ResourceManager, Game
 
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, true, false, nil
 local headImgCache, length = {}, nil
@@ -13,7 +18,7 @@ local friTab = {}
 ---@param _tarTab 目标表格
 ---@param _spNode 排除节点
 local function SwitchNodeCtr(_spNode, _tarTab, _bool)
-    for k, v in pairs(_tarTab) do
+    for _, v in pairs(_tarTab) do
         if v == _spNode then
             v:SetActive(not _bool)
         else
@@ -43,12 +48,7 @@ end
 ---初始化
 function MenuDisplay:Init()
     Game.ShowSystemBar(false)
-    self:DataInit()
     self:GuiInit()
-end
-
----数据变量初始化
-function MenuDisplay:DataInit()
 end
 
 ---节点申明
@@ -150,15 +150,15 @@ function MenuDisplay:DisplayImgIm()
     self.ImgIm:SetActive(isDisplay)
 end
 
-function MenuDisplay:DisableCtr(isOpen)
-    self.ImgBase:SetActive(isOpen)
-    self.ImgMenu:SetActive(not isOpen)
-    self.ImgVoice:SetActive(not isOpen)
-    self.ImgImBubble:SetActive(not isOpen)
-    if isOpen then
-        self.ImgIm:SetActive(not isOpen)
+function MenuDisplay:DisableCtr(_isOpen)
+    self.ImgBase:SetActive(_isOpen)
+    self.ImgMenu:SetActive(not _isOpen)
+    self.ImgVoice:SetActive(not _isOpen)
+    self.ImgImBubble:SetActive(not _isOpen)
+    if _isOpen then
+        self.ImgIm:SetActive(not _isOpen)
     else
-        self.ImgProfileBg:SetActive(isOpen)
+        self.ImgProfileBg:SetActive(_isOpen)
     end
 end
 
