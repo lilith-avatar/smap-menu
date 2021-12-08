@@ -17,7 +17,6 @@ local started = false
 
 --- Initialize the Lua extension library
 function InitLuaExt()
-
 end
 
 --- Initialize MenuKit
@@ -26,7 +25,6 @@ function InitMenuKit()
     RequireUtils()
     RequireFramework()
     RequireManifest()
-    InitCommonModules()
 end
 
 --- Initialize Global
@@ -82,14 +80,8 @@ end
 --- Reference Manifest
 function RequireManifest()
     Menu.Manifest = {}
-    Menu.Manifest.Common = require(PATH_ROOT .. 'Common/Manifest')
     Menu.Manifest.Client = require(PATH_ROOT .. 'Client/Manifest')
     Menu.Manifest.Server = require(PATH_ROOT .. 'Server/Manifest')
-end
-
---- Load Common scripts
-function InitCommonModules()
-    Menu.Util.Mod.LoadManifest(_G, Menu.Manifest.Common, Menu.Manifest.Common.ROOT_PATH)
 end
 
 --- Start AvaKit

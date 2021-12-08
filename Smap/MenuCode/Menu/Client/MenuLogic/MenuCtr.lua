@@ -1,7 +1,7 @@
 ---@module MenuCtr
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao
-local  MenuCtr,this = ModuleUtil.New('MenuCtr', ClientBase)
+local MenuCtr, this = ModuleUtil.New('MenuCtr', ClientBase)
 local Event, VoiceManager, Friends = Event, VoiceManager, Friends
 
 ---初始化
@@ -18,7 +18,7 @@ end
 
 ---屏蔽所有人语音
 function MenuCtr:MuteAllEventHandler(_isMuted)
-    for k,v in pairs(self.playerList) do
+    for k, v in pairs(self.playerList) do
         if v ~= localPlayer then
             VoiceManager.MuteDesignatedPlayer(v.UserId, _isMuted)
         end
@@ -52,7 +52,7 @@ end
 ---邀请好友来游戏房间
 local localRoomIdTab = {}
 function MenuCtr:InviteFriendToGameEventHandler(targetPlayerId)
-    Friends.InvitePlayer(targetPlayerId,callback)
+    Friends.InvitePlayer(targetPlayerId, callback)
     localRoomIdTab['ROOMID'] = Game.GetRoomID()
     localRoomIdTab['PLAYER'] = localPlayer
     Event.EmitLuaEvent(Event.Scope.APP, 'MENU_INVITE', '100000000', localRoomIdTab)
@@ -77,7 +77,7 @@ end
 
 local roomIdTab = {}
 local J_callback = function(_eventType, _eventId, _eventData)
-    for k,v in pairs(_eventData) do
+    for k, v in pairs(_eventData) do
         if v == 'JOIN_REQUEST' then
             roomIdTab['ROOMID'] = Game.GetRoomID()
             Event.EmitLuaEvent(Event.Scope.APP, 'MENU_JOIN_R', '100000002', roomIdTab)

@@ -6,15 +6,15 @@ local Manifest = {}
 Manifest.ROOT_PATH = 'Menu/Client/'
 
 Manifest.Events = {
-    'NoticeEvent', 
-    'NormalImEvent', 
+    'NoticeEvent',
+    'NormalImEvent',
     'MuteAllEvent',
-    'MuteSpecificPlayerEvent', 
+    'MuteSpecificPlayerEvent',
     'GetFriendsListEvent',
     'InviteFriendToGameEvent',
     'JoinFriendGameEvent',
-    'AddFriendsEvent', 
-    'SomeoneInviteEvent', 
+    'AddFriendsEvent',
+    'SomeoneInviteEvent',
     'ConfirmInviteEvent'
 }
 
@@ -22,9 +22,8 @@ Manifest.Modules = {
     {
         Name = 'MenuLogic',
         Modules = {
-            'CtrBase',
             'MenuDisplay',
-            'MenuCtr', 
+            'MenuCtr',
             'MenuApi'
         }
     }
