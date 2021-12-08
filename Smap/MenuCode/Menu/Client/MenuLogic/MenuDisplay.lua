@@ -465,4 +465,12 @@ function MenuDisplay:NormalImEventHandler(_sender,_content)
     end
 end
 
+function MenuDisplay:SomeoneInviteEventHandler(_invitePlayer, _roomId)
+    self.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg'.._invitePlayer.Name, self.MenuGui)
+    
+    self.BtnInviteOk.OnClick:Connect(function()
+        NetUtil.Fire_C('ConfirmInviteEvent', localPlayer, _invitePlayer, _roomId)
+    end)
+end
+
 return MenuDisplay

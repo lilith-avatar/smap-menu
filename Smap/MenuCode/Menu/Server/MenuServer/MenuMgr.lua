@@ -60,8 +60,12 @@ function MenuMgr:MuteLocalEventHandler(_playerId, _isOn)
     end
 end
 
-function MenuMgr:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
+local callbackTeleport = function()
 
+end
+
+function MenuMgr:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
+    Game.TeleportPlayerToRoom (_player, _roomId, {}, callbackTeleport)
 end
 
 return MenuMgr

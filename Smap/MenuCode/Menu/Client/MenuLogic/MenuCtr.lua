@@ -68,7 +68,6 @@ function MenuCtr:JoinFriendGameEventHandler(_player, _tarPlayerUserId)
 end
 
 local callback1 = function(msg)
-
 end
 
 ---添加好友
@@ -89,7 +88,9 @@ end
 
 local friendInviteInfoTab = {}
 local I_callback = function(_eventType, _eventId, _eventData)
-    
+    local inviteRoomTab = _eventData
+    NetUtil.Fire_C('SomeoneInviteEvent', localPlayer, inviteRoomTab['PLAYER'], inviteRoomTab['ROOMID'])
+    inviteRoomTab = {}
 end
 
 local R_callback = function(_eventType, _eventId, _eventData)
@@ -101,6 +102,10 @@ function MenuCtr:InitListener()
     Event.ListenLuaEvent(Event.Scope.APP, 'MENU_INVITE', '100000000', I_callback)
     Event.ListenLuaEvent(Event.Scope.APP, 'MENU_JOIN', '100000001', J_callback)
     Event.ListenLuaEvent(Event.Scope.APP, 'MENU_JOIN_R', '100000002', R_callback)
+end
+
+function MenuCtr:ConfirmInviteEventHandler(_player, _roomId)
+    NetUtil.Fire_S('TeleportPlayerToFriendGameEvent', _player, _roomId)
 end
 
 return MenuCtr

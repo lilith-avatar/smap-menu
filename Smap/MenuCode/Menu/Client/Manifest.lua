@@ -13,7 +13,9 @@ Manifest.Events = {
     'GetFriendsListEvent',
     'InviteFriendToGameEvent',
     'JoinFriendGameEvent',
-    'AddFriendsEvent'
+    'AddFriendsEvent', 
+    'SomeoneInviteEvent', 
+    'ConfirmInviteEvent'
 }
 
 Manifest.Modules = {
