@@ -2,6 +2,7 @@
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao
 local MenuMgr, this = ModuleUtil.New('MenuMgr', ServerBase)
+local world, NetUtil, invoke, Game, PlayerHub = world, NetUtil, invoke, Game, PlayerHub
 ---初始化
 function MenuMgr:Init()
     self:DataInit()

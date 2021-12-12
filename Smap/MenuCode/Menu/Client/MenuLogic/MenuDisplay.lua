@@ -4,14 +4,21 @@
 local MenuDisplay, this = ModuleUtil.New('MenuDisplay', ClientBase)
 
 -- 本地变量
-local Enum, Vector2 = Enum, Vector2
-local world, localPlayer = world, localPlayer
-local ResourceManager, Game = ResourceManager, Game
+local Enum, Vector2, Color = Enum, Vector2, Color
+local world, localPlayer, NetUtil = world, localPlayer, NetUtil
+local ResourceManager, Game, Friends = ResourceManager, Game, Friends
 
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, true, false, nil
-local headImgCache, length = {}, nil
-local mutedPlayerTab, mutedInfo = {}, {}
-local friTab = {}
+local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
+
+local MUTEALL_OFF_COLOR, MUTEALL_ON_COLOR = Color(38, 121, 217, 255), Color(222, 69, 119, 230)
+
+local resReplaceTab = {
+    Gaming = 'games',
+    FriList = 'friends',
+    Setting = 'setting',
+    DressUp = 'figure'
+}
 
 ---开关节点控制器
 ---@param _bool 期望的布尔值
@@ -27,12 +34,12 @@ local function SwitchNodeCtr(_spNode, _tarTab, _bool)
     end
 end
 
-local function SwitchTextureCtr(_tar, _tab, _tex)
-    for k, v in pairs(_tab) do
+local function SwitchTextureCtr(_tar, _tab)
+    for _, v in pairs(_tab) do
         if v ~= _tar then
-            v.Texture = ResourceManager.GetTexture('MenuRes/' .. _tex)
             v:GetChild(tostring(v.Name) .. 'Icon').Texture =
-                ResourceManager.GetTexture('MenuRes/Btn_' .. string.gsub(v.Name, 'Btn', ''))
+                ResourceManager.GetTexture('MenuRes/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')])
+            v:GetChild(tostring(v.Name) .. 'Icon').Color = Color(0, 0, 0, 180)
         end
     end
 end
@@ -53,7 +60,7 @@ end
 
 ---节点申明
 function MenuDisplay:GuiInit()
-    self.MenuGui = world:CreateInstance('MenuGui', 'MenuGui', world.Local)
+    self.MenuGui = world.MenuNode.MenuGui
     for _, v in pairs(self.MenuGui:GetDescendants()) do
         self[v.Name] = v
     end
@@ -109,10 +116,10 @@ function MenuDisplay:SwitchLocalVoice()
     self.BtnVoice.OnClick:Connect(
         function()
             if isOn then
-                self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_OFF')
+                self.ImgVoice.Texture = ResourceManager.GetTexture('MenuRes/svg_microoff')
                 isOn = false
             else
-                self.IconVoice.Texture = ResourceManager.GetTexture('MenuRes/Btn_Voice_ON')
+                self.ImgVoice.Texture = ResourceManager.GetTexture('MenuRes/svg_microon')
                 isOn = true
             end
             NetUtil.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
@@ -152,9 +159,7 @@ end
 
 function MenuDisplay:DisableCtr(_isOpen)
     self.ImgBase:SetActive(_isOpen)
-    self.ImgMenu:SetActive(not _isOpen)
-    self.ImgVoice:SetActive(not _isOpen)
-    self.ImgImBubble:SetActive(not _isOpen)
+    self.PnlMenu:SetActive(not _isOpen)
     if _isOpen then
         self.ImgIm:SetActive(not _isOpen)
     else
@@ -162,40 +167,22 @@ function MenuDisplay:DisableCtr(_isOpen)
     end
 end
 
----左侧功能按钮的底板资源替换
-function MenuDisplay:ResourceReplace()
-    for k, v in pairs(self.FunBtnTab) do
-        v.OnClick:Connect(
-            function()
-                if tostring(v.Texture) == 'Btn_Idle' then
-                    ---按钮本身贴图替换
-                    v.Texture = ResourceManager.GetTexture('MenuRes/Btn_Selected')
-                    v:GetChild(tostring(v.Name) .. 'Icon').Texture =
-                        ResourceManager.GetTexture('MenuRes/Btn_' .. string.gsub(v.Name, 'Btn', '') .. '_1')
-                    SwitchTextureCtr(v, self.FunBtnTab, 'Btn_Idle')
-
-                    ---显示对应功能面板
-                    SwitchNodeCtr(self[string.gsub(v.Name, 'Btn', 'Img')], self.FunDisplayTab, false)
-                end
-            end
-        )
-    end
-end
-
 function MenuDisplay:ResourceReplaceAni()
-    for k, v in pairs(self.FunBtnTab) do
+    for _, v in pairs(self.FunBtnTab) do
         v.OnClick:Connect(
             function()
-                local aniTween = world:CreateObject('TweenObject', 'aniTween', self.BtnAniShadow)
-                aniTween.Properties = {AnchorsY = v.AnchorsY}
+                local aniTween = self.ImgShadow.aniTween
+                aniTween.Properties = {Offset = v.Offset}
                 aniTween.Duration = 0.1
                 aniTween.EaseCurve = Enum.EaseCurve.Linear
+                aniTween:Flush()
                 aniTween:Play()
                 aniTween.OnComplete:Connect(
                     function()
                         v:GetChild(tostring(v.Name) .. 'Icon').Texture =
-                            ResourceManager.GetTexture('MenuRes/Btn_' .. string.gsub(v.Name, 'Btn', '') .. '_1')
-                        SwitchTextureCtr(v, self.FunBtnTab, 'Btn_Idle')
+                            ResourceManager.GetTexture('MenuRes/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')] .. '1')
+                        v:GetChild(tostring(v.Name) .. 'Icon').Color = Color(0, 0, 0, 255)
+                        SwitchTextureCtr(v, self.FunBtnTab)
                         ---显示对应功能面板
                         SwitchNodeCtr(self[string.gsub(v.Name, 'Btn', 'Img')], self.FunDisplayTab, false)
                     end
@@ -209,15 +196,15 @@ function MenuDisplay:ProfileBgFix(_playerId)
     local theGuy = world:GetPlayerByUserId(_playerId)
     if friTab[theGuy.Name] then
         self.BtnProfileAdd:SetActive(false)
-        self.BtnProfileMute.AnchorsX = Vector2(0.5, 0.5)
+        self.BtnProfileMute.Offset = Vector2(-158,-384)
     else
         self.BtnProfileAdd:SetActive(true)
-        self.BtnProfileMute.AnchorsX = Vector2(0.7, 0.7)
+        self.BtnProfileMute.Offset = Vector2(-50, -384)
     end
 
     if theGuy == localPlayer then
         self.BtnProfileAdd:SetActive(false)
-        self.BtnProfileMute.AnchorsX = Vector2(0.5, 0.5)
+        self.BtnProfileMute.Offset = Vector2(-158,-384)
     end
 end
 
@@ -225,7 +212,7 @@ local function MuteAll(_isMuteAll)
     for _, v in pairs(mutedPlayerTab) do
         v['isMuted'] = _isMuteAll
         MenuDisplay['ImgMic' .. v['num']]:SetActive(_isMuteAll)
-        MenuDisplay['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
+        MenuDisplay['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/svg_ic_speakeroff1')
     end
 end
 
@@ -240,12 +227,12 @@ function MenuDisplay:GamingBind()
                 self.BtnTouch:SetActive(true)
                 mutedPlayerId = self['FigBg' .. i].PlayerInfo.Value
                 if mutedPlayerTab[mutedPlayerId]['isMuted'] then
-                    self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
+                    self.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
                 else
-                    self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute')
+                    self.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
                 end
                 if isMuteAll then
-                    self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
+                    self.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
                 end
             end
         )
@@ -254,12 +241,14 @@ function MenuDisplay:GamingBind()
         function()
             if isMuteAll then
                 isMuteAll = false
-                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
-                self.BtnMuteAll.TextColor = Color(38, 121, 217, 255)
+                self.TextMuteAll.Color = MUTEALL_OFF_COLOR
+                self.ImgMuteAll.Color = MUTEALL_OFF_COLOR
+                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')   
             else
                 isMuteAll = true
-                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
-                self.BtnMuteAll.TextColor = Color(222, 69, 119, 230)
+                self.TextMuteAll.Color = MUTEALL_ON_COLOR
+                self.ImgMuteAll.Color = MUTEALL_ON_COLOR
+                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
             end
             MuteAll(isMuteAll)
             NetUtil.Fire_C('MuteAllEvent', localPlayer, isMuteAll)
@@ -275,13 +264,12 @@ function MenuDisplay:GamingBind()
     self.BtnProfileMute.OnClick:Connect(
         function()
             if mutedPlayerTab[mutedPlayerId]['isMuted'] then
-                self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute')
-                self['ImgMic' .. mutedPlayerTab[mutedPlayerId]['num']].Texture =
-                    ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_OFF')
-                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/Btn_Gaming_MuteAll_ON')
-                self.BtnMuteAll.TextColor = Color(38, 121, 217, 255)
+                self.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
+                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
+                self.ImgMuteAll.Color = MUTEALL_OFF_COLOR
+                self.TextMuteAll.Color = MUTEALL_OFF_COLOR
             else
-                self.BtnProfileMute.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileMute1')
+                self.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
             end
             mutedPlayerTab[mutedPlayerId]['isMuted'] = not mutedPlayerTab[mutedPlayerId]['isMuted']
             self['ImgMic' .. mutedPlayerTab[mutedPlayerId]['num']]:SetActive(mutedPlayerTab[mutedPlayerId]['isMuted'])
@@ -297,7 +285,7 @@ function MenuDisplay:GamingBind()
     self.BtnProfileAdd.OnClick:Connect(
         function()
             NetUtil.Fire_C('AddFriendsEvent', localPlayer, mutedPlayerId)
-            self.BtnProfileAdd.Texture = ResourceManager.GetTexture('MenuRes/Btn_ProfileAdded')
+            self.ImgProfileAdd.Texture = ResourceManager.GetTexture('MenuRes/svg_addfriends1')
         end
     )
 end
@@ -320,7 +308,7 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
     for k, v in pairs(_list) do
         i = i + 1
     end
-    self.TextFriList.Text = 'Friends(' .. i .. ')'
+    self.TextFriList.Text = 'Friends (' .. i .. ')'
     ClearChildren(self.PnlFriList)
     for k, v in pairs(_list) do
         self[k] = world:CreateInstance('FigFriInfo', k, self.PnlFriList)
@@ -372,7 +360,7 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
     end
 
     for k, v in pairs(self.PnlFriList:GetChildren()) do
-        v.AnchorsY = Vector2(1 - 0.15 * k, 1.15 - 0.15 * k)
+        v.Offset = Vector2(0, -130*k + 130)
     end
 end
 
@@ -456,7 +444,7 @@ end
 function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
-    self.TextPlayNum.Text = 'Player(' .. length .. ')'
+    self.TextPlayNum.Text = 'Player (' .. length .. ')'
     if _isAdded then
         headImgCache = _playerList
         self:AdjustHeadPos(headImgCache, _playerTab)

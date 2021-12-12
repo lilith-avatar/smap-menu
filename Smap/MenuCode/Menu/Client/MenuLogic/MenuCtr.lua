@@ -2,7 +2,7 @@
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao
 local MenuCtr, this = ModuleUtil.New('MenuCtr', ClientBase)
-local Event, VoiceManager, Friends = Event, VoiceManager, Friends
+local Event, VoiceManager, Friends, NetUtil, Game, localPlayer = Event, VoiceManager, Friends, NetUtil, Game, localPlayer
 
 ---初始化
 function MenuCtr:Init()
@@ -18,7 +18,7 @@ end
 
 ---屏蔽所有人语音
 function MenuCtr:MuteAllEventHandler(_isMuted)
-    for k, v in pairs(self.playerList) do
+    for _, v in pairs(self.playerList) do
         if v ~= localPlayer then
             VoiceManager.MuteDesignatedPlayer(v.UserId, _isMuted)
         end
@@ -86,7 +86,6 @@ local J_callback = function(_eventType, _eventId, _eventData)
     roomIdTab = {}
 end
 
-local friendInviteInfoTab = {}
 local I_callback = function(_eventType, _eventId, _eventData)
     local inviteRoomTab = _eventData
     NetUtil.Fire_C('SomeoneInviteEvent', localPlayer, inviteRoomTab['PLAYER'], inviteRoomTab['ROOMID'])
