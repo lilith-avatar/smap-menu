@@ -531,13 +531,9 @@ end
 local messageCache, length = '', 0
 function MenuDisplay:NormalImEventHandler(_sender, _content)
     length = string.len((_sender.Name) .. _content)
-    if length < 20 then
-        self.TextImContent.Text =
-            messageCache .. '\n' .. '<color=#c8ffffff>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
-    else
+    self.TextImContent.Text =
+            messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
         --todo 换行
-        self.TextImContent.Text = messageCache .. '\n' .. '[' .. _sender.Name .. ']' .. _content
-    end
     messageCache = self.TextImContent.Text
 
     ---红点
