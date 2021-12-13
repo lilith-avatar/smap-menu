@@ -4,7 +4,7 @@
 --- @author Yuancheng Zhang，ropztao
 
 -- Local Cache
-local world, wait, invoke = world, wait, invoke
+local world, wait = world, wait
 local Debug, Timer = Debug, Timer
 
 --* 模块
@@ -38,9 +38,15 @@ end
 
 --- 加载客户端模块
 function RequireClientModules()
+    --* 临时开放 _G.C, 用于require其他lua模块
+    _G.C = {}
+    _G.C.Base = M.Kit.Framework.Client.Base
+    _G.C.ModuleUtil = M.Kit.Util.Mod
     Debug.Log('[MenuKit][Client] RequireClientModules()')
     events = M.Kit.Manifest.Client.Events
     M.Kit.Util.Mod.LoadManifest(_G.C, M.Kit.Manifest.Client, M.Kit.Manifest.Client.ROOT_PATH, list)
+    --* 关闭 _G.C
+    _G.C = nil
 end
 
 --- 模块对MenuKit的引用
@@ -79,9 +85,9 @@ end
 --- 生成需要Init和Update的模块列表
 function GenInitAndUpdateList()
     -- Debug.Log(table.dump(list))
-    Menu.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
-    Menu.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
-    Menu.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
+    M.Kit.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
+    M.Kit.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
+    M.Kit.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
 end
 
 --- 执行默认的Init方法

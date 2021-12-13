@@ -5,9 +5,10 @@
 
 -- Local Caches
 local ChatManager = ChatManager
+local S = _G.S
 
 --* 模块
-local M = ModuleUtil.New('InGamingImMgr', ServerBase)
+local M = S.ModuleUtil.New('InGamingImMgr', S.Base)
 
 --* 本地变量
 local sender  -- 发送者
@@ -26,7 +27,6 @@ function SendToChat(_content)
 end
 
 function M:InGamingImEventHandler(_sendPlayer, _imContent)
-    print(_imContent)
     -- 敏感词过滤
     local callback = function(_imContent, _msg)
         SendToChat(_msg)

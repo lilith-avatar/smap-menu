@@ -3,6 +3,10 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
+-- Local Caches
+local class = class
+local Debug = Debug
+
 --- 加载Manifest
 --- @param _root 模块目录的节点
 --- @param _manifest Mainifest中的节点

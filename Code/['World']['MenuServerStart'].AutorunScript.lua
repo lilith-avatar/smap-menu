@@ -2,5 +2,5 @@
 --- @module Menu: start client
 --- @copyright Lilith Games, Avatar Team
 
-local MenuKit = MenuKit or require('Menu/MenuKit/MenuKit')
+local MenuKit = MenuKit or require('Menu/Kit/MenuKit')
 MenuKit.StartServer()

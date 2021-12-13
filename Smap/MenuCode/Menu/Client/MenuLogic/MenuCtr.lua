@@ -5,9 +5,10 @@
 
 -- Local Caches
 local Event, VoiceManager, Friends, Game, localPlayer = Event, VoiceManager, Friends, Game, localPlayer
+local C = _G.C
 
 --* 模块
-local M, this = ModuleUtil.New('MenuCtr', ClientBase)
+local M, this = C.ModuleUtil.New('MenuCtr', C.Base)
 
 ---初始化
 function M:Init()

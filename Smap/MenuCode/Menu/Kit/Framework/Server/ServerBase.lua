@@ -2,6 +2,12 @@
 --- @module ServerBase, Server-side
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang, Dead Ratman, ropztao
+
+-- Local Caches
+local world, class = world, class
+local Debug = Debug
+
+--* 模块
 local M = class('ServerBase')
 
 function M:GetSelf()

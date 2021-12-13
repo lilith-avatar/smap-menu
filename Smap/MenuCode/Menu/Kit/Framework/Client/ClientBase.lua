@@ -2,6 +2,12 @@
 --- @module ClientBase, Client-side
 --- @copyright Lilith Games, Avatar Team
 --- @author ropztao, Yuancheng Zhang
+
+-- Local Caches
+local world, class = world, class
+local Debug = Debug
+
+--* 模块
 local M = class('ClientBase')
 
 function M:GetSelf()

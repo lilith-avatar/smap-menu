@@ -3,7 +3,12 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author ropztao, Yuancheng Zhang
 
-local M, this = ModuleUtil.New('MenuApi', ClientBase)
+-- Local Caches
+local ChatManager = ChatManager
+local C = _G.C
+
+--* 模块
+local M = C.ModuleUtil.New('MenuApi', C.Base)
 
 function DeveloperOfficialMsg(_content)
     M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)

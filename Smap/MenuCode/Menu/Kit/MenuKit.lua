@@ -15,7 +15,7 @@ local M = {}
 
 --* 常量
 local PATH_ROOT = 'Menu/'
-local PATH_MENUKIT = 'Menu/MenuKit/'
+local PATH_MENUKIT = 'Menu/Kit/'
 local PATH_UTIL = PATH_MENUKIT .. 'Util/'
 local PATH_LUA_EXT = PATH_MENUKIT .. 'Util/LuaExt'
 local PATH_CLIENT = PATH_MENUKIT .. 'Framework/Client/'
@@ -23,21 +23,13 @@ local PATH_SERVER = PATH_MENUKIT .. 'Framework/Server/'
 
 --* 本地变量
 local started = false
-local Kit = {}
-_G.Menu = Kit
+local Kit = {} -- 用于给其他模块引用相关工具
 
 --- Initialize MenuKit
 function InitMenuKit()
-    InitGlobal()
     RequireUtils()
     RequireFramework()
     RequireManifest()
-end
-
---- Initialize Global
-function InitGlobal()
-    _G.C = {}
-    _G.S = {}
 end
 
 --- Reference tool module
@@ -45,13 +37,10 @@ function RequireUtils()
     Kit.Util = {}
 
     -- Require Utils
+    require(PATH_LUA_EXT)
     Kit.Util.Mod = require(PATH_UTIL .. 'Module')
     Kit.Util.Net = require(PATH_UTIL .. 'Net')
     Kit.Util.Event = require(PATH_UTIL .. 'Event')
-    require(PATH_LUA_EXT)
-    -- Init Utils
-
-    _G.ModuleUtil = Kit.Util.Mod
 end
 
 --- Reference framework
@@ -72,10 +61,6 @@ function RequireFramework()
     Kit.Framework.Server.Main = require(PATH_SERVER .. 'ServerMain')
     Kit.Framework.Server.Base.Kit = Kit
     Kit.Framework.Server.Main.Kit = Kit
-
-    --FIXME:
-    _G.ClientBase = Kit.Framework.Client.Base
-    _G.ServerBase = Kit.Framework.Server.Base
 end
 
 --- Reference Manifest

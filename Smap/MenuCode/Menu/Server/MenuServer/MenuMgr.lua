@@ -2,8 +2,13 @@
 ---@module MenuMgr
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao, Yuancheng Zhang
-local M = ModuleUtil.New('MenuMgr', ServerBase)
+
+-- Local Caches
 local world, invoke, Game, PlayerHub = world, invoke, Game, PlayerHub
+local S = _G.S
+
+--* 模块
+local M = S.ModuleUtil.New('MenuMgr', S.Base)
 
 --* 数据
 local playerInfoTab = {}

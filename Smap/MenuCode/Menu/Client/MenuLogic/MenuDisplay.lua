@@ -7,9 +7,10 @@
 local Enum, Vector2, Color = Enum, Vector2, Color
 local world, localPlayer = world, localPlayer
 local ResourceManager, Game, Friends, invoke = ResourceManager, Game, Friends, invoke
+local C = _G.C
 
 --* 模块
-local M, this = ModuleUtil.New('MenuDisplay', ClientBase)
+local M, this = C.ModuleUtil.New('MenuDisplay', C.Base)
 
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
@@ -49,7 +50,6 @@ end
 
 ---初始化
 function M:Init()
-    print('M:Init()')
     Game.ShowSystemBar(false)
     self:GuiInit()
 end
