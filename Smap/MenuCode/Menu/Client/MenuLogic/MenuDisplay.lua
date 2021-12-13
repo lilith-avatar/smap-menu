@@ -2,12 +2,14 @@
 --- @module MenuDisplay
 --- @copyright Lilith Games, Avatar Team
 --- @author ropztao, Yuancheng Zhang
-local MenuDisplay, this = ModuleUtil.New('MenuDisplay', ClientBase)
 
--- 本地变量
+-- Local Caches
 local Enum, Vector2, Color = Enum, Vector2, Color
-local world, localPlayer, NetUtil = world, localPlayer, NetUtil
+local world, localPlayer = world, localPlayer
 local ResourceManager, Game, Friends, invoke = ResourceManager, Game, Friends, invoke
+
+--* 模块
+local M, this = ModuleUtil.New('MenuDisplay', ClientBase)
 
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
@@ -46,13 +48,14 @@ local function SwitchTextureCtr(_tar, _tab)
 end
 
 ---初始化
-function MenuDisplay:Init()
+function M:Init()
+    print('M:Init()')
     Game.ShowSystemBar(false)
     self:GuiInit()
 end
 
 ---节点申明
-function MenuDisplay:GuiInit()
+function M:GuiInit()
     self.MenuGui = world.MenuNode.Client.MenuGui
     for _, v in pairs(self.MenuGui:GetDescendants()) do
         self[v.Name] = v
@@ -68,7 +71,7 @@ function MenuDisplay:GuiInit()
 end
 
 ---事件绑定初始化
-function MenuDisplay:ListenerInit()
+function M:ListenerInit()
     self:OpenAndClose()
     self:SwitchLocalVoice()
     self:InputBind()
@@ -95,7 +98,7 @@ function MenuDisplay:ListenerInit()
     )
 end
 
-function MenuDisplay:OpenAndClose()
+function M:OpenAndClose()
     self.BtnMenu.OnClick:Connect(
         function()
             isOpen = true
@@ -127,7 +130,7 @@ function MenuDisplay:OpenAndClose()
     )
 end
 
-function MenuDisplay:SwitchLocalVoice()
+function M:SwitchLocalVoice()
     self.BtnVoice.OnClick:Connect(
         function()
             if isOn then
@@ -139,13 +142,13 @@ function MenuDisplay:SwitchLocalVoice()
                 self.ImgVoiceMask:SetActive(true)
                 isOn = true
             end
-            NetUtil.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
+            M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
         end
     )
 end
 
 local tt = 0
-function MenuDisplay:Updatee(dt)
+function M:Updatee(dt)
     tt = tt + dt
     if tt > 1 then
         if isOn and localPlayer:IsSpeaking() then
@@ -157,7 +160,7 @@ function MenuDisplay:Updatee(dt)
     end
 end
 
-function MenuDisplay:InputBind()
+function M:InputBind()
     self.BtnImBubble.OnClick:Connect(
         function()
             self:DisplayImgIm()
@@ -177,7 +180,7 @@ function MenuDisplay:InputBind()
     )
 end
 
-function MenuDisplay:DisplayImgIm()
+function M:DisplayImgIm()
     if isDisplay then
         isDisplay = false
     else
@@ -187,7 +190,7 @@ function MenuDisplay:DisplayImgIm()
     self.ImgIm:SetActive(isDisplay)
 end
 
-function MenuDisplay:DisableCtr(_isOpen)
+function M:DisableCtr(_isOpen)
     self:ImgBaseAni(_isOpen)
     self:PnlMenuAni(not _isOpen)
     if _isOpen then
@@ -197,7 +200,7 @@ function MenuDisplay:DisableCtr(_isOpen)
     end
 end
 
-function MenuDisplay:PnlMenuAni(_isOpen)
+function M:PnlMenuAni(_isOpen)
     if not _isOpen then
         self.TweenMenuBg.Properties = {Offset = Vector2(0, 800)}
         self.TweenImBubbleBg.Properties = {Offset = Vector2(84, 550)}
@@ -215,7 +218,7 @@ function MenuDisplay:PnlMenuAni(_isOpen)
     end
 end
 
-function MenuDisplay:ImgBaseAni(_isOpen)
+function M:ImgBaseAni(_isOpen)
     local tarProTab, comFun
     if _isOpen then
         self.ImgBase:SetActive(_isOpen)
@@ -233,7 +236,7 @@ function MenuDisplay:ImgBaseAni(_isOpen)
     self:TweenAni(self.TweenImgBase, tarProTab, 0.4, Enum.EaseCurve.QuinticInOut, comFun)
 end
 
-function MenuDisplay:TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
+function M:TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
     _tarTween.Properties = _tarProTab
     _tarTween.Duration = _tarDur
     _tarTween.EaseCurve = _tarEase
@@ -244,7 +247,7 @@ function MenuDisplay:TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
     end
 end
 
-function MenuDisplay:ResourceReplaceAni()
+function M:ResourceReplaceAni()
     for _, v in pairs(self.FunBtnTab) do
         v.OnClick:Connect(
             function()
@@ -271,7 +274,7 @@ function MenuDisplay:ResourceReplaceAni()
     end
 end
 
-function MenuDisplay:ProfileBgFix(_playerId)
+function M:ProfileBgFix(_playerId)
     local theGuy = world:GetPlayerByUserId(_playerId)
     if friTab[theGuy.Name] then
         self.BtnProfileAdd:SetActive(false)
@@ -290,12 +293,12 @@ end
 local function MuteAll(_isMuteAll)
     for _, v in pairs(mutedPlayerTab) do
         v['isMuted'] = _isMuteAll
-        MenuDisplay['ImgMic' .. v['num']]:SetActive(_isMuteAll)
-        MenuDisplay['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/svg_ic_speakeroff1')
+        M['ImgMic' .. v['num']]:SetActive(_isMuteAll)
+        M['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/svg_ic_speakeroff1')
     end
 end
 
-function MenuDisplay:GamingBind()
+function M:GamingBind()
     for i = 1, 12 do
         self['BtnMic' .. i].OnClick:Connect(
             function()
@@ -330,7 +333,7 @@ function MenuDisplay:GamingBind()
                 self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
             end
             MuteAll(isMuteAll)
-            NetUtil.Fire_C('MuteAllEvent', localPlayer, isMuteAll)
+            M.Kit.Util.Net.Fire_C('MuteAllEvent', localPlayer, isMuteAll)
         end
     )
 
@@ -352,7 +355,7 @@ function MenuDisplay:GamingBind()
             end
             mutedPlayerTab[mutedPlayerId]['isMuted'] = not mutedPlayerTab[mutedPlayerId]['isMuted']
             self['ImgMic' .. mutedPlayerTab[mutedPlayerId]['num']]:SetActive(mutedPlayerTab[mutedPlayerId]['isMuted'])
-            NetUtil.Fire_C(
+            M.Kit.Util.Net.Fire_C(
                 'MuteSpecificPlayerEvent',
                 localPlayer,
                 mutedPlayerId,
@@ -363,7 +366,7 @@ function MenuDisplay:GamingBind()
 
     self.BtnProfileAdd.OnClick:Connect(
         function()
-            NetUtil.Fire_C('AddFriendsEvent', localPlayer, mutedPlayerId)
+            M.Kit.Util.Net.Fire_C('AddFriendsEvent', localPlayer, mutedPlayerId)
             self.ImgProfileAdd.Texture = ResourceManager.GetTexture('MenuRes/svg_addfriends1')
         end
     )
@@ -382,7 +385,7 @@ local function ClearChildren(_parent)
     end
 end
 
-function MenuDisplay:GetFriendsListEventHandler(_list)
+function M:GetFriendsListEventHandler(_list)
     local i = 0
     for _, v in pairs(_list) do
         i = i + 1
@@ -420,20 +423,20 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
 
         self[k].BtnFriInviteOut.OnClick:Connect(
             function()
-                NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k)
+                M.Kit.Util.Net.Fire_C('InviteFriendToGameEvent', localPlayer, k)
             end
         )
 
         self[k].ImgFriMoreBg.BtnFriInvite.OnClick:Connect(
             function()
-                NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k)
+                M.Kit.Util.Net.Fire_C('InviteFriendToGameEvent', localPlayer, k)
             end
         )
 
         self[k].ImgFriMoreBg.BtnFriJoin.OnClick:Connect(
             function()
                 --todo join
-                NetUtil.Fire_C('InviteFriendToGameEvent', localPlayer, k)
+                M.Kit.Util.Net.Fire_C('InviteFriendToGameEvent', localPlayer, k)
             end
         )
     end
@@ -443,7 +446,7 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
     end
 end
 
-function MenuDisplay:SettingBind()
+function M:SettingBind()
     self.GraphicSetTextTab = {self.TextHigh, self.TextMedium, self.TextLow}
     self.GraphicSetBtnTab = {}
     self.GraphicSetBtnTab[3] = self.BtnHigh
@@ -486,7 +489,7 @@ function MenuDisplay:SettingBind()
     end
 end
 
-function MenuDisplay:QuitBind()
+function M:QuitBind()
     ---Quit的二级弹窗
     self.BtnQuit.OnClick:Connect(
         function()
@@ -522,7 +525,7 @@ function MenuDisplay:QuitBind()
     )
 end
 
-function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+function M:NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
     self.TextPlayNum.Text = 'Player (' .. length .. ')'
@@ -539,7 +542,7 @@ function MenuDisplay:NoticeEventHandler(_playerTab, _playerList, _changedPlayer,
     end
 end
 
-function MenuDisplay:AdjustHeadPos(_tarTab, _playerTab)
+function M:AdjustHeadPos(_tarTab, _playerTab)
     for k, v in pairs(_tarTab) do
         self['ImgHead' .. k].Texture = _playerTab[v]
         self['FigBg' .. k]:SetActive(true)
@@ -555,9 +558,9 @@ function MenuDisplay:AdjustHeadPos(_tarTab, _playerTab)
 end
 
 ---游戏内IM
-function MenuDisplay:PlayerInGameIm(_text)
+function M:PlayerInGameIm(_text)
     local textMessage = _text
-    NetUtil.Fire_S('InGamingImEvent', localPlayer, textMessage)
+    M.Kit.Util.Net.Fire_S('InGamingImEvent', localPlayer, textMessage)
 
     ---重置输入栏
     self.InputFieldIm.Text = ''
@@ -565,7 +568,7 @@ end
 
 ---消息更新
 local messageCache, length = '', 0
-function MenuDisplay:NormalImEventHandler(_sender, _content)
+function M:NormalImEventHandler(_sender, _content)
     length = string.len((_sender.Name) .. _content)
     self.TextImContent.Text =
         messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
@@ -578,12 +581,12 @@ function MenuDisplay:NormalImEventHandler(_sender, _content)
     end
 end
 
-function MenuDisplay:SomeoneInviteEventHandler(_invitePlayer, _roomId)
+function M:SomeoneInviteEventHandler(_invitePlayer, _roomId)
     self.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, self.MenuGui)
     self.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
     self.BtnInviteOk.OnClick:Connect(
         function()
-            NetUtil.Fire_C('ConfirmInviteEvent', localPlayer, _invitePlayer, _roomId)
+            M.Kit.Util.Net.Fire_C('ConfirmInviteEvent', localPlayer, _invitePlayer, _roomId)
         end
     )
     local inviteWin = function()
@@ -592,4 +595,4 @@ function MenuDisplay:SomeoneInviteEventHandler(_invitePlayer, _roomId)
     invoke(inviteWin, 5)
 end
 
-return MenuDisplay
+return M

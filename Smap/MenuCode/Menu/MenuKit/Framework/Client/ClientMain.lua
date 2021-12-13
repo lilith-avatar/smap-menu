@@ -2,10 +2,13 @@
 --- @module Game Manager, Client-side
 --- @copyright Lilith Games, Menutar Team
 --- @author Yuancheng Zhang，ropztao
-local Client = {}
 
--- 缓存全局变量
-local Menu = Menu
+-- Local Cache
+local world, wait, invoke = world, wait, invoke
+local Debug, Timer = Debug, Timer
+
+--* 模块
+local M = {}
 
 -- 已经初始化，正在运行
 local initialized, running = false, false
@@ -14,22 +17,8 @@ local initialized, running = false, false
 local list = {}
 local initDefaultList, initList, updateList = {}, {}, {}
 
---! Public
-
---- 运行客户端
-function Client:Run()
-    Debug.Log('[MenuKit][Client] Run()')
-    InitClient()
-    StartUpdate()
-end
-
---- 停止Update
-function Client:Stop()
-    Debug.Log('[MenuKit][Client] Stop()')
-    running = false
-end
-
---! Private
+-- 客户端事件
+local events = {}
 
 --- 初始化
 function InitClient()
@@ -38,7 +27,8 @@ function InitClient()
     end
     Debug.Log('[MenuKit][Client] InitClient()')
     RequireClientModules()
-    InitRandomSeed()
+    SetKitRef()
+    SetOtherModuleRef()
     InitClientCustomEvents()
     GenInitAndUpdateList()
     RunInitDefault()
@@ -49,20 +39,39 @@ end
 --- 加载客户端模块
 function RequireClientModules()
     Debug.Log('[MenuKit][Client] RequireClientModules()')
-    _G.C.Events = Menu.Manifest.Client.Events
-    Menu.Util.Mod.LoadManifest(_G.C, Menu.Manifest.Client, Menu.Manifest.Client.ROOT_PATH, list)
+    events = M.Kit.Manifest.Client.Events
+    M.Kit.Util.Mod.LoadManifest(_G.C, M.Kit.Manifest.Client, M.Kit.Manifest.Client.ROOT_PATH, list)
+end
+
+--- 模块对MenuKit的引用
+function SetKitRef()
+    for _, mod in pairs(list) do
+        mod.Kit = M.Kit
+    end
+end
+
+--- 设置跨模块引用
+function SetOtherModuleRef()
+    for _, mod in pairs(list) do
+        mod.Other = {}
+        for _, modOther in pairs(list) do
+            if modOther ~= mod then
+                mod.Other[modOther.name] = modOther
+            end
+        end
+    end
 end
 
 --- 初始化客户端的CustomEvent
 function InitClientCustomEvents()
-    if localPlayer.C_Event == nil then
-        world:CreateObject('FolderObject', 'C_Event', localPlayer)
+    if world.MenuNode.C_Event == nil then
+        world:CreateObject('FolderObject', 'C_Event', world.MenuNode)
     end
 
     -- 生成CustomEvent节点
-    for _, evt in pairs(C.Events) do
-        if localPlayer.C_Event[evt] == nil then
-            world:CreateObject('CustomEvent', evt, localPlayer.C_Event)
+    for _, evt in pairs(events) do
+        if world.MenuNode.C_Event[evt] == nil then
+            world:CreateObject('CustomEvent', evt, world.MenuNode.C_Event)
         end
     end
 end
@@ -82,11 +91,6 @@ function RunInitDefault()
     end
 end
 
---- 初始化客户端随机种子
-function InitRandomSeed()
-    math.randomseed(os.time())
-end
-
 --- 初始化包含Init()方法的模块
 function InitOtherModules()
     for _, m in ipairs(initList) do
@@ -100,10 +104,10 @@ function StartUpdate()
     assert(not running, '[MenuKit][Client] StartUpdate() 正在运行')
     running = true
 
-    local dt = 0 -- delta time 每帧时间
+    local dt  -- delta time 每帧时间
     local tt = 0 -- total time 游戏总时间
     local now = Timer.GetTimeMillisecond --时间函数缓存
-    local prev, curr = now() / 1000, nil -- two timestamps
+    local prev, curr = now() / 1000 -- two timestamps
 
     while (running and wait()) do
         curr = now() / 1000
@@ -122,4 +126,24 @@ function UpdateClient(_dt, _tt)
     end
 end
 
-return Client
+--! Public
+
+--- 运行客户端
+function Run()
+    Debug.Log('[MenuKit][Client] Run()')
+    InitClient()
+    StartUpdate()
+end
+
+--- 停止Update
+function Stop()
+    Debug.Log('[MenuKit][Client] Stop()')
+    running = false
+end
+
+--! Public
+
+M.Run = Run
+M.Stop = Stop
+
+return M

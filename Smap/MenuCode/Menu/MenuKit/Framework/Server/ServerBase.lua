@@ -2,17 +2,17 @@
 --- @module ServerBase, Server-side
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang, Dead Ratman, ropztao
-local ServerBase = class('ServerBase')
+local M = class('ServerBase')
 
-function ServerBase:GetSelf()
+function M:GetSelf()
     return self
 end
 
 --- 加载的时候运行的代码
-function ServerBase:InitDefault(_module)
-    -- Debug.Log(string.format('[ServerBase][%s] InitDefault()', self.name))
+function M:InitDefault(_module)
+    Debug.Log(string.format('[ServerBase][%s] InitDefault()', self.name))
     -- 初始化默认监听事件
-    Menu.Util.Event.LinkConnects(world.MenuNode.S_Event, _module, self)
+    M.Kit.Util.Event.LinkConnects(world.MenuNode.S_Event, _module, self)
 end
 
-return ServerBase
+return M

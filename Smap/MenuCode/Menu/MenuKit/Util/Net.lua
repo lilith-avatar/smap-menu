@@ -2,7 +2,6 @@
 --- @module Network utilities
 --- @copyright Lilith Games, Avatar Team
 --- @author Sharif Ma, Yuancheng Zhang, Yen Yuan
-local Net = {}
 
 --! 事件参数校验, true:开启校验
 local valid, ValidateArgs = true
@@ -21,7 +20,7 @@ local FireEnum = {
 --- 向服务器发送消息
 --- @param @string _eventName 事件的名字(严格对应)
 --- @param ... 事件参数
-function Net.Fire_S(_eventName, ...)
+function Fire_S(_eventName, ...)
     ValidateArgs(FireEnum.SERVER, _eventName)
     local args = {...}
     world.MenuNode.S_Event[_eventName]:Fire(table.unpack(args))
@@ -32,20 +31,20 @@ end
 --- @param @string _eventName 事件的名字
 --- @param _player 玩家对象
 --- @param ... 事件参数
-function Net.Fire_C(_eventName, _player, ...)
+function Fire_C(_eventName, _player, ...)
     if _player == nil then
         return
     end
     ValidateArgs(FireEnum.CLIENT, _eventName, _player)
     local args = {...}
-    _player.C_Event[_eventName]:Fire(table.unpack(args))
+    world.MenuNode.C_Event[_eventName]:Fire(table.unpack(args))
     PrintEventLog(FireEnum.CLIENT, _eventName, _player, args)
 end
 
 --- 客户端广播
 --- @param @string _eventName 事件的名字(严格对应)
 --- @param ... 事件参数
-function Net.Broadcast(_eventName, ...)
+function Broadcast(_eventName, ...)
     ValidateArgs(FireEnum.BROADCAST, _eventName, ...)
     local args = {...}
     world.Players:BroadcastEvent(_eventName, table.unpack(args))
@@ -69,9 +68,9 @@ ValidateArgs =
                 _player and _player.ClassName == 'PlayerInstance',
                 string.format('[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
             )
-            assert(_player.C_Event, '[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
+            assert(world.MenuNode.C_Event, '[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
             assert(
-                _player.C_Event[_eventName],
+                world.MenuNode.C_Event[_eventName],
                 string.format('[Net][Fire_C] 客户端玩家不存在事件: %s, 玩家: %s', _player.Name, _eventName)
             )
         elseif _fireEnum == FireEnum.BROADCAST then
@@ -108,4 +107,9 @@ PrintEventLog =
     function()
     end
 
-return Net
+--! Public
+return {
+    Fire_S = Fire_S,
+    Fire_C = Fire_C,
+    Broadcast = Broadcast
+}

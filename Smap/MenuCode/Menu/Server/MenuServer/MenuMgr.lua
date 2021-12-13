@@ -2,8 +2,8 @@
 ---@module MenuMgr
 ---@copyright Lilith Games, Avatar Team
 ---@author ropztao, Yuancheng Zhang
-local M, this = ModuleUtil.New('MenuMgr', ServerBase)
-local world, NetUtil, invoke, Game, PlayerHub = world, NetUtil, invoke, Game, PlayerHub
+local M = ModuleUtil.New('MenuMgr', ServerBase)
+local world, invoke, Game, PlayerHub = world, invoke, Game, PlayerHub
 
 --* 数据
 local playerInfoTab = {}
@@ -35,7 +35,7 @@ function OnPlayerAdded(_player)
     local changedPlayer = _player
 
     local broadcast = function()
-        NetUtil.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, true)
+        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, true)
     end
     invoke(broadcast, 1)
 end
@@ -50,7 +50,7 @@ function OnPlayerRemoved(_player)
 
     local changedPlayer = _player
     local broadcast = function()
-        NetUtil.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, false)
+        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, false)
     end
     invoke(broadcast, 1)
 end
@@ -65,7 +65,7 @@ end
 
 function M:MuteLocalEventHandler(_playerId, _isOn)
     for _, v in pairs(playerList) do
-        NetUtil.Fire_C('MuteSpecificPlayerEvent', v, _playerId, not _isOn)
+        M.Kit.Util.Net.Fire_C('MuteSpecificPlayerEvent', v, _playerId, not _isOn)
     end
 end
 
@@ -79,5 +79,6 @@ end
 --! Public Function
 
 M.Init = Init
+M.playerList = playerList
 
 return M

@@ -6,7 +6,7 @@
 local M, this = ModuleUtil.New('MenuApi', ClientBase)
 
 function DeveloperOfficialMsg(_content)
-    NetUtil.Fire_S('InGamingImEvent', 'Developer', _content)
+    M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)
 end
 
 --! Public

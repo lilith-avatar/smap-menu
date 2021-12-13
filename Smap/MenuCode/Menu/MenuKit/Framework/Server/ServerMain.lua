@@ -4,20 +4,21 @@
 --- @author Yuancheng Zhang, ropztao
 
 -- Local Cache
-local world = world
-local Debug = Debug
+local world, wait, invoke = world, wait, invoke
+local Debug, Timer = Debug, Timer
 
 --* 模块
 local M = {}
---- 已经初始化，正在运行
+
+-- 已经初始化，正在运行
 local initialized, running = false, false
 
---- 模块列表: 含有InitDefault(), Init(), Update()
+-- 模块列表: 含有InitDefault(), Init(), Update()
 local list = {}
 local initDefaultList, initList, updateList = {}, {}, {}
 
---- 确定Server存在
-local exist = false
+-- 服务器事件
+local events = {}
 
 --- 初始化
 function InitServer()
@@ -26,6 +27,8 @@ function InitServer()
     end
     Debug.Log('[MenuKit][Server] InitServer()')
     RequireServerModules()
+    SetKitRef()
+    SetOtherModuleRef()
     InitServerCustomEvents()
     GenInitAndUpdateList()
     RunInitDefault()
@@ -33,10 +36,30 @@ function InitServer()
     initialized = true
 end
 
+--- 加载服务器模块
 function RequireServerModules()
     Debug.Log('[MenuKit][Server] RequireServerModules()')
-    _G.S.Events = M.Kit.Manifest.Server.Events
+    events = M.Kit.Manifest.Server.Events
     M.Kit.Util.Mod.LoadManifest(_G.S, M.Kit.Manifest.Server, M.Kit.Manifest.Server.ROOT_PATH, list)
+end
+
+--- 模块对MenuKit的引用
+function SetKitRef()
+    for _, mod in pairs(list) do
+        mod.Kit = M.Kit
+    end
+end
+
+--- 设置跨模块引用
+function SetOtherModuleRef()
+    for _, mod in pairs(list) do
+        mod.Other = {}
+        for _, modOther in pairs(list) do
+            if modOther ~= mod then
+                mod.Other[modOther.name] = modOther
+            end
+        end
+    end
 end
 
 --- 初始化服务器的CustomEvent
@@ -46,7 +69,7 @@ function InitServerCustomEvents()
         world:CreateObject('FolderObject', 'S_Event', world.MenuNode)
     end
 
-    for _, evt in pairs(S.Events) do
+    for _, evt in pairs(events) do
         if world.MenuNode.S_Event[evt] == nil then
             world:CreateObject('CustomEvent', evt, world.MenuNode.S_Event)
         end
@@ -82,10 +105,10 @@ function StartUpdate()
 
     running = true
 
-    local dt = 0 -- delta time 每帧时间
+    local dt  -- delta time 每帧时间
     local tt = 0 -- total time 游戏总时间
     local now = Timer.GetTimeMillisecond --时间函数缓存
-    local prev, curr = now() / 1000, nil -- two timestamps
+    local prev, curr = now() / 1000 -- two timestamps
 
     while (running and wait()) do
         curr = now() / 1000
@@ -109,7 +132,6 @@ function Run()
     Debug.Log('[MenuKit][Server] Run()')
     InitServer()
     invoke(StartUpdate)
-    exist = true
 end
 
 --- 停止Update
@@ -119,6 +141,7 @@ function Stop()
 end
 
 --! Public
+
 M.Run = Run
 M.Stop = Stop
 

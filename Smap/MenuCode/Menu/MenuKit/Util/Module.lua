@@ -3,42 +3,19 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
-local ModuleUtil = {}
-
--- Constants
-local LOOP_MAX = 15 -- Manifest最多层级深度
-
-string.split = string.split or function(input, delimiter)
-        input = tostring(input)
-        delimiter = tostring(delimiter)
-        if (delimiter == '') then
-            return false
-        end
-        local pos, arr = 0, {}
-        -- for each divider found
-        for st, sp in function()
-            return string.find(input, delimiter, pos, true)
-        end do
-            table.insert(arr, string.sub(input, pos, st - 1))
-            pos = sp + 1
-        end
-        table.insert(arr, string.sub(input, pos))
-        return arr
-    end
-
 --- 加载Manifest
 --- @param _root 模块目录的节点
 --- @param _manifest Mainifest中的节点
 --- @param _res 资源路径
 --- @param _list 模块清单
-function ModuleUtil.LoadManifest(_root, _manifest, _res, _list)
-    Debug.Assert(_root ~= nil, '[AvaKit][ModuleUtil] _root is WRONG')
-    Debug.Assert(_manifest ~= nil and _manifest.Modules ~= nil, '[AvaKit][ModuleUtil] _manifest is WRONG')
-    Debug.Assert(_res ~= nil, '[AvaKit][ModuleUtil] _res does NOT exist')
+function LoadManifest(_root, _manifest, _res, _list)
+    Debug.Assert(_root ~= nil, '[MenuKit][ModuleUtil] _root is WRONG')
+    Debug.Assert(_manifest ~= nil and _manifest.Modules ~= nil, '[MenuKit][ModuleUtil] _manifest is WRONG')
+    Debug.Assert(_res ~= nil, '[MenuKit][ModuleUtil] _res does NOT exist')
 
     local pathArr, tmpRoot, tmp
     for _, path in ipairs(_manifest.Modules) do
-        Debug.Assert(type(path) == 'string', '[AvaKit][ModuleUtil] path is NOT a string')
+        Debug.Assert(type(path) == 'string', '[MenuKit][ModuleUtil] path is NOT a string')
         pathArr = string.split(path, '/')
         tmpRoot = _root
         for k, fn in ipairs(pathArr) do
@@ -55,15 +32,11 @@ function ModuleUtil.LoadManifest(_root, _manifest, _res, _list)
     end
 end
 
-string.isnilorempty = function(inputStr)
-    return inputStr == nil or inputStr == ''
-end
-
 --- 将有包含特定方法的模块筛选出来，并放在一个table中
 --- @param _modules module列表
 --- @param @string _fn 方法名 function_name
 --- @param @table _list 存放的table
-function ModuleUtil.GetModuleListWithFunc(_modules, _fn, _list)
+function GetModuleListWithFunc(_modules, _fn, _list)
     assert(_modules, '[ModuleUtil] Node does NOT exist!')
     assert(not string.isnilorempty(_fn), '[ModuleUtil] Function name is nil or empty!')
     assert(_list, '[ModuleUtil] List is NOT initialized!')
@@ -75,9 +48,14 @@ function ModuleUtil.GetModuleListWithFunc(_modules, _fn, _list)
 end
 
 --- 新建一个模块实例（ServerBase or ClientBase）
-function ModuleUtil.New(_name, _baseClass)
+function New(_name, _baseClass)
     local t = class(_name, _baseClass)
     return t, t:GetSelf()
 end
 
-return ModuleUtil
+--! Public
+return {
+    LoadManifest = LoadManifest,
+    GetModuleListWithFunc = GetModuleListWithFunc,
+    New = New
+}
