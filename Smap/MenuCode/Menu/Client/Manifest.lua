@@ -1,11 +1,12 @@
---- 框架默认配置
+--- 框架默认配置 --* 客户端
 --- @module Framework Global FrameworkConfig
 --- @copyright Lilith Games, Avatar Team
-local Manifest = {}
 
-Manifest.ROOT_PATH = 'Menu/Client/'
+local M = {}
 
-Manifest.Events = {
+M.ROOT_PATH = 'Menu/Client/'
+
+M.Events = {
     'NoticeEvent',
     'NormalImEvent',
     'MuteAllEvent',
@@ -18,15 +19,10 @@ Manifest.Events = {
     'ConfirmInviteEvent'
 }
 
-Manifest.Modules = {
-    {
-        Name = 'MenuLogic',
-        Modules = {
-            'MenuDisplay',
-            'MenuCtr',
-            'MenuApi'
-        }
-    }
+M.Modules = {
+    'MenuLogic/MenuDisplay',
+    'MenuLogic/MenuCtr',
+    'MenuLogic/MenuApi'
 }
 
-return Manifest
+return M

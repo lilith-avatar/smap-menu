@@ -8,9 +8,9 @@ local EventUtil = {}
 --- @param @string target
 --- @param @string start
 --- @return @boolean
-string.endswith = function(str, ending)
-    return ending == '' or str:sub(-(#ending)) == ending
-end
+string.endswith = string.endswith or function(str, ending)
+        return ending == '' or str:sub(-(#ending)) == ending
+    end
 
 --- 检查是否为Json化的字符串
 --- @param _str @string 输入的字符串

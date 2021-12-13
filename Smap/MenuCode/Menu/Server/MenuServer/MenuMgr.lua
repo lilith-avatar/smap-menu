@@ -1,78 +1,83 @@
+---菜单管理器
 ---@module MenuMgr
 ---@copyright Lilith Games, Avatar Team
----@author ropztao
-local MenuMgr, this = ModuleUtil.New('MenuMgr', ServerBase)
+---@author ropztao, Yuancheng Zhang
+local M, this = ModuleUtil.New('MenuMgr', ServerBase)
 local world, NetUtil, invoke, Game, PlayerHub = world, NetUtil, invoke, Game, PlayerHub
+
+--* 数据
+local playerInfoTab = {}
+local playerList = {}
+
+--玩家头像
+local headPortrait
+
 ---初始化
-function MenuMgr:Init()
-    self:DataInit()
-
-    world.OnPlayerAdded:Connect(
-        function(_player)
-            self:OnPlayerAdded(_player)
-        end
-    )
-
-    world.OnPlayerRemoved:Connect(
-        function(_player)
-            self:OnPlayerRemoved(_player)
-        end
-    )
+function Init()
+    InitEvents()
 end
 
-function MenuMgr:DataInit()
-    self.playerInfoTab = {}
-    self.playerList = {}
+---初始化游戏事件
+function InitEvents()
+    -- 玩家加入事件
+    world.OnPlayerAdded:Connect(OnPlayerAdded)
+    -- 玩家离开事件
+    world.OnPlayerRemoved:Connect(OnPlayerRemoved)
 end
 
-function MenuMgr:OnPlayerAdded(_player)
-    self:GetPlayerProfile(_player)
+---玩家加入事件
+function OnPlayerAdded(_player)
+    GetPlayerProfile(_player)
 
-    self.playerInfoTab[_player] = self.headPortrait
-    table.insert(self.playerList, _player)
+    playerInfoTab[_player] = headPortrait
+    table.insert(playerList, _player)
 
     local changedPlayer = _player
 
     local broadcast = function()
-        NetUtil.Broadcast('NoticeEvent', self.playerInfoTab, self.playerList, changedPlayer, true)
+        NetUtil.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, true)
     end
     invoke(broadcast, 1)
 end
 
-function MenuMgr:OnPlayerRemoved(_player)
-    self.playerInfoTab[_player.UserId] = {}
-    for k, v in pairs(self.playerList) do
+function OnPlayerRemoved(_player)
+    playerInfoTab[_player.UserId] = {}
+    for k, v in pairs(playerList) do
         if v == _player then
-            table.remove(self.playerList, k)
+            table.remove(playerList, k)
         end
     end
 
     local changedPlayer = _player
     local broadcast = function()
-        NetUtil.Broadcast('NoticeEvent', self.playerInfoTab, self.playerList, changedPlayer, false)
+        NetUtil.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, false)
     end
     invoke(broadcast, 1)
 end
 
-function MenuMgr:GetPlayerProfile(_player)
-    self.callback = function(_profile)
-        self.headPortrait = _profile.HeadPortrait
+function GetPlayerProfile(_player)
+    local callback = function(_profile)
+        headPortrait = _profile.HeadPortrait
     end
 
-    PlayerHub.GetPlayerProfile(_player.UserId, self.callback)
+    PlayerHub.GetPlayerProfile(_player.UserId, callback)
 end
 
-function MenuMgr:MuteLocalEventHandler(_playerId, _isOn)
-    for _, v in pairs(self.playerList) do
+function M:MuteLocalEventHandler(_playerId, _isOn)
+    for _, v in pairs(playerList) do
         NetUtil.Fire_C('MuteSpecificPlayerEvent', v, _playerId, not _isOn)
     end
 end
 
-local callbackTeleport = function()
-end
-
-function MenuMgr:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
+function M:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
+    local callbackTeleport = function()
+        --TODO: 处理回调函数
+    end
     Game.TeleportPlayerToRoom(_player, _roomId, {}, callbackTeleport)
 end
 
-return MenuMgr
+--! Public Function
+
+M.Init = Init
+
+return M

@@ -12,13 +12,8 @@ Manifest.Events = {
 }
 
 Manifest.Modules = {
-    {
-        Name = 'MenuServer',
-        Modules = {
-            'MenuMgr',
-            'InGamingImMgr'
-        }
-    }
+    'MenuServer/MenuMgr',
+    'MenuServer/InGamingImMgr'
 }
 
 return Manifest

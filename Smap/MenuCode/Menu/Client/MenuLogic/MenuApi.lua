@@ -1,14 +1,15 @@
----@module MenuApi
----@copyright Lilith Games, Avatar Team
----@author ropztao
-local MenuApi, this = ModuleUtil.New('MenuApi', ClientBase)
+--- 菜单模块的外部API
+--- @module MenuApi
+--- @copyright Lilith Games, Avatar Team
+--- @author ropztao, Yuancheng Zhang
 
----初始化
-function MenuApi:Init()
-end
+local M, this = ModuleUtil.New('MenuApi', ClientBase)
 
-function MenuApi:DeveloperOfficialMsg(_content)
+function DeveloperOfficialMsg(_content)
     NetUtil.Fire_S('InGamingImEvent', 'Developer', _content)
 end
 
-return MenuApi
+--! Public
+M.DeveloperOfficialMsg = DeveloperOfficialMsg
+
+return M

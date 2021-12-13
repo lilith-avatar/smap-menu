@@ -1,6 +1,7 @@
----@module MenuDisplay
----@copyright Lilith Games, Avatar Team
----@author ropztao, Yuancheng Zhang
+--- 菜单GUI显示
+--- @module MenuDisplay
+--- @copyright Lilith Games, Avatar Team
+--- @author ropztao, Yuancheng Zhang
 local MenuDisplay, this = ModuleUtil.New('MenuDisplay', ClientBase)
 
 -- 本地变量
@@ -52,13 +53,13 @@ end
 
 ---节点申明
 function MenuDisplay:GuiInit()
-    self.MenuGui = world.MenuNode.MenuGui
+    self.MenuGui = world.MenuNode.Client.MenuGui
     for _, v in pairs(self.MenuGui:GetDescendants()) do
         self[v.Name] = v
     end
 
-    self.ImgBase.Offset = Vector2(0,100)
-    self.ImgBase.Color= Color(255,255,255,0)
+    self.ImgBase.Offset = Vector2(0, 100)
+    self.ImgBase.Color = Color(255, 255, 255, 0)
 
     self.FunBtnTab = {self.BtnGaming, self.BtnFriList, self.BtnSetting, self.BtnDressUp}
     self.FunDisplayTab = {self.ImgGaming, self.ImgFriList, self.ImgSetting, self.ImgDressUp}
@@ -115,13 +116,15 @@ function MenuDisplay:OpenAndClose()
         self.TweenMask.Loop = 0
     end
 
-    self.IsReallySpeaking.OnValueChanged:Connect(function()
-        if self.IsReallySpeaking.Value then
-            VoiceAni()
-        else
-            self.TweenMask:Complete()
+    self.IsReallySpeaking.OnValueChanged:Connect(
+        function()
+            if self.IsReallySpeaking.Value then
+                VoiceAni()
+            else
+                self.TweenMask:Complete()
+            end
         end
-    end)
+    )
 end
 
 function MenuDisplay:SwitchLocalVoice()
@@ -143,7 +146,7 @@ end
 
 local tt = 0
 function MenuDisplay:Updatee(dt)
-    tt =  tt + dt
+    tt = tt + dt
     if tt > 1 then
         if isOn and localPlayer:IsSpeaking() then
             self.IsReallySpeaking.Value = true
@@ -197,14 +200,14 @@ end
 function MenuDisplay:PnlMenuAni(_isOpen)
     if not _isOpen then
         self.TweenMenuBg.Properties = {Offset = Vector2(0, 800)}
-        self.TweenImBubbleBg.Properties = {Offset = Vector2(84,550)}
-        self.TweenVoiceBg.Properties = {Offset = Vector2(168,100)}
+        self.TweenImBubbleBg.Properties = {Offset = Vector2(84, 550)}
+        self.TweenVoiceBg.Properties = {Offset = Vector2(168, 100)}
     else
-        self.TweenMenuBg.Properties = {Offset = Vector2(0,0)}
-        self.TweenImBubbleBg.Properties = {Offset = Vector2(84,0)}
-        self.TweenVoiceBg.Properties = {Offset = Vector2(168,0)}
+        self.TweenMenuBg.Properties = {Offset = Vector2(0, 0)}
+        self.TweenImBubbleBg.Properties = {Offset = Vector2(84, 0)}
+        self.TweenVoiceBg.Properties = {Offset = Vector2(168, 0)}
     end
-    for _,v in pairs(self.PnlMenuTab) do
+    for _, v in pairs(self.PnlMenuTab) do
         v.Duration = 0.4
         v.EaseCurve = Enum.EaseCurve.QuinticInOut
         v:Flush()
@@ -216,9 +219,9 @@ function MenuDisplay:ImgBaseAni(_isOpen)
     local tarProTab, comFun
     if _isOpen then
         self.ImgBase:SetActive(_isOpen)
-        tarProTab = {Offset = Vector2(80, 0), Color= Color(255,255,255,180)}
+        tarProTab = {Offset = Vector2(80, 0), Color = Color(255, 255, 255, 180)}
     else
-        tarProTab = {Offset = Vector2(0, 100), Color= Color(255,255,255,0)}
+        tarProTab = {Offset = Vector2(0, 100), Color = Color(255, 255, 255, 0)}
         self.BtnBase:SetActive(_isOpen)
         self.DisplayBase:SetActive(_isOpen)
     end
@@ -232,7 +235,7 @@ end
 
 function MenuDisplay:TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
     _tarTween.Properties = _tarProTab
-    _tarTween.Duration =_tarDur
+    _tarTween.Duration = _tarDur
     _tarTween.EaseCurve = _tarEase
     _tarTween:Flush()
     _tarTween:Play()
@@ -254,7 +257,9 @@ function MenuDisplay:ResourceReplaceAni()
                 aniTween.OnComplete:Connect(
                     function()
                         v:GetChild(tostring(v.Name) .. 'Icon').Texture =
-                            ResourceManager.GetTexture('MenuRes/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')] .. '1')
+                            ResourceManager.GetTexture(
+                            'MenuRes/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')] .. '1'
+                        )
                         v:GetChild(tostring(v.Name) .. 'Icon').Color = Color(0, 0, 0, 255)
                         SwitchTextureCtr(v, self.FunBtnTab)
                         ---显示对应功能面板
@@ -270,7 +275,7 @@ function MenuDisplay:ProfileBgFix(_playerId)
     local theGuy = world:GetPlayerByUserId(_playerId)
     if friTab[theGuy.Name] then
         self.BtnProfileAdd:SetActive(false)
-        self.BtnProfileMute.Offset = Vector2(-158,-384)
+        self.BtnProfileMute.Offset = Vector2(-158, -384)
     else
         self.BtnProfileAdd:SetActive(true)
         self.BtnProfileMute.Offset = Vector2(-50, -384)
@@ -278,7 +283,7 @@ function MenuDisplay:ProfileBgFix(_playerId)
 
     if theGuy == localPlayer then
         self.BtnProfileAdd:SetActive(false)
-        self.BtnProfileMute.Offset = Vector2(-158,-384)
+        self.BtnProfileMute.Offset = Vector2(-158, -384)
     end
 end
 
@@ -317,7 +322,7 @@ function MenuDisplay:GamingBind()
                 isMuteAll = false
                 self.TextMuteAll.Color = MUTEALL_OFF_COLOR
                 self.ImgMuteAll.Color = MUTEALL_OFF_COLOR
-                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')   
+                self.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
             else
                 isMuteAll = true
                 self.TextMuteAll.Color = MUTEALL_ON_COLOR
@@ -434,7 +439,7 @@ function MenuDisplay:GetFriendsListEventHandler(_list)
     end
 
     for k, v in pairs(self.PnlFriList:GetChildren()) do
-        v.Offset = Vector2(0, -130*k + 130)
+        v.Offset = Vector2(0, -130 * k + 130)
     end
 end
 
@@ -448,9 +453,9 @@ function MenuDisplay:SettingBind()
     self.TextShut.OnEnter:Connect(
         function()
             self.BtnShut:SetActive(true)
-            print('ss')
+            Debug.Log('ss')
             self.BtnOpen:SetActive(false)
-            print('sssss')
+            Debug.Log('sssss')
             self.GraphicMask:SetActive(false)
         end
     )
@@ -563,8 +568,8 @@ local messageCache, length = '', 0
 function MenuDisplay:NormalImEventHandler(_sender, _content)
     length = string.len((_sender.Name) .. _content)
     self.TextImContent.Text =
-            messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
-        --todo 换行
+        messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
+    --todo 换行
     messageCache = self.TextImContent.Text
 
     ---红点
@@ -575,7 +580,7 @@ end
 
 function MenuDisplay:SomeoneInviteEventHandler(_invitePlayer, _roomId)
     self.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, self.MenuGui)
-    self.ImgInviteBg.AnchorsY = Vector2(0,9,0.9)
+    self.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
     self.BtnInviteOk.OnClick:Connect(
         function()
             NetUtil.Fire_C('ConfirmInviteEvent', localPlayer, _invitePlayer, _roomId)

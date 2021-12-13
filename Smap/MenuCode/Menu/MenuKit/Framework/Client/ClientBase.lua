@@ -1,18 +1,18 @@
 --- 客户端模块基础类, Client Module Base Class
 --- @module ClientBase, Client-side
 --- @copyright Lilith Games, Avatar Team
---- @author Yuancheng Zhang
-local ClientBase = class('ClientBase')
+--- @author ropztao, Yuancheng Zhang
+local M = class('ClientBase')
 
-function ClientBase:GetSelf()
+function M:GetSelf()
     return self
 end
 
 --- 加载的时候运行的代码
-function ClientBase:InitDefault(_module)
-    print(string.format('[ClientBase][%s] InitDefault()', self.name))
+function M:InitDefault(_module)
+    Debug.Log(string.format('[ClientBase][%s] InitDefault()', self.name))
     -- 初始化默认监听事件
     Menu.Util.Event.LinkConnects(localPlayer.C_Event, _module, self)
 end
 
-return ClientBase
+return M

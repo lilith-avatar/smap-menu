@@ -1,7 +1,7 @@
 --- 服务器模块基础类, Server Module Base Class
 --- @module ServerBase, Server-side
 --- @copyright Lilith Games, Avatar Team
---- @author Yuancheng Zhang, Dead Ratman
+--- @author Yuancheng Zhang, Dead Ratman, ropztao
 local ServerBase = class('ServerBase')
 
 function ServerBase:GetSelf()
@@ -10,7 +10,7 @@ end
 
 --- 加载的时候运行的代码
 function ServerBase:InitDefault(_module)
-    -- print(string.format('[ServerBase][%s] InitDefault()', self.name))
+    -- Debug.Log(string.format('[ServerBase][%s] InitDefault()', self.name))
     -- 初始化默认监听事件
     Menu.Util.Event.LinkConnects(world.MenuNode.S_Event, _module, self)
 end

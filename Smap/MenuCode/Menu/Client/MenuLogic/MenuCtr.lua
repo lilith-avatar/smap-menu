@@ -1,8 +1,15 @@
----@module MenuCtr
----@copyright Lilith Games, Avatar Team
----@author ropztao
+--- 菜单GUI控制器
+--- @module MenuCtr
+--- @copyright Lilith Games, Avatar Team
+--- @author ropztao, Yuancheng Zhang
 local MenuCtr, this = ModuleUtil.New('MenuCtr', ClientBase)
-local Event, VoiceManager, Friends, NetUtil, Game, localPlayer = Event, VoiceManager, Friends, NetUtil, Game, localPlayer
+local Event, VoiceManager, Friends, NetUtil, Game, localPlayer =
+    Event,
+    VoiceManager,
+    Friends,
+    NetUtil,
+    Game,
+    localPlayer
 
 ---初始化
 function MenuCtr:Init()
@@ -46,7 +53,7 @@ function MenuCtr:Update(dt)
 end
 
 local callback = function(msg)
-    print(msg)
+    Debug.Log(msg)
 end
 
 ---邀请好友来游戏房间

@@ -1,7 +1,7 @@
 --- 游戏客户端主逻辑
 --- @module Game Manager, Client-side
 --- @copyright Lilith Games, Menutar Team
---- @author Yuancheng Zhang
+--- @author Yuancheng Zhang，ropztao
 local Client = {}
 
 -- 缓存全局变量
@@ -18,14 +18,14 @@ local initDefaultList, initList, updateList = {}, {}, {}
 
 --- 运行客户端
 function Client:Run()
-    print('[MenuKit][Client] Run()')
+    Debug.Log('[MenuKit][Client] Run()')
     InitClient()
     StartUpdate()
 end
 
 --- 停止Update
 function Client:Stop()
-    print('[MenuKit][Client] Stop()')
+    Debug.Log('[MenuKit][Client] Stop()')
     running = false
 end
 
@@ -36,7 +36,7 @@ function InitClient()
     if initialized then
         return
     end
-    print('[MenuKit][Client] InitClient()')
+    Debug.Log('[MenuKit][Client] InitClient()')
     RequireClientModules()
     InitRandomSeed()
     InitClientCustomEvents()
@@ -48,7 +48,7 @@ end
 
 --- 加载客户端模块
 function RequireClientModules()
-    print('[MenuKit][Client] RequireClientModules()')
+    Debug.Log('[MenuKit][Client] RequireClientModules()')
     _G.C.Events = Menu.Manifest.Client.Events
     Menu.Util.Mod.LoadManifest(_G.C, Menu.Manifest.Client, Menu.Manifest.Client.ROOT_PATH, list)
 end
@@ -69,7 +69,7 @@ end
 
 --- 生成需要Init和Update的模块列表
 function GenInitAndUpdateList()
-    -- print(table.dump(list))
+    -- Debug.Log(table.dump(list))
     Menu.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
     Menu.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
     Menu.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
@@ -96,7 +96,7 @@ end
 
 --- 开始Update
 function StartUpdate()
-    print('[MenuKit][Client] StartUpdate()')
+    Debug.Log('[MenuKit][Client] StartUpdate()')
     assert(not running, '[MenuKit][Client] StartUpdate() 正在运行')
     running = true
 

@@ -1,35 +1,35 @@
----@module InGamingImMgr
----@copyright Lilith Games, Avatar Team
----@author ropztao
-local InGamingImMgr, this = ModuleUtil.New('InGamingImMgr', ServerBase)
----初始化
-function InGamingImMgr:Init()
-    self:DataInit()
-end
+--- 游戏内设置
+--- @module InGamingImMgr
+--- @copyright Lilith Games, Avatar Team
+--- @author ropztao, Yuancheng Zhang
+local M, this = ModuleUtil.New('InGamingImMgr', ServerBase)
 
-function InGamingImMgr:DataInit()
-end
+-- Local Caches
+local ChatManager = ChatManager
 
-local callback = function(_imContent, _msg)
-    InGamingImMgr:SendToChat(_msg)
-end
+--* 本地变量
+local sender  -- 发送者
 
-function InGamingImMgr:InGamingImEventHandler(_sendPlayer, _imContent)
-    -- 敏感词过滤
-    self.sender = _sendPlayer
-    ChatManager.SensitiveWordCheck(_imContent, callback)
-end
-
-function InGamingImMgr:SendToChat(_content)
-    if self.sender.ClassName == 'PlayerInstance' then
+--- 发送聊天数据
+function SendToChat(_content)
+    if sender.ClassName == 'PlayerInstance' then
         for _, v in pairs(MenuMgr.playerList) do
-            NetUtil.Fire_C('NormalImEvent', v, self.sender, _content)
+            NetUtil.Fire_C('NormalImEvent', v, sender, _content)
         end
-    elseif self.sender == 'Developer' then
+    elseif sender == 'Developer' then
         for _, v in pairs(MenuMgr.playerList) do
             NetUtil.Fire_C('NormalImEvent', v, 'Developer', _content)
         end
     end
 end
 
-return InGamingImMgr
+function M:InGamingImEventHandler(_sendPlayer, _imContent)
+    -- 敏感词过滤
+    local callback = function(_imContent, _msg)
+        SendToChat(_msg)
+    end
+    sender = _sendPlayer
+    ChatManager.SensitiveWordCheck(_imContent, callback)
+end
+
+return M

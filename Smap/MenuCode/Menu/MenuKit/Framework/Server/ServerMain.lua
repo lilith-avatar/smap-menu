@@ -1,12 +1,14 @@
 --- 游戏服务器主逻辑
 --- @module Game Server, Server-side
 --- @copyright Lilith Games, Avatar Team
---- @author Yuancheng Zhang
-local Server = {}
+--- @author Yuancheng Zhang, ropztao
 
---- 缓存全局变量
-local Menu = Menu
+-- Local Cache
+local world = world
+local Debug = Debug
 
+--* 模块
+local M = {}
 --- 已经初始化，正在运行
 local initialized, running = false, false
 
@@ -14,35 +16,16 @@ local initialized, running = false, false
 local list = {}
 local initDefaultList, initList, updateList = {}, {}, {}
 
---! Public
 --- 确定Server存在
-Server.Exist = false
-
---- 运行服务器
-function Server:Run()
-    print('[MenuKit][Server] Run()')
-    InitServer()
-    invoke(StartUpdate)
-    Server.Exist = true
-end
-
---- 停止Update
-function Server:Stop()
-    print('[MenuKit][Server] Stop()')
-    running = false
-    Heartbeat.Stop()
-end
-
---! Private
+local exist = false
 
 --- 初始化
 function InitServer()
     if initialized then
         return
     end
-    print('[MenuKit][Server] InitServer()')
+    Debug.Log('[MenuKit][Server] InitServer()')
     RequireServerModules()
-    InitRandomSeed()
     InitServerCustomEvents()
     GenInitAndUpdateList()
     RunInitDefault()
@@ -51,14 +34,14 @@ function InitServer()
 end
 
 function RequireServerModules()
-    print('[MenuKit][Server] RequireServerModules()')
-    _G.S.Events = Menu.Manifest.Server.Events
-    Menu.Util.Mod.LoadManifest(_G.S, Menu.Manifest.Server, Menu.Manifest.Server.ROOT_PATH, list)
+    Debug.Log('[MenuKit][Server] RequireServerModules()')
+    _G.S.Events = M.Kit.Manifest.Server.Events
+    M.Kit.Util.Mod.LoadManifest(_G.S, M.Kit.Manifest.Server, M.Kit.Manifest.Server.ROOT_PATH, list)
 end
 
 --- 初始化服务器的CustomEvent
 function InitServerCustomEvents()
-    print('[MenuKit][Server] InitServerCustomEvents()')
+    Debug.Log('[MenuKit][Server] InitServerCustomEvents()')
     if world.MenuNode.S_Event == nil then
         world:CreateObject('FolderObject', 'S_Event', world.MenuNode)
     end
@@ -73,9 +56,9 @@ end
 --- 生成需要Init和Update的模块列表
 function GenInitAndUpdateList()
     -- TODO: 改成在Ava.Config中配置
-    Menu.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
-    Menu.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
-    Menu.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
+    M.Kit.Util.Mod.GetModuleListWithFunc(list, 'InitDefault', initDefaultList)
+    M.Kit.Util.Mod.GetModuleListWithFunc(list, 'Init', initList)
+    M.Kit.Util.Mod.GetModuleListWithFunc(list, 'Update', updateList)
 end
 
 --- 执行默认的Init方法
@@ -83,11 +66,6 @@ function RunInitDefault()
     for _, m in ipairs(initDefaultList) do
         m:InitDefault(m)
     end
-end
-
---- 初始化服务器随机种子
-function InitRandomSeed()
-    math.randomseed(os.time())
 end
 
 --- 初始化包含Init()方法的模块
@@ -99,7 +77,7 @@ end
 
 --- 开始Update
 function StartUpdate()
-    print('[Server] StartUpdate()')
+    Debug.Log('[Server] StartUpdate()')
     assert(not running, '[MenuKit][Server] StartUpdate() 正在运行')
 
     running = true
@@ -126,4 +104,22 @@ function UpdateServer(_dt, _tt)
     end
 end
 
-return Server
+--- 运行服务器
+function Run()
+    Debug.Log('[MenuKit][Server] Run()')
+    InitServer()
+    invoke(StartUpdate)
+    exist = true
+end
+
+--- 停止Update
+function Stop()
+    Debug.Log('[MenuKit][Server] Stop()')
+    running = false
+end
+
+--! Public
+M.Run = Run
+M.Stop = Stop
+
+return M
