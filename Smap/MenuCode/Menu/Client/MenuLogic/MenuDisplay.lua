@@ -108,6 +108,20 @@ function MenuDisplay:OpenAndClose()
             self:DisableCtr(isOpen)
         end
     )
+
+    local function VoiceAni()
+        self.ImgVoiceMask.Offset = Vector2(0, -24)
+        self:TweenAni(self.TweenMask, {Offset = Vector2(0, 0)}, 1, Enum.EaseCurve.BounceInOut)
+        self.TweenMask.Loop = 0
+    end
+
+    self.IsReallySpeaking.OnValueChanged:Connect(function()
+        if self.IsReallySpeaking.Value then
+            VoiceAni()
+        else
+            self.TweenMask:Complete()
+        end
+    end)
 end
 
 function MenuDisplay:SwitchLocalVoice()
@@ -115,14 +129,29 @@ function MenuDisplay:SwitchLocalVoice()
         function()
             if isOn then
                 self.ImgVoice.Texture = ResourceManager.GetTexture('MenuRes/svg_microoff')
+                self.ImgVoiceMask:SetActive(false)
                 isOn = false
             else
                 self.ImgVoice.Texture = ResourceManager.GetTexture('MenuRes/svg_microon')
+                self.ImgVoiceMask:SetActive(true)
                 isOn = true
             end
             NetUtil.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
         end
     )
+end
+
+local tt = 0
+function MenuDisplay:Updatee(dt)
+    tt =  tt + dt
+    if tt > 1 then
+        if isOn and localPlayer:IsSpeaking() then
+            self.IsReallySpeaking.Value = true
+        else
+            self.IsReallySpeaking.Value = false
+        end
+        tt = 0
+    end
 end
 
 function MenuDisplay:InputBind()
@@ -207,7 +236,9 @@ function MenuDisplay:TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
     _tarTween.EaseCurve = _tarEase
     _tarTween:Flush()
     _tarTween:Play()
-    _tarTween.OnComplete:Connect(_comFun)
+    if _comFun ~= nil then
+        _tarTween.OnComplete:Connect(_comFun)
+    end
 end
 
 function MenuDisplay:ResourceReplaceAni()
