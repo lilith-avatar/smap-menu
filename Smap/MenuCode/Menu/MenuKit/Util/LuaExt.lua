@@ -95,7 +95,7 @@ table.dump = table.dump or function(data, showMetatable)
                     table.insert(result, ',\n')
                 end
                 --Format
-                for i = 1, lastCount or 0 do
+                for _ = 1, lastCount or 0 do
                     table.insert(result, tab)
                 end
                 table.insert(result, '}')

@@ -3,6 +3,10 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author Sharif Ma, Yuancheng Zhang, Yen Yuan
 
+-- Local Caches
+local world = world
+local Debug = Debug
+
 --! 事件参数校验, true:开启校验
 local valid, ValidateArgs = true
 
@@ -20,7 +24,7 @@ local FireEnum = {
 --- 向服务器发送消息
 --- @param @string _eventName 事件的名字(严格对应)
 --- @param ... 事件参数
-function Fire_S(_eventName, ...)
+function FireToServer(_eventName, ...)
     ValidateArgs(FireEnum.SERVER, _eventName)
     local args = {...}
     world.MenuNode.S_Event[_eventName]:Fire(table.unpack(args))
@@ -31,7 +35,7 @@ end
 --- @param @string _eventName 事件的名字
 --- @param _player 玩家对象
 --- @param ... 事件参数
-function Fire_C(_eventName, _player, ...)
+function FireToClient(_eventName, _player, ...)
     if _player == nil then
         return
     end
@@ -109,7 +113,7 @@ PrintEventLog =
 
 --! Public
 return {
-    Fire_S = Fire_S,
-    Fire_C = Fire_C,
+    Fire_S = FireToServer,
+    Fire_C = FireToClient,
     Broadcast = Broadcast
 }
