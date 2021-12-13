@@ -8,7 +8,7 @@ local Enum, Vector2, Color = Enum, Vector2, Color
 local world, localPlayer, NetUtil = world, localPlayer, NetUtil
 local ResourceManager, Game, Friends, invoke = ResourceManager, Game, Friends, invoke
 
-local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, true, false, nil
+local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
 
 local MUTEALL_OFF_COLOR, MUTEALL_ON_COLOR = Color(38, 121, 217, 255), Color(222, 69, 119, 230)
@@ -44,14 +44,6 @@ local function SwitchTextureCtr(_tar, _tab)
     end
 end
 
-local function SwitchDisplayCtr(_tar, _tab, _bool)
-    for k, v in pairs(_tab) do
-        if v ~= _tar then
-            v:SetActive(_bool)
-        end
-    end
-end
-
 ---初始化
 function MenuDisplay:Init()
     Game.ShowSystemBar(false)
@@ -64,6 +56,9 @@ function MenuDisplay:GuiInit()
     for _, v in pairs(self.MenuGui:GetDescendants()) do
         self[v.Name] = v
     end
+
+    self.ImgBase.Offset = Vector2(0,100)
+    self.ImgBase.Color= Color(255,255,255,0)
 
     self.FunBtnTab = {self.BtnGaming, self.BtnFriList, self.BtnSetting, self.BtnDressUp}
     self.FunDisplayTab = {self.ImgGaming, self.ImgFriList, self.ImgSetting, self.ImgDressUp}
@@ -161,10 +156,8 @@ function MenuDisplay:DisplayImgIm()
 end
 
 function MenuDisplay:DisableCtr(_isOpen)
-    -- self.ImgBase:SetActive(_isOpen)
     self:ImgBaseAni(_isOpen)
     self:PnlMenuAni(not _isOpen)
-    -- self.PnlMenu:SetActive(not _isOpen)
     if _isOpen then
         self.ImgIm:SetActive(not _isOpen)
     else
@@ -424,7 +417,9 @@ function MenuDisplay:SettingBind()
     self.TextShut.OnEnter:Connect(
         function()
             self.BtnShut:SetActive(true)
+            print('ss')
             self.BtnOpen:SetActive(false)
+            print('sssss')
             self.GraphicMask:SetActive(false)
         end
     )
