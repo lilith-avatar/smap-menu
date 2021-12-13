@@ -24,7 +24,7 @@ local FireEnum = {
 function Net.Fire_S(_eventName, ...)
     ValidateArgs(FireEnum.SERVER, _eventName)
     local args = {...}
-    world.S_Event[_eventName]:Fire(table.unpack(args))
+    world.MenuNode.S_Event[_eventName]:Fire(table.unpack(args))
     PrintEventLog(FireEnum.SERVER, _eventName, nil, args)
 end
 
@@ -61,7 +61,7 @@ ValidateArgs =
         if _fireEnum == FireEnum.SERVER then
             --! Fire_S 检查参数
             assert(not string.isnilorempty(_eventName), '[Net][Fire_S] 事件名为空')
-            assert(world.S_Event[_eventName], string.format('[Net][Fire_S] 服务器不存在事件: %s', _eventName))
+            assert(world.MenuNode.S_Event[_eventName], string.format('[Net][Fire_S] 服务器不存在事件: %s', _eventName))
         elseif _fireEnum == FireEnum.CLIENT then
             --! Fire_C 检查参数
             assert(not string.isnilorempty(_eventName), '[Net] 事件名为空')

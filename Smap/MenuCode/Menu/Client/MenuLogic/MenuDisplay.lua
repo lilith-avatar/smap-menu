@@ -6,7 +6,7 @@ local MenuDisplay, this = ModuleUtil.New('MenuDisplay', ClientBase)
 -- 本地变量
 local Enum, Vector2, Color = Enum, Vector2, Color
 local world, localPlayer, NetUtil = world, localPlayer, NetUtil
-local ResourceManager, Game, Friends = ResourceManager, Game, Friends
+local ResourceManager, Game, Friends, invoke = ResourceManager, Game, Friends, invoke
 
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, true, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
@@ -67,6 +67,8 @@ function MenuDisplay:GuiInit()
 
     self.FunBtnTab = {self.BtnGaming, self.BtnFriList, self.BtnSetting, self.BtnDressUp}
     self.FunDisplayTab = {self.ImgGaming, self.ImgFriList, self.ImgSetting, self.ImgDressUp}
+    self.PnlMenuTab = {self.TweenMenuBg, self.TweenImBubbleBg, self.TweenVoiceBg}
+    self.ConTweenTab = {self.TweenBtnBase, self.TweendDisplayBase}
     self:ListenerInit()
 end
 
@@ -75,6 +77,8 @@ function MenuDisplay:ListenerInit()
     self:OpenAndClose()
     self:SwitchLocalVoice()
     self:InputBind()
+    ---顶部三个按钮动画
+
     ---左侧功能按钮的底板资源替换
     self:ResourceReplaceAni()
 
@@ -158,13 +162,60 @@ function MenuDisplay:DisplayImgIm()
 end
 
 function MenuDisplay:DisableCtr(_isOpen)
-    self.ImgBase:SetActive(_isOpen)
-    self.PnlMenu:SetActive(not _isOpen)
+    -- self.ImgBase:SetActive(_isOpen)
+    self:ImgBaseAni(_isOpen)
+    self:PnlMenuAni(not _isOpen)
+    -- self.PnlMenu:SetActive(not _isOpen)
     if _isOpen then
         self.ImgIm:SetActive(not _isOpen)
     else
         self.ImgProfileBg:SetActive(_isOpen)
     end
+end
+
+function MenuDisplay:PnlMenuAni(_isOpen)
+    if not _isOpen then
+        self.TweenMenuBg.Properties = {Offset = Vector2(0, 800)}
+        self.TweenImBubbleBg.Properties = {Offset = Vector2(84,550)}
+        self.TweenVoiceBg.Properties = {Offset = Vector2(168,100)}
+    else
+        self.TweenMenuBg.Properties = {Offset = Vector2(0,0)}
+        self.TweenImBubbleBg.Properties = {Offset = Vector2(84,0)}
+        self.TweenVoiceBg.Properties = {Offset = Vector2(168,0)}
+    end
+    for _,v in pairs(self.PnlMenuTab) do
+        v.Duration = 0.4
+        v.EaseCurve = Enum.EaseCurve.QuinticInOut
+        v:Flush()
+        v:Play()
+    end
+end
+
+function MenuDisplay:ImgBaseAni(_isOpen)
+    local tarProTab, comFun
+    if _isOpen then
+        self.ImgBase:SetActive(_isOpen)
+        tarProTab = {Offset = Vector2(80, 0), Color= Color(255,255,255,180)}
+    else
+        tarProTab = {Offset = Vector2(0, 100), Color= Color(255,255,255,0)}
+        self.BtnBase:SetActive(_isOpen)
+        self.DisplayBase:SetActive(_isOpen)
+    end
+    comFun = function()
+        self.DisplayBase:SetActive(_isOpen)
+        self.BtnBase:SetActive(_isOpen)
+        self.ImgBase:SetActive(_isOpen)
+    end
+    self:TweenAni(self.TweenImgBase, tarProTab, 0.4, Enum.EaseCurve.QuinticInOut, comFun)
+end
+
+function MenuDisplay:TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
+    _tarTween.Properties = _tarProTab
+    _tarTween.Duration =_tarDur
+    _tarTween.EaseCurve = _tarEase
+    _tarTween:Flush()
+    _tarTween:Play()
+    _tarTween.OnComplete:Connect(_comFun)
 end
 
 function MenuDisplay:ResourceReplaceAni()
@@ -305,7 +356,7 @@ end
 
 function MenuDisplay:GetFriendsListEventHandler(_list)
     local i = 0
-    for k, v in pairs(_list) do
+    for _, v in pairs(_list) do
         i = i + 1
     end
     self.TextFriList.Text = 'Friends (' .. i .. ')'
@@ -388,7 +439,7 @@ function MenuDisplay:SettingBind()
         end
     )
 
-    for k, v in pairs(self.GraphicSetTextTab) do
+    for _, v in pairs(self.GraphicSetTextTab) do
         v.OnEnter:Connect(
             function()
                 SwitchNodeCtr(self[string.gsub(v.Name, 'Text', 'Btn')], self.GraphicSetBtnTab, false)
@@ -418,7 +469,7 @@ function MenuDisplay:QuitBind()
         function()
             self.BtnTouch:SetActive(false)
             self.ImgPopUps:SetActive(false)
-            for k, v in pairs(self.PnlFriList:GetChildren()) do
+            for _, v in pairs(self.PnlFriList:GetChildren()) do
                 if v then
                     v.ImgFriMoreBg:SetActive(false)
                 end
@@ -503,12 +554,16 @@ end
 
 function MenuDisplay:SomeoneInviteEventHandler(_invitePlayer, _roomId)
     self.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, self.MenuGui)
-
+    self.ImgInviteBg.AnchorsY = Vector2(0,9,0.9)
     self.BtnInviteOk.OnClick:Connect(
         function()
             NetUtil.Fire_C('ConfirmInviteEvent', localPlayer, _invitePlayer, _roomId)
         end
     )
+    local inviteWin = function()
+        self.ImgInviteBg:Destroy()
+    end
+    invoke(inviteWin, 5)
 end
 
 return MenuDisplay

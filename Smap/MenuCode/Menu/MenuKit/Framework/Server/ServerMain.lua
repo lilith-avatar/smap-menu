@@ -59,13 +59,13 @@ end
 --- 初始化服务器的CustomEvent
 function InitServerCustomEvents()
     print('[MenuKit][Server] InitServerCustomEvents()')
-    if world.S_Event == nil then
-        world:CreateObject('FolderObject', 'S_Event', world)
+    if world.MenuNode.S_Event == nil then
+        world:CreateObject('FolderObject', 'S_Event', world.MenuNode)
     end
 
     for _, evt in pairs(S.Events) do
-        if world.S_Event[evt] == nil then
-            world:CreateObject('CustomEvent', evt, world.S_Event)
+        if world.MenuNode.S_Event[evt] == nil then
+            world:CreateObject('CustomEvent', evt, world.MenuNode.S_Event)
         end
     end
 end
