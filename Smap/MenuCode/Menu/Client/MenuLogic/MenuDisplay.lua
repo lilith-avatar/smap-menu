@@ -68,7 +68,6 @@ function MenuDisplay:GuiInit()
     self.FunBtnTab = {self.BtnGaming, self.BtnFriList, self.BtnSetting, self.BtnDressUp}
     self.FunDisplayTab = {self.ImgGaming, self.ImgFriList, self.ImgSetting, self.ImgDressUp}
     self.PnlMenuTab = {self.TweenMenuBg, self.TweenImBubbleBg, self.TweenVoiceBg}
-    self.ConTweenTab = {self.TweenBtnBase, self.TweendDisplayBase}
     self:ListenerInit()
 end
 
