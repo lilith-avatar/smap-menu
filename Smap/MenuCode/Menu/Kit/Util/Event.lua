@@ -14,7 +14,7 @@ function LinkConnects(_eventFolder, _module)
         if string.endswith(evt.Name, 'Event') then
             local handler = _module[evt.Name .. 'Handler']
             if handler ~= nil then
-                print('[EventUtil]', _eventFolder, _module.name, evt)
+                -- print('[EventUtil]', _eventFolder, _module.name, evt)
                 evt:Connect(handler)
             end
         end

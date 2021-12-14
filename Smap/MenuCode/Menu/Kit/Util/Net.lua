@@ -11,7 +11,7 @@ local Debug = Debug
 local valid, ValidateArgs = true
 
 --! 打印事件日志, true:开启打印
-local showLog, PrintEventLog = true
+local showLog, PrintEventLog = false
 
 local FireEnum = {
     SERVER = 1,
@@ -27,7 +27,7 @@ local FireEnum = {
 function FireToServer(_eventName, ...)
     ValidateArgs(FireEnum.SERVER, _eventName)
     local args = {...}
-    world.MenuNode.S_Event[_eventName]:Fire(table.unpack(args))
+    world.MenuNode.MenuEvent_S[_eventName]:Fire(table.unpack(args))
     PrintEventLog(FireEnum.SERVER, _eventName, nil, args)
 end
 
@@ -41,7 +41,7 @@ function FireToClient(_eventName, _player, ...)
     end
     ValidateArgs(FireEnum.CLIENT, _eventName, _player)
     local args = {...}
-    _player.C_Event[_eventName]:Fire(table.unpack(args))
+    _player.MenuEvent_C[_eventName]:Fire(table.unpack(args))
     PrintEventLog(FireEnum.CLIENT, _eventName, _player, args)
 end
 
@@ -64,7 +64,7 @@ ValidateArgs =
         if _fireEnum == FireEnum.SERVER then
             --! Fire_S 检查参数
             assert(not string.isnilorempty(_eventName), '[Net][Fire_S] 事件名为空')
-            assert(world.MenuNode.S_Event[_eventName], string.format('[Net][Fire_S] 服务器不存在事件: %s', _eventName))
+            assert(world.MenuNode.MenuEvent_S[_eventName], string.format('[Net][Fire_S] 服务器不存在事件: %s', _eventName))
         elseif _fireEnum == FireEnum.CLIENT then
             --! Fire_C 检查参数
             assert(not string.isnilorempty(_eventName), '[Net] 事件名为空')
@@ -72,9 +72,9 @@ ValidateArgs =
                 _player and _player.ClassName == 'PlayerInstance',
                 string.format('[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
             )
-            assert(_player.C_Event, '[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
+            assert(_player.MenuEvent_C, '[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
             assert(
-                _player.C_Event[_eventName],
+                _player.MenuEvent_C[_eventName],
                 string.format('[Net][Fire_C] 客户端玩家不存在事件: %s, 玩家: %s', _player.Name, _eventName)
             )
         elseif _fireEnum == FireEnum.BROADCAST then

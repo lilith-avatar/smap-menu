@@ -18,7 +18,7 @@ end
 function M:InitDefault(_module)
     Debug.Log(string.format('[ServerBase][%s] InitDefault()', self.name))
     -- 初始化默认监听事件
-    M.Kit.Util.Event.LinkConnects(world.MenuNode.S_Event, _module, self)
+    M.Kit.Util.Event.LinkConnects(world.MenuNode.MenuEvent_S, _module)
 end
 
 return M
