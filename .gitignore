@@ -13,6 +13,7 @@ code/*.xlsm
 code/*.xlsx
 Project/*.config
 *.smap.storage
+*.smap.config
 *.iso
 ~$*
 *.idea/
