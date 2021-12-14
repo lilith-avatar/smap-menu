@@ -68,13 +68,13 @@ function GetPlayerProfile(_player)
     PlayerHub.GetPlayerProfile(_player.UserId, callback)
 end
 
-function M:MuteLocalEventHandler(_playerId, _isOn)
+function MuteLocalEventHandler(_, _playerId, _isOn)
     for _, v in pairs(playerList) do
         M.Kit.Util.Net.Fire_C('MuteSpecificPlayerEvent', v, _playerId, not _isOn)
     end
 end
 
-function M:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
+function TeleportPlayerToFriendGameEventHandler(_, _player, _roomId)
     local callbackTeleport = function()
         --TODO: 处理回调函数
     end
@@ -84,4 +84,6 @@ end
 --! Public methods
 M.Init = Init
 M.playerList = playerList
+M.MuteLocalEventHandler = MuteLocalEventHandler
+M.TeleportPlayerToFriendGameEventHandler = TeleportPlayerToFriendGameEventHandler
 return M

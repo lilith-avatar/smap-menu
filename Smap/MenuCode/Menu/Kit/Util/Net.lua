@@ -51,7 +51,12 @@ end
 function Broadcast(_eventName, ...)
     ValidateArgs(FireEnum.BROADCAST, _eventName, ...)
     local args = {...}
-    world.Players:BroadcastEvent(_eventName, table.unpack(args))
+    if world.MenuNode.C_Event[_eventName] then
+        world.MenuNode.C_Event:BroadcastEvent(_eventName, table.unpack(args))
+    end
+    if world.MenuNode.S_Event[_eventName] then
+        world.MenuNode.S_Event:BroadcastEvent(_eventName, table.unpack(args))
+    end
     PrintEventLog(FireEnum.BROADCAST, _eventName, nil, args)
 end
 
