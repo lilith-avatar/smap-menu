@@ -57,6 +57,8 @@ function InitGui()
 
     gui.ImgBase.Offset = Vector2(0, 100)
     gui.ImgBase.Color = Color(255, 255, 255, 0)
+    gui.DisplayBase:SetActive(false)
+    gui.BtnBase:SetActive(false)
 
     gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
@@ -190,14 +192,36 @@ function DisplayImgIm()
         isDisplay = true
         gui.ImgRedDot:SetActive(false)
     end
-    gui.ImgIm:SetActive(isDisplay)
+    ImgImAni(isDisplay)
+end
+
+function ImgImAni(_isDisplay)
+    local tarProTab, comFun
+    if _isDisplay then
+        gui.ImgIm:SetActive(_isDisplay)
+        tarProTab = {Offset = Vector2(40, -121), Color = Color(0,0,0,180)}
+    else
+        gui.InputFieldIm:SetActive(_isDisplay)
+        gui.PnlIm:SetActive(_isDisplay)
+        gui.BtnArrow:SetActive(_isDisplay)
+        tarProTab = {Offset = Vector2(40, 0), Color = Color(0,0,0,0)}
+    end
+    comFun = function()
+        gui.InputFieldIm:SetActive(_isDisplay)
+        gui.PnlIm:SetActive(_isDisplay)
+        gui.BtnArrow:SetActive(_isDisplay)
+        gui.ImgIm:SetActive(_isDisplay)
+    end
+
+    TweenAni(gui.TweenIm, tarProTab, 0.4, Enum.EaseCurve.QuinticInOut, comFun)
 end
 
 function DisableCtr(_isOpen)
     ImgBaseAni(_isOpen)
     PnlMenuAni(not _isOpen)
     if _isOpen then
-        gui.ImgIm:SetActive(not _isOpen)
+        ImgImAni(not _isOpen)
+        isDisplay = not _isOpen
     else
         gui.ImgProfileBg:SetActive(_isOpen)
     end
@@ -577,7 +601,6 @@ function NormalImEventHandler(_, _sender, _content)
     length = string.len((_sender.Name) .. _content)
     gui.TextImContent.Text =
         messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
-    --todo 换行
     messageCache = gui.TextImContent.Text
 
     ---红点
