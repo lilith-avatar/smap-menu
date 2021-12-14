@@ -57,6 +57,8 @@ function InitGui()
 
     gui.ImgBase.Offset = Vector2(0, 100)
     gui.ImgBase.Color = Color(255, 255, 255, 0)
+    gui.DisplayBase:SetActive(false)
+    gui.BtnBase:SetActive(false)
 
     gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
@@ -577,7 +579,6 @@ function NormalImEventHandler(_, _sender, _content)
     length = string.len((_sender.Name) .. _content)
     gui.TextImContent.Text =
         messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
-    --todo 换行
     messageCache = gui.TextImContent.Text
 
     ---红点
