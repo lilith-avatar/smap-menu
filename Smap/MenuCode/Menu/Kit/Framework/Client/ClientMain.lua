@@ -132,8 +132,6 @@ function UpdateClient(_dt, _tt)
     end
 end
 
---! Public methods
-
 --- 运行客户端
 function Run()
     Debug.Log('[MenuKit][Client] Run()')
@@ -148,8 +146,6 @@ function Stop()
 end
 
 --! Public methods
-
 M.Run = Run
 M.Stop = Stop
-
 return M
