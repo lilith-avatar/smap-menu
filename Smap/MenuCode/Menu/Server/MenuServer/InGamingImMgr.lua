@@ -26,7 +26,7 @@ function SendToChat(_content)
     end
 end
 
-function M:InGamingImEventHandler(_sendPlayer, _imContent)
+function InGamingImEventHandler(_sendPlayer, _imContent)
     -- 敏感词过滤
     local callback = function(_imContent, _msg)
         SendToChat(_msg)
@@ -35,4 +35,6 @@ function M:InGamingImEventHandler(_sendPlayer, _imContent)
     ChatManager.SensitiveWordCheck(_imContent, callback)
 end
 
+--! Public methods
+M.InGamingImEventHandler = InGamingImEventHandler
 return M
