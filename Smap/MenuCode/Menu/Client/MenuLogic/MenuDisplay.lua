@@ -79,6 +79,7 @@ function InitListener()
     SettingBind()
     QuitBind()
     GamingBind()
+    OutfitBind() --* 换装
 
     --FIXME: debug only
     local test = false
@@ -453,6 +454,21 @@ function SettingBind()
             end
         )
     end
+end
+
+--* 换装事件绑定
+function OutfitBind()
+    local btnDressUpOnClickHandler = function()
+        if not _G.Menu.Outfit.IsOpen() then
+            -- 打开换装界面
+            _G.Menu.Outfit.Open()
+            -- 关闭当前MENU
+            isOpen = false
+            DisableCtr(isOpen)
+        --TODO: 隐藏Menu的三个小按钮
+        end
+    end
+    gui.BtnDressUp.OnClick:Connect(btnDressUpOnClickHandler)
 end
 
 function QuitBind()

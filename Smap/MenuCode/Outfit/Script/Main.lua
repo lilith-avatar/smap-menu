@@ -37,7 +37,7 @@ M.Enum = {
 }
 
 -- 根节点
-local root = world.Outfit
+local root = world.MenuNode.Outfit
 -- 初始化flag
 local initialized = false
 

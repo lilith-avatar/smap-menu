@@ -52,6 +52,7 @@ end
 function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
         local args = {...}
+        booth.Enable = true
         booth.Position = args[1] or localPlayer.Position
         localPlayer.Enable = false
         npc.Enable = true
@@ -59,6 +60,7 @@ function EventHandler(_event, ...)
         avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
         PlayAnim()
     elseif _event == M.Event.Enum.CLOSE then
+        booth.Enable = false
         localPlayer.Enable = true
         npc.Enable = false
     elseif _event == M.Event.Enum.NPC_ROT then

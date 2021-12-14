@@ -62,6 +62,11 @@ end
 
 --- 事件处理
 function EventHandler(_event, ...)
+    if _event == M.Event.Enum.OPEN then
+        guiAvatar.Enable = true
+    elseif _event == M.Event.Enum.CLOSE then
+        guiAvatar.Enable = false
+    end
 end
 
 --- 初始化界面
