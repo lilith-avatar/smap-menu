@@ -192,14 +192,36 @@ function DisplayImgIm()
         isDisplay = true
         gui.ImgRedDot:SetActive(false)
     end
-    gui.ImgIm:SetActive(isDisplay)
+    ImgImAni(isDisplay)
+end
+
+function ImgImAni(_isDisplay)
+    local tarProTab, comFun
+    if _isDisplay then
+        gui.ImgIm:SetActive(_isDisplay)
+        tarProTab = {Offset = Vector2(40, -121), Color = Color(0,0,0,180)}
+    else
+        gui.InputFieldIm:SetActive(_isDisplay)
+        gui.PnlIm:SetActive(_isDisplay)
+        gui.BtnArrow:SetActive(_isDisplay)
+        tarProTab = {Offset = Vector2(40, 0), Color = Color(0,0,0,0)}
+    end
+    comFun = function()
+        gui.InputFieldIm:SetActive(_isDisplay)
+        gui.PnlIm:SetActive(_isDisplay)
+        gui.BtnArrow:SetActive(_isDisplay)
+        gui.ImgIm:SetActive(_isDisplay)
+    end
+
+    TweenAni(gui.TweenIm, tarProTab, 0.4, Enum.EaseCurve.QuinticInOut, comFun)
 end
 
 function DisableCtr(_isOpen)
     ImgBaseAni(_isOpen)
     PnlMenuAni(not _isOpen)
     if _isOpen then
-        gui.ImgIm:SetActive(not _isOpen)
+        ImgImAni(not _isOpen)
+        isDisplay = not _isOpen
     else
         gui.ImgProfileBg:SetActive(_isOpen)
     end
