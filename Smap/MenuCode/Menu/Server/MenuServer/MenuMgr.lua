@@ -81,9 +81,7 @@ function M:TeleportPlayerToFriendGameEventHandler(_player, _roomId)
     Game.TeleportPlayerToRoom(_player, _roomId, {}, callbackTeleport)
 end
 
---! Public Function
-
+--! Public methods
 M.Init = Init
 M.playerList = playerList
-
 return M

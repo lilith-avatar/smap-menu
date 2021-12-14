@@ -57,7 +57,7 @@ function New(_name, _baseClass)
     return t, t:GetSelf()
 end
 
---! Public
+--! Public methods
 return {
     LoadManifest = LoadManifest,
     GetModuleListWithFunc = GetModuleListWithFunc,

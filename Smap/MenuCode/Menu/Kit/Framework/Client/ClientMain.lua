@@ -132,7 +132,7 @@ function UpdateClient(_dt, _tt)
     end
 end
 
---! Public
+--! Public methods
 
 --- 运行客户端
 function Run()
@@ -147,7 +147,7 @@ function Stop()
     running = false
 end
 
---! Public
+--! Public methods
 
 M.Run = Run
 M.Stop = Stop

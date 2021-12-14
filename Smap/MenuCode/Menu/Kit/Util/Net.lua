@@ -111,7 +111,7 @@ PrintEventLog =
     function()
     end
 
---! Public
+--! Public methods
 return {
     Fire_S = FireToServer,
     Fire_C = FireToClient,

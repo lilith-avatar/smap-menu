@@ -28,7 +28,7 @@ function LinkConnects(_eventFolder, _module, _this)
     end
 end
 
---! Public
+--! Public methods
 return {
     LinkConnects = LinkConnects
 }

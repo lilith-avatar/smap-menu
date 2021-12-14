@@ -146,7 +146,7 @@ function Stop()
     running = false
 end
 
---! Public
+--! Public methods
 
 M.Run = Run
 M.Stop = Stop

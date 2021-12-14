@@ -95,7 +95,7 @@ function StartServer()
     Kit.Framework.Server.Main:Run()
 end
 
---! Public
+--! Public methods
 
 M.StartClient = StartClient
 M.StartServer = StartServer
