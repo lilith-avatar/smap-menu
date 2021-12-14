@@ -7,22 +7,15 @@
 --- @param _eventFolder 事件所在的节点folder
 --- @param _module 模块
 --- @param _this module的self指针,用于闭包
-function LinkConnects(_eventFolder, _module, _this)
-    assert(
-        _eventFolder and _module and _this,
-        string.format('[EventUtil] 参数有空值: %s, %s, %s', _eventFolder, _module, _this)
-    )
+function LinkConnects(_eventFolder, _module)
+    assert(_eventFolder and _module, string.format('[EventUtil] 参数有空值: %s, %s', _eventFolder, _module))
     local events = _eventFolder:GetChildren()
     for _, evt in pairs(events) do
         if string.endswith(evt.Name, 'Event') then
             local handler = _module[evt.Name .. 'Handler']
             if handler ~= nil then
                 print('[EventUtil]', _eventFolder, _module.name, evt)
-                evt:Connect(
-                    function(...)
-                        handler(_this, ...)
-                    end
-                )
+                evt:Connect(handler)
             end
         end
     end

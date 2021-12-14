@@ -11,7 +11,7 @@ local Debug = Debug
 local valid, ValidateArgs = true
 
 --! 打印事件日志, true:开启打印
-local showLog, PrintEventLog = false
+local showLog, PrintEventLog = true
 
 local FireEnum = {
     SERVER = 1,
@@ -41,7 +41,7 @@ function FireToClient(_eventName, _player, ...)
     end
     ValidateArgs(FireEnum.CLIENT, _eventName, _player)
     local args = {...}
-    world.MenuNode.C_Event[_eventName]:Fire(table.unpack(args))
+    _player.C_Event[_eventName]:Fire(table.unpack(args))
     PrintEventLog(FireEnum.CLIENT, _eventName, _player, args)
 end
 
@@ -51,12 +51,7 @@ end
 function Broadcast(_eventName, ...)
     ValidateArgs(FireEnum.BROADCAST, _eventName, ...)
     local args = {...}
-    if world.MenuNode.C_Event[_eventName] then
-        world.MenuNode.C_Event:BroadcastEvent(_eventName, table.unpack(args))
-    end
-    if world.MenuNode.S_Event[_eventName] then
-        world.MenuNode.S_Event:BroadcastEvent(_eventName, table.unpack(args))
-    end
+    world.Players:BroadcastEvent(_eventName, table.unpack(args))
     PrintEventLog(FireEnum.BROADCAST, _eventName, nil, args)
 end
 
@@ -77,9 +72,9 @@ ValidateArgs =
                 _player and _player.ClassName == 'PlayerInstance',
                 string.format('[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
             )
-            assert(world.MenuNode.C_Event, '[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
+            assert(_player.C_Event, '[Net][Fire_C]第2个参数需要是玩家对象, 错误事件: %s', _eventName)
             assert(
-                world.MenuNode.C_Event[_eventName],
+                _player.C_Event[_eventName],
                 string.format('[Net][Fire_C] 客户端玩家不存在事件: %s, 玩家: %s', _player.Name, _eventName)
             )
         elseif _fireEnum == FireEnum.BROADCAST then

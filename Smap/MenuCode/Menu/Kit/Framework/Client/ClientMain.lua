@@ -70,14 +70,14 @@ end
 
 --- 初始化客户端的CustomEvent
 function InitClientCustomEvents()
-    if world.MenuNode.C_Event == nil then
-        world:CreateObject('FolderObject', 'C_Event', world.MenuNode)
+    if localPlayer.C_Event == nil then
+        world:CreateObject('FolderObject', 'C_Event', localPlayer)
     end
 
     -- 生成CustomEvent节点
     for _, evt in pairs(events) do
-        if world.MenuNode.C_Event[evt] == nil then
-            world:CreateObject('CustomEvent', evt, world.MenuNode.C_Event)
+        if localPlayer.C_Event[evt] == nil then
+            world:CreateObject('CustomEvent', evt, localPlayer.C_Event)
         end
     end
 end

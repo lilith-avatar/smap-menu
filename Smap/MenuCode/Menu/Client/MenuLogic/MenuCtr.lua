@@ -66,13 +66,13 @@ function Update(_, dt)
 end
 
 ---玩家加入
-function NoticeEventHandler(_, _playerTab, _playerList, _changedPlayer, _isAdded)
+function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     playerTab = _playerTab
     playerList = _playerList
 end
 
 ---屏蔽所有人语音
-function MuteAllEventHandler(_, _isMuted)
+function MuteAllEventHandler(_isMuted)
     for _, v in pairs(playerList) do
         if v ~= localPlayer then
             VoiceManager.MuteDesignatedPlayer(v.UserId, _isMuted)
@@ -81,7 +81,7 @@ function MuteAllEventHandler(_, _isMuted)
 end
 
 ---屏蔽指定人语音
-function MuteSpecificPlayerEventHandler(_, _specificPlayer, _isMuted)
+function MuteSpecificPlayerEventHandler(_specificPlayer, _isMuted)
     VoiceManager.MuteDesignatedPlayer(_specificPlayer, _isMuted)
 end
 
@@ -98,21 +98,21 @@ function InviteFriendToGameEventHandler(_targetPlayerId)
 end
 
 ---去好友的游戏房间
-function JoinFriendGameEventHandler(_, _player, _tarPlayerUserId)
+function JoinFriendGameEventHandler(_player, _tarPlayerUserId)
     table.insert(content, 'JOIN_REQUEST')
     Event.EmitLuaEvent(Event.Scope.APP, 'MENU_JOIN', '100000001', content)
     content = {}
 end
 
 ---添加好友
-function AddFriendsEventHandler(_, _playerId)
+function AddFriendsEventHandler(_playerId)
     local callback = function(_msg)
         Debug.Log(_msg)
     end
     Friends.SendFriendRequest(_playerId, callback)
 end
 
-function ConfirmInviteEventHandler(_, _player, _roomId)
+function ConfirmInviteEventHandler(_player, _roomId)
     M.Kit.Util.Net.Fire_S('TeleportPlayerToFriendGameEvent', _player, _roomId)
 end
 

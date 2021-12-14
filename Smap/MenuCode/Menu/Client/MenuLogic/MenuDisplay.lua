@@ -199,12 +199,12 @@ function ImgImAni(_isDisplay)
     local tarProTab, comFun
     if _isDisplay then
         gui.ImgIm:SetActive(_isDisplay)
-        tarProTab = {Offset = Vector2(40, -121), Color = Color(0,0,0,180)}
+        tarProTab = {Offset = Vector2(40, -121), Color = Color(0, 0, 0, 180)}
     else
         gui.InputFieldIm:SetActive(_isDisplay)
         gui.PnlIm:SetActive(_isDisplay)
         gui.BtnArrow:SetActive(_isDisplay)
-        tarProTab = {Offset = Vector2(40, 0), Color = Color(0,0,0,0)}
+        tarProTab = {Offset = Vector2(40, 0), Color = Color(0, 0, 0, 0)}
     end
     comFun = function()
         gui.InputFieldIm:SetActive(_isDisplay)
@@ -517,7 +517,7 @@ end
 
 --! Event handlers
 
-function GetFriendsListEventHandler(_, _list)
+function GetFriendsListEventHandler(_list)
     local i = 0
     for _ in pairs(_list) do
         i = i + 1
@@ -578,7 +578,7 @@ function GetFriendsListEventHandler(_, _list)
     end
 end
 
-function NoticeEventHandler(_, _playerTab, _playerList, _changedPlayer, _isAdded)
+function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
     gui.TextPlayNum.Text = 'Player (' .. length .. ')'
@@ -597,7 +597,7 @@ end
 
 ---消息更新
 local messageCache, length = '', 0
-function NormalImEventHandler(_, _sender, _content)
+function NormalImEventHandler(_sender, _content)
     length = string.len((_sender.Name) .. _content)
     gui.TextImContent.Text =
         messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
@@ -609,7 +609,7 @@ function NormalImEventHandler(_, _sender, _content)
     end
 end
 
-function SomeoneInviteEventHandler(_, _invitePlayer, _roomId)
+function SomeoneInviteEventHandler(_invitePlayer, _roomId)
     gui.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, gui.MenuGui)
     gui.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
     gui.BtnInviteOk.OnClick:Connect(
