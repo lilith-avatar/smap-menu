@@ -5,7 +5,7 @@
 
 -- Local Caches
 local Enum, Vector2, Color = Enum, Vector2, Color
-local world, localPlayer = world, localPlayer
+local world, localPlayer, PlayerHub = world, localPlayer, PlayerHub
 local Debug, ResourceManager, Game, Friends, invoke = Debug, ResourceManager, Game, Friends, invoke
 local C = _G.C
 
@@ -534,7 +534,10 @@ end
 --! Event handlers
 
 function GetFriendsListEventHandler(_list)
-    local i = 0
+    local i, headPortrait = 0, nil
+    local callback = function(_profile)
+        headPortrait = _profile.HeadPortrait
+    end
     for _ in pairs(_list) do
         i = i + 1
     end
@@ -543,8 +546,8 @@ function GetFriendsListEventHandler(_list)
     for k, v in pairs(_list) do
         gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
         gui[k].TextName.Text = v.Name
-        --todo
-        gui[k].ImgHead.Texture = nil
+        PlayerHub.GetPlayerProfile(k, callback)
+        gui[k].ImgHead.Texture = headPortrait
         if v.Status == 'PLAYING' then
             gui[k].BtnFriMore:SetActive(true)
             gui[k].BtnFriInviteOut:SetActive(false)
@@ -583,8 +586,7 @@ function GetFriendsListEventHandler(_list)
 
         gui[k].ImgFriMoreBg.BtnFriJoin.OnClick:Connect(
             function()
-                --todo join
-                M.Kit.Util.Net.Fire_C('InviteFriendToGameEvent', localPlayer, k)
+                M.Kit.Util.Net.Fire_C('JoinFriendGameEvent', localPlayer, k)
             end
         )
     end
