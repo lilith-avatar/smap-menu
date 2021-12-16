@@ -641,8 +641,9 @@ function SomeoneInviteEventHandler(_invitePlayer, _roomId)
     invoke(inviteWin, 5)
 end
 
-function ColseOutfitEventHandler()
+function CloseOutfitEventHandler()
     gui.PnlMenu:SetActive(true)
+    print('关闭菜单')
 end
 
 --! Public methods
@@ -652,6 +653,6 @@ M.NoticeEventHandler = NoticeEventHandler
 M.NormalImEventHandler = NormalImEventHandler
 M.SomeoneInviteEventHandler = SomeoneInviteEventHandler
 M.GetFriendsListEventHandler = GetFriendsListEventHandler
-M.ColseOutfitEventHandler = ColseOutfitEventHandler
+M.CloseOutfitEventHandler = CloseOutfitEventHandler
 
 return M

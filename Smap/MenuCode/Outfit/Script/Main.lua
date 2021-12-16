@@ -24,6 +24,7 @@ local GuiAvatar = require('Outfit/Script/Gui/GuiAvatar')
 local GuiOutfit = require('Outfit/Script/Gui/GuiOutfit')
 local GuiTransition = require('Outfit/Script/Gui/GuiTransition')
 local Cam = require('Outfit/Script/Scene/Cam')
+local MenuHub = require('Outfit/Script/Scene/MenuHub')
 
 -- 全局枚举 --! Public
 M.Enum = {
@@ -77,6 +78,7 @@ function InitSubModule()
     InitSubModuleAux(Engine, mt) -- 引擎相关接口
     InitSubModuleAux(PlayerCtrl, mt) -- 玩家控制器
     InitSubModuleAux(Cam, mt) -- 相机
+    InitSubModuleAux(MenuHub, mt) -- Menu相关
 end
 
 -- 初始化辅助函数
