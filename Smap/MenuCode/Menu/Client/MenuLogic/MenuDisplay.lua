@@ -320,8 +320,8 @@ end
 function MuteAll(_isMuteAll)
     for _, v in pairs(mutedPlayerTab) do
         v['isMuted'] = _isMuteAll
-        M['ImgMic' .. v['num']]:SetActive(_isMuteAll)
-        M['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/svg_ic_speakeroff1')
+        gui['ImgMic' .. v['num']]:SetActive(_isMuteAll)
+        gui['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/svg_ic_speakeroff1')
     end
 end
 
@@ -642,7 +642,6 @@ end
 
 function CloseOutfitEventHandler()
     gui.PnlMenu:SetActive(true)
-    print('关闭菜单')
 end
 
 --! Public methods

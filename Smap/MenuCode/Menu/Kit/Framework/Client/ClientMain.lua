@@ -100,9 +100,6 @@ end
 --- 初始化包含Init()方法的模块
 function InitOtherModules()
     for _, m in ipairs(initList) do
-        print('看这里')
-        print(_,m)
-        print('看上面')
         m:Init()
     end
 end
