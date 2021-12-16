@@ -5,7 +5,7 @@
 
 -- Local Caches
 local ChatManager = ChatManager
-local S = _G.S
+local S = _G.mS
 
 --* 模块
 local M = S.ModuleUtil.New('InGamingImMgr', S.Base)

@@ -38,15 +38,15 @@ end
 
 --- 加载客户端模块
 function RequireClientModules()
-    --* 临时开放 _G.C, 用于require其他lua模块
-    _G.C = {}
-    _G.C.Base = M.Kit.Framework.Client.Base
-    _G.C.ModuleUtil = M.Kit.Util.Mod
+    --* 临时开放 _G.mC, 用于require其他lua模块
+    _G.mC = {}
+    _G.mC.Base = M.Kit.Framework.Client.Base
+    _G.mC.ModuleUtil = M.Kit.Util.Mod
     Debug.Log('[MenuKit][Client] RequireClientModules()')
     events = M.Kit.Manifest.Client.Events
-    M.Kit.Util.Mod.LoadManifest(_G.C, M.Kit.Manifest.Client, M.Kit.Manifest.Client.ROOT_PATH, list)
-    --* 关闭 _G.C
-    _G.C = nil
+    M.Kit.Util.Mod.LoadManifest(_G.mC, M.Kit.Manifest.Client, M.Kit.Manifest.Client.ROOT_PATH, list)
+    --* 关闭 _G.mC
+    _G.mC = nil
 end
 
 --- 模块对MenuKit的引用
@@ -100,6 +100,9 @@ end
 --- 初始化包含Init()方法的模块
 function InitOtherModules()
     for _, m in ipairs(initList) do
+        print('看这里')
+        print(_,m)
+        print('看上面')
         m:Init()
     end
 end

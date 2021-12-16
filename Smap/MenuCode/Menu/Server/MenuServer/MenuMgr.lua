@@ -5,7 +5,7 @@
 
 -- Local Caches
 local world, invoke, Game, PlayerHub = world, invoke, Game, PlayerHub
-local S = _G.S
+local S = _G.mS
 
 --* 模块
 local M = S.ModuleUtil.New('MenuMgr', S.Base)

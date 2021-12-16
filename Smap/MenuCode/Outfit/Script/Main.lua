@@ -54,8 +54,11 @@ function InitEvent()
     -- 创建事件节点
     if root.Events == nil then
         local eventsNode = world:CreateObject('FolderObject', 'Events', root)
-        M.Event.Root = world:CreateObject('CustomEvent', 'Outfit', eventsNode)
+        if root.Events.Outfit == nil then
+            world:CreateObject('CustomEvent', 'Outfit', eventsNode)
+        end
     end
+    M.Event.Root = root.Events.Outfit
 end
 
 --- 初始化其他模块

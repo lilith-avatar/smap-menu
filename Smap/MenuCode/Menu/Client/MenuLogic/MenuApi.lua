@@ -6,7 +6,7 @@
 -- Local Caches
 local invoke = invoke
 local ChatManager = ChatManager
-local C = _G.C
+local C = _G.mC
 
 --* 模块
 local M = C.ModuleUtil.New('MenuApi', C.Base)

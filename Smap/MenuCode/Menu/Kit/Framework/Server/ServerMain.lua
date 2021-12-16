@@ -38,15 +38,15 @@ end
 
 --- 加载服务器模块
 function RequireServerModules()
-    --* 临时开放 _G.S, 用于require其他lua模块
-    _G.S = {}
-    _G.S.Base = M.Kit.Framework.Server.Base
-    _G.S.ModuleUtil = M.Kit.Util.Mod
+    --* 临时开放 _G.mS, 用于require其他lua模块
+    _G.mS = {}
+    _G.mS.Base = M.Kit.Framework.Server.Base
+    _G.mS.ModuleUtil = M.Kit.Util.Mod
     Debug.Log('[MenuKit][Server] RequireServerModules()')
     events = M.Kit.Manifest.Server.Events
-    M.Kit.Util.Mod.LoadManifest(_G.S, M.Kit.Manifest.Server, M.Kit.Manifest.Server.ROOT_PATH, list)
-    --* 关闭 _G.S
-    _G.S = nil
+    M.Kit.Util.Mod.LoadManifest(_G.mS, M.Kit.Manifest.Server, M.Kit.Manifest.Server.ROOT_PATH, list)
+    --* 关闭 _G.mS
+    _G.mS = nil
 end
 
 --- 模块对MenuKit的引用

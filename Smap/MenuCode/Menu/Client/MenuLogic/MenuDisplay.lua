@@ -7,7 +7,7 @@
 local Enum, Vector2, Color = Enum, Vector2, Color
 local world, localPlayer, PlayerHub = world, localPlayer, PlayerHub
 local Debug, ResourceManager, Game, Friends, invoke = Debug, ResourceManager, Game, Friends, invoke
-local C = _G.C
+local C = _G.mC
 
 --* 模块
 local M, this = C.ModuleUtil.New('MenuDisplay', C.Base)
@@ -63,7 +63,6 @@ function InitGui()
     gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
     gui.PnlMenuTab = {gui.TweenMenuBg, gui.TweenImBubbleBg, gui.TweenVoiceBg}
-    InitListener()
 end
 
 --- 事件绑定初始化

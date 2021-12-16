@@ -6,7 +6,7 @@
 -- Local Caches
 local localPlayer = localPlayer
 local Debug, Event, VoiceManager, Friends, Game = Debug, Event, VoiceManager, Friends, Game
-local C = _G.C
+local C = _G.mC
 
 --* 模块
 local M, this = C.ModuleUtil.New('MenuCtr', C.Base)
