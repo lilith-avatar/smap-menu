@@ -465,7 +465,7 @@ function OutfitBind()
             -- 关闭当前MENU
             isOpen = false
             DisableCtr(isOpen)
-        --TODO: 隐藏Menu的三个小按钮
+            gui.PnlMenu:SetActive(false)
         end
     end
     gui.BtnDressUp.OnClick:Connect(btnDressUpOnClickHandler)
@@ -641,6 +641,10 @@ function SomeoneInviteEventHandler(_invitePlayer, _roomId)
     invoke(inviteWin, 5)
 end
 
+function ColseOutfitEventHandler()
+    gui.PnlMenu:SetActive(true)
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -648,4 +652,6 @@ M.NoticeEventHandler = NoticeEventHandler
 M.NormalImEventHandler = NormalImEventHandler
 M.SomeoneInviteEventHandler = SomeoneInviteEventHandler
 M.GetFriendsListEventHandler = GetFriendsListEventHandler
+M.ColseOutfitEventHandler = ColseOutfitEventHandler
+
 return M
