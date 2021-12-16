@@ -1,5 +1,5 @@
 --- 过渡动画UI（Landscape）
---- @module Costom GUI
+--- @module Outfit GUI
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 

@@ -1,5 +1,5 @@
 --- 换装系统
---- @module Costom Player Controller
+--- @module Outfit Player Controller
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 

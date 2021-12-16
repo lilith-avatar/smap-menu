@@ -1,5 +1,5 @@
 --- 换装系统引擎API调用
---- @module Costom Engine API
+--- @module Outfit Engine API
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 

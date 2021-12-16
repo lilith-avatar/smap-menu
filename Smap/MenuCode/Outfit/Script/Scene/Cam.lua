@@ -1,8 +1,9 @@
 --- 换装系统相机（Landscape）
---- @module Costom Camera
+--- @module Outfit Camera
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
+--* 模块
 local M = {}
 
 -- 根节点（Init时候被赋值）

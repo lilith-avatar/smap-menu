@@ -1,5 +1,5 @@
 --- 换装系统
---- @module Costom Manager
+--- @module Outfit Manager
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 

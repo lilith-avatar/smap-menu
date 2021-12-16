@@ -1,5 +1,5 @@
 --- 换装、换体型系统事件
---- @module Costom Engine API
+--- @module Outfit Engine API
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
