@@ -17,7 +17,8 @@ M.Events = {
     'AddFriendsEvent',
     'SomeoneInviteEvent',
     'ConfirmInviteEvent',
-    'CloseOutfitEvent'
+    'CloseOutfitEvent',
+    'MenuSwitchEvent'
 }
 
 M.Modules = {

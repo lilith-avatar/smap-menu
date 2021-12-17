@@ -4,7 +4,7 @@
 --- @author ropztao, Yuancheng Zhang
 
 -- Local Caches
-local invoke = invoke
+local invoke, localPlayer = invoke, localPlayer
 local ChatManager = ChatManager
 local C = _G.mC
 
@@ -15,12 +15,17 @@ function DeveloperOfficialMsg(_content)
     M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)
 end
 
+function MenuSwitch(_type, _boolean)
+    M.Kit.Util.Net.Fire_C('MenuSwitchEvent', localPlayer,_type, _boolean)
+end
+
 -- 初始化换装
 local Outfit = require('Outfit/Script/Main')
 invoke(Outfit.Init)
 
 --! Public methods
 M.DeveloperOfficialMsg = DeveloperOfficialMsg
+M.MenuSwitch = MenuSwitch
 
 --* 换装相关API
 M.Outfit = {}

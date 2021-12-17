@@ -671,6 +671,16 @@ function CloseOutfitEventHandler()
     gui.PnlMenu:SetActive(true)
 end
 
+function MenuSwitchEventHandler(_type, _boolean)
+    if _type == 0 then
+        gui.MenuGui:SetActive(_boolean)
+    elseif _type == 1 then
+        gui.PnlMenu:SetActive(_boolean)
+    elseif _type == 2 then
+        gui.ImgBase:SetActive(_boolean)
+    end
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -679,5 +689,6 @@ M.NormalImEventHandler = NormalImEventHandler
 M.SomeoneInviteEventHandler = SomeoneInviteEventHandler
 M.GetFriendsListEventHandler = GetFriendsListEventHandler
 M.CloseOutfitEventHandler = CloseOutfitEventHandler
+M.MenuSwitchEventHandler = MenuSwitchEventHandler
 
 return M
