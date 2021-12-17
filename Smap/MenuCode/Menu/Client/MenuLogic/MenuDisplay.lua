@@ -29,9 +29,14 @@ local resReplaceTab = {
 
 --- 初始化
 function Init()
-    Game.ShowSystemBar(false)
     InitGui()
     InitListener()
+
+    local initSubfun = function()
+        Game.ShowSystemBar(false)
+        M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
+    end
+    invoke(initSubfun, 5)
 end
 
 -- 更新
@@ -80,6 +85,28 @@ function InitListener()
     GamingBind()
     OutfitBind() --* 换装
 
+    DebugOnly()
+end
+
+function DebugOnly()
+    local count, isShow = 0, false
+    local function ShowTest()
+        if isShow then
+            isShow = false
+        else
+            isShow = true
+        end
+        gui.TestBtn:SetActive(isShow)
+    end
+    gui.BtnOldMenu.OnClick:Connect(
+        function()
+            count = count + 1
+            if count > 5 then
+                count = 0
+                ShowTest()
+            end
+        end
+    )
     --FIXME: debug only
     local test = false
     gui.TestBtn.OnClick:Connect(
