@@ -63,10 +63,10 @@ function OnPlayerRemoved(_player)
 end
 
 local tt = 0
-function Update(_dt)
+function Update(_, _dt)
     if isArrived then return end
     tt = tt + _dt
-    if isSent and tt > 1 then
+    if tt > 1 then
         tt = 0
         M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer, true)
     end
@@ -74,7 +74,9 @@ end
 
 function ConfirmNoticeEventHandler(_boolean)
     isArrived = _boolean
-    isSent = not _boolean
+    if _boolean then
+        isSent = not _boolean
+    end
 end
 
 function GetPlayerProfile(_player)
@@ -100,8 +102,10 @@ end
 
 --! Public methods
 M.Init = Init
+M.Update = Update
 M.playerList = playerList
 M.MuteLocalEventHandler = MuteLocalEventHandler
 M.TeleportPlayerToFriendGameEventHandler = TeleportPlayerToFriendGameEventHandler
 M.ConfirmNoticeEventHandler = ConfirmNoticeEventHandler
+
 return M

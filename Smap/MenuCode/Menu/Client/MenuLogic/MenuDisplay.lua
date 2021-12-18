@@ -18,6 +18,7 @@ local MUTEALL_OFF_COLOR, MUTEALL_ON_COLOR = Color(38, 121, 217, 255), Color(222,
 -- 本地变量
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
+local isNone = true
 local gui = {}
 
 local resReplaceTab = {
@@ -49,6 +50,11 @@ function Update(_, dt)
         else
             gui.IsReallySpeaking.Value = false
         end
+
+        if isNone then
+            M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
+        end
+
         tt = 0
     end
 end
@@ -624,7 +630,8 @@ function GetFriendsListEventHandler(_list)
 end
 
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
-    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', true)
+    isNone = false
+    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
     gui.TextPlayNum.Text = 'Player (' .. length .. ')'

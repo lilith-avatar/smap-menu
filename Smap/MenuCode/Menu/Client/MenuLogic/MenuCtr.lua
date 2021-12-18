@@ -16,7 +16,7 @@ local roomIdTab = {}
 local playerTab, playerList
 local localRoomIdTab = {}
 local content = {}
-local tt = 0
+local tt, ot, isNone = 0, 0, true
 
 ---初始化
 function Init()
@@ -59,15 +59,22 @@ end
 
 function Update(_, dt)
     tt = tt + dt
+    ot = ot + dt
     if tt > 60 then
         GetFriendsList()
         tt = 0
+    end
+
+    if ot > 1 and isNone then
+        ot = 0
+        M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     end
 end
 
 ---玩家加入
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
-    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', true)
+    isNone = false
+    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     playerTab = _playerTab
     playerList = _playerList
 end
