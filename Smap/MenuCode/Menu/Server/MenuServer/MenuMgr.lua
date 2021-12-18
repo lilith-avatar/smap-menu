@@ -11,8 +11,8 @@ local S = _G.mS
 local M = S.ModuleUtil.New('MenuMgr', S.Base)
 
 --* 数据
-local playerInfoTab = {}
-local playerList = {}
+local playerInfoTab, playerList = {}, {}
+local isSent, isArrived, addedPlayer = false, false
 
 --玩家头像
 local headPortrait
@@ -37,10 +37,11 @@ function OnPlayerAdded(_player)
     playerInfoTab[_player] = headPortrait
     table.insert(playerList, _player)
 
-    local changedPlayer = _player
+    addedPlayer = _player
 
     local broadcast = function()
-        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, true)
+        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer, true)
+        isSent = true
     end
     invoke(broadcast, 1)
 end
@@ -56,8 +57,24 @@ function OnPlayerRemoved(_player)
     local changedPlayer = _player
     local broadcast = function()
         M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, false)
+        isSent = true
     end
     invoke(broadcast, 1)
+end
+
+local tt = 0
+function Update(_dt)
+    if isArrived then return end
+    tt = tt + _dt
+    if isSent and tt > 1 then
+        tt = 0
+        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer, true)
+    end
+end
+
+function ConfirmNoticeEventHandler(_boolean)
+    isArrived = _boolean
+    isSent = not _boolean
 end
 
 function GetPlayerProfile(_player)
@@ -86,4 +103,5 @@ M.Init = Init
 M.playerList = playerList
 M.MuteLocalEventHandler = MuteLocalEventHandler
 M.TeleportPlayerToFriendGameEventHandler = TeleportPlayerToFriendGameEventHandler
+M.ConfirmNoticeEventHandler = ConfirmNoticeEventHandler
 return M

@@ -67,12 +67,14 @@ end
 
 ---玩家加入
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', true)
     playerTab = _playerTab
     playerList = _playerList
 end
 
 ---屏蔽所有人语音
 function MuteAllEventHandler(_isMuted)
+    if playerList == nil then return end
     for _, v in pairs(playerList) do
         if v ~= localPlayer then
             VoiceManager.MuteDesignatedPlayer(v.UserId, _isMuted)

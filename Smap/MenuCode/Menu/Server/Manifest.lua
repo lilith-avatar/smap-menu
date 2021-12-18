@@ -8,7 +8,8 @@ Manifest.ROOT_PATH = 'Menu/Server/'
 Manifest.Events = {
     'InGamingImEvent',
     'MuteLocalEvent',
-    'TeleportPlayerToFriendGameEvent'
+    'TeleportPlayerToFriendGameEvent',
+    'ConfirmNoticeEvent'
 }
 
 Manifest.Modules = {

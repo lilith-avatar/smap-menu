@@ -345,6 +345,7 @@ function ProfileBgFix(_playerId)
 end
 
 function MuteAll(_isMuteAll)
+    if mutedPlayerTab == nil then return end
     for _, v in pairs(mutedPlayerTab) do
         v['isMuted'] = _isMuteAll
         gui['ImgMic' .. v['num']]:SetActive(_isMuteAll)
@@ -623,6 +624,7 @@ function GetFriendsListEventHandler(_list)
 end
 
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', true)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
     gui.TextPlayNum.Text = 'Player (' .. length .. ')'
