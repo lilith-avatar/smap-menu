@@ -333,8 +333,6 @@ function BtnItemLongPressBegin(_btnObj)
     local dataIdx, data = itemDataDict[_btnObj].dataIdx, nil
     if dataIdx ~= nil and dataIdx <= #currItemList then
         data = currItemList[dataIdx]
-        -- 更新当前ItemObj
-        currItemObj = _btnObj
     end
 
     -- 刷新item点击状态
