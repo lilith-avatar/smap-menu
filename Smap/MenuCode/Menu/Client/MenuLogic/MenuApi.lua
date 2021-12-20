@@ -16,7 +16,19 @@ function DeveloperOfficialMsg(_content)
 end
 
 function MenuSwitch(_type, _boolean)
-    M.Kit.Util.Net.Fire_C('MenuSwitchEvent', localPlayer,_type, _boolean)
+    M.Kit.Util.Net.Fire_C('MenuSwitchEvent', localPlayer, _type, _boolean)
+end
+
+function SwichOutfitEntrance(_boolean)
+    M.Kit.Util.Net.Fire_C('SwitchOutfitEntranceEvent', localPlayer, _boolean)
+end
+
+function SwitchVoice(_boolean)
+    M.Kit.Util.Net.Fire_C('SwitchVoiceEvent', localPlayer, _boolean)
+end
+
+function SwitchInGameMessage(_boolean)
+    M.Kit.Util.Net.Fire_C('SwitchInGameMessageEvent', localPlayer, _boolean)
 end
 
 -- 初始化换装
@@ -26,6 +38,9 @@ invoke(Outfit.Init)
 --! Public methods
 M.DeveloperOfficialMsg = DeveloperOfficialMsg
 M.MenuSwitch = MenuSwitch
+M.SwichOutfitEntrance = SwichOutfitEntrance
+M.SwitchVoice = SwitchVoice
+M.SwitchInGameMessage = SwitchInGameMessage
 
 --* 换装相关API
 M.Outfit = {}

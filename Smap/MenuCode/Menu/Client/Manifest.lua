@@ -18,7 +18,10 @@ M.Events = {
     'SomeoneInviteEvent',
     'ConfirmInviteEvent',
     'CloseOutfitEvent',
-    'MenuSwitchEvent'
+    'MenuSwitchEvent',
+    'SwitchOutfitEntranceEvent',
+    'SwitchVoiceEvent',
+    'SwitchInGameMessageEvent'
 }
 
 M.Modules = {

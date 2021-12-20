@@ -33,11 +33,11 @@ function Init()
     InitGui()
     InitListener()
 
+    Game.ShowSystemBar(false)
+    M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
     local initSubfun = function()
-        Game.ShowSystemBar(false)
-        M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
     end
-    invoke(initSubfun, 5)
+    invoke(initSubfun, 1)
 end
 
 -- 更新
@@ -258,6 +258,7 @@ function DisableCtr(_isOpen)
     else
         gui.ImgProfileBg:SetActive(_isOpen)
     end
+    ResetImgBase()
 end
 
 function PnlMenuAni(_isOpen)
@@ -276,6 +277,17 @@ function PnlMenuAni(_isOpen)
         v:Flush()
         v:Play()
     end
+end
+
+function ResetImgBase()
+    gui.BtnGamingIcon.Texture =
+        ResourceManager.GetTexture(
+        'MenuRes/svg_games1'
+    )
+    gui.BtnGamingIcon.Color = Color(0, 0, 0, 255)
+    gui.ImgShadow.Offset = gui.BtnGaming.Offset
+    SwitchTextureCtr(gui.BtnGaming, gui.FunBtnTab)
+    SwitchNodeCtr(gui.ImgGaming, gui.FunDisplayTab, false)
 end
 
 function ImgBaseAni(_isOpen)
@@ -679,6 +691,14 @@ end
 function CloseOutfitEventHandler()
     gui.PnlMenu:SetActive(true)
 end
+function CheckPnlMenu(_boolean, _gui)
+    _gui:SetActive(_boolean)
+    if not gui.ImgImBubbleBg.ActiveSelf then
+        gui.ImgVoiceBg.Offset = gui.ImgImBubbleBg.Offset
+    else
+        gui.ImgVoiceBg.Offset = Vector2(168, 0)
+    end
+end
 
 function MenuSwitchEventHandler(_type, _boolean)
     if _type == 0 then
@@ -690,6 +710,25 @@ function MenuSwitchEventHandler(_type, _boolean)
     end
 end
 
+function SwitchOutfitEntranceEventHandler(_boolean)
+    if _boolean then
+        gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
+        gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
+    else
+        gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting}
+        gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting}
+    end
+    gui.BtnDressUp:SetActive(_boolean)
+end
+
+function SwitchVoiceEventHandler(_boolean)
+    CheckPnlMenu(_boolean, gui.ImgVoiceBg)
+end
+
+function SwitchInGameMessageEventHandler(_boolean)
+    CheckPnlMenu(_boolean, gui.ImgImBubbleBg)
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -699,5 +738,8 @@ M.SomeoneInviteEventHandler = SomeoneInviteEventHandler
 M.GetFriendsListEventHandler = GetFriendsListEventHandler
 M.CloseOutfitEventHandler = CloseOutfitEventHandler
 M.MenuSwitchEventHandler = MenuSwitchEventHandler
+M.SwitchOutfitEntranceEventHandler = SwitchOutfitEntranceEventHandler
+M.SwitchVoiceEventHandler = SwitchVoiceEventHandler
+M.SwitchInGameMessageEventHandler = SwitchInGameMessageEventHandler
 
 return M
