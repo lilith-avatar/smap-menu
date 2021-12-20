@@ -16,7 +16,7 @@ local M = {}
 local root
 
 -- 服装数据
-local costumes = {}
+local outfits = {}
 -- 玩家上次保存时的服装IDs
 local defaultIds = {}
 -- 当前身上的服装IDs
@@ -255,11 +255,11 @@ function GetPlayerOwnedList()
         --     Debug.Log(string.format('[%02d] %s', k, dump(v)))
         -- end
         if _ownedItems ~= nil and _ownedItems ~= {} then
-            costumes = {}
+            outfits = {}
             for _, v in ipairs(_ownedItems) do
                 if v.gender == 0 or v.gender == gender then
                     -- 判断服装是否可用，性别是否相符
-                    costumes[v.itemId] = {
+                    outfits[v.itemId] = {
                         Id = v.itemId,
                         Gender = v.gender,
                         New = not v.viewed,
@@ -290,7 +290,7 @@ function UpdateItemList(_subType)
     -- 根据SubType拿到服装列表
     for _, st in ipairs(_subType) do
         Debug.Assert(st ~= nil, '[换装] SubType为空')
-        for _, cos in pairs(costumes) do
+        for _, cos in pairs(outfits) do
             if cos.SubType == st then
                 table.insert(currItemList, cos)
             end
@@ -305,7 +305,7 @@ end
 function UpdateNewTypes()
     -- 找到有红点的标签
     newTypes = {}
-    for _, cos in pairs(costumes) do
+    for _, cos in pairs(outfits) do
         if cos.New == true then
             newTypes[cos.MainType] = (newTypes[cos.MainType] or 0) + 1
             newTypes[cos.SubType] = (newTypes[cos.SubType] or 0) + 1
@@ -323,7 +323,7 @@ function ClearRedDot(_id)
     Debug.Log(string.format('[换装] 清除红点 id = %s', _id))
     AvatarManager.ClearRedPot(1, _id)
 
-    local cos = costumes[_id]
+    local cos = outfits[_id]
     if cos.New then
         newTypes[cos.MainType] = newTypes[cos.MainType] - 1
         newTypes[cos.SubType] = newTypes[cos.SubType] - 1
