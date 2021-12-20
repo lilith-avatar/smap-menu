@@ -35,6 +35,9 @@ local gender  -- 玩家性别
 -- 外观信息下载成功
 local avatarDownloaded = false
 
+-- 当前数据
+local currId
+
 -- 常量
 local MSG_SUCCEEDED = 'succeeded'
 local MSG_FAILED = 'failed'
@@ -297,8 +300,11 @@ function UpdateItemList(_subType)
         end
     end
 
-    -- 触发GUI物品列表更新
-    M.Fire(M.Event.Enum.REFRESH_GUI.ITEMLIST, currItemList)
+    local callback = function()
+        -- 触发GUI物品列表更新
+        M.Fire(M.Event.Enum.REFRESH_GUI.ITEMLIST, currItemList, currId)
+    end
+    GetOutfitCurrId(currItemList, callback)
 end
 
 --- 更新有红点的MainType和SubType
@@ -314,6 +320,24 @@ function UpdateNewTypes()
 
     -- 触发GUI更新
     M.Fire(M.Event.Enum.REFRESH_GUI.MENU, newTypes)
+end
+
+--- 得到当前的服装
+function GetOutfitCurrId(_currItemList, _callback)
+    currId = nil
+    local findCurrId = function(_items)
+        for _, v1 in pairs(_currItemList) do
+            for _, v2 in pairs(_items) do
+                if v1.Id == v2 then
+                    currId = v2
+                    _callback()
+                    return
+                end
+            end
+        end
+        _callback()
+    end
+    avatar:GetCurrentSuits(findCurrId)
 end
 
 --! 玩家行为相关接口

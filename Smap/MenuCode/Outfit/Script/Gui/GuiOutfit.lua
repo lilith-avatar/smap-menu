@@ -2,7 +2,14 @@
 --- @module Outfit GUI
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
+-- cache
+local wait, invoke = wait, invoke
+local world = world
+local Vector2, Color, Enum = Vector2, Color, Enum
+local Debug = Debug
+local ResourceManager, AvatarManager, ScreenCapture = ResourceManager, AvatarManager, ScreenCapture
 
+--* 模块
 local M = {}
 
 -- 本地缓存
@@ -29,6 +36,10 @@ local imgTips
 local btnBack, btnRestore, btnRedo, btnUndo
 -- 服装的Scroller节点
 local sclOutfit
+
+--* 当前选中的ItemId
+local currId
+
 -- 节点列表
 local mainTypeBtns = {}
 local subTypePnls = {}
@@ -102,6 +113,7 @@ function EventHandler(_event, ...)
     elseif _event == M.Event.Enum.REFRESH_GUI.ITEMLIST then
         local args = {...}
         currItemList = args[1] or {}
+        currId = args[2]
         RefreshScroller()
     elseif _event == M.Event.Enum.REFRESH_GUI.MENU then
         local args = {...}
@@ -316,8 +328,13 @@ function BtnItemClicked(_btnObj)
     local dataIdx = itemDataDict[_btnObj].dataIdx
     if dataIdx ~= nil and dataIdx <= #currItemList then
         local data = currItemList[dataIdx]
+        local prevItemObj = currItemObj
         -- 更新当前ItemObj
         currItemObj = _btnObj
+        if prevItemObj == currItemObj then
+            currId = nil
+            currItemObj = nil
+        end
         local id = currItemList[dataIdx].Id
         -- 调用引擎接口换装、红点
         M.Fire(M.Event.Enum.CHANGE_CLOTHES, id, data.New)
@@ -360,13 +377,12 @@ function BtnItemLongPressBegin(_btnObj)
         imgTips.Txt_RichText.Text = richText
         local btnScnPos = _btnObj.ScreenPosition
         local pnlRightSize = pnlRight.FinalSize
+        local anchorX = 1 / 2
         if btnScnPos.X > 0 and btnScnPos.Y > 0 and pnlRightSize.X > 0 and pnlRightSize.Y > 0 then
             if lineIdx == 2 then
                 anchorX = 3 / 4
             elseif lineIdx == 3 then
                 anchorX = 1 / 4
-            else
-                anchorX = 1 / 2
             end
             imgTips.AnchorsX = Vector2.One * anchorX
             imgTips.AnchorsY = Vector2.One * 0.5
@@ -689,6 +705,7 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
     -- 加载服装Thumbnail资源
     local callback = function(_resRef, _msg)
         if _resRef then
+            _obj.Img_Frame.Enable = data.Id == currId
             _obj.Img_Item.Texture = _resRef
             _obj.Img_Item.Enable = true
             _obj.Img_Load.Enable = false
