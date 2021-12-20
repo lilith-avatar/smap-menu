@@ -20,6 +20,8 @@ local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, f
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
 local isNone = true
 local gui = {}
+local i, headPortrait = 0, nil
+local friText, playerText, imText = 'Friends', 'Player', 'Say Something'
 
 local resReplaceTab = {
     Gaming = 'games',
@@ -70,6 +72,7 @@ function InitGui()
     gui.ImgBase.Color = Color(255, 255, 255, 0)
     gui.DisplayBase:SetActive(false)
     gui.BtnBase:SetActive(false)
+    gui.InputFieldIm.Tips = '<color=#dadada>'..imText..'</color>'
 
     gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
@@ -468,9 +471,7 @@ function SettingBind()
     gui.TextShut.OnEnter:Connect(
         function()
             gui.BtnShut:SetActive(true)
-            Debug.Log('ss')
             gui.BtnOpen:SetActive(false)
-            Debug.Log('sssss')
             gui.GraphicMask:SetActive(false)
         end
     )
@@ -577,16 +578,27 @@ function PlayerInGameIm(_text)
 end
 
 --! Event handlers
+function TranslateTextEventHandler(_text, _com)
+    print('收到了呀')
+    if _com == 'TextPlayNum' then
+        playerText = _text
+    elseif _com == 'TextFriList' then
+        friText = _text
+        gui.TextFriList.Text = friText..'(' .. i .. ')'
+    elseif _com == 'InputFieldIm' then
+        imText = _com
+        gui.InputFieldIm.Tips = '<color=#dadada>'..imText..'</color>'
+    end
+end
 
 function GetFriendsListEventHandler(_list)
-    local i, headPortrait = 0, nil
     local callback = function(_profile)
         headPortrait = _profile.HeadPortrait
     end
     for _ in pairs(_list) do
         i = i + 1
     end
-    gui.TextFriList.Text = 'Friends (' .. i .. ')'
+    gui.TextFriList.Text = friText..'(' .. i .. ')'
     ClearChildren(gui.PnlFriList)
     for k, v in pairs(_list) do
         gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
@@ -646,7 +658,7 @@ function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
-    gui.TextPlayNum.Text = 'Player (' .. length .. ')'
+    gui.TextPlayNum.Text = playerText..' (' .. length .. ')'
     if _isAdded then
         headImgCache = _playerList
         AdjustHeadPos(headImgCache, _playerTab)
@@ -741,5 +753,6 @@ M.MenuSwitchEventHandler = MenuSwitchEventHandler
 M.SwitchOutfitEntranceEventHandler = SwitchOutfitEntranceEventHandler
 M.SwitchVoiceEventHandler = SwitchVoiceEventHandler
 M.SwitchInGameMessageEventHandler = SwitchInGameMessageEventHandler
+M.TranslateTextEventHandler = TranslateTextEventHandler
 
 return M

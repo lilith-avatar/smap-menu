@@ -21,13 +21,15 @@ M.Events = {
     'MenuSwitchEvent',
     'SwitchOutfitEntranceEvent',
     'SwitchVoiceEvent',
-    'SwitchInGameMessageEvent'
+    'SwitchInGameMessageEvent',
+    'TranslateTextEvent'
 }
 
 M.Modules = {
     'MenuLogic/MenuDisplay',
     'MenuLogic/MenuCtr',
-    'MenuLogic/MenuApi'
+    'MenuLogic/MenuApi',
+    'MenuLogic/MenuLocalization'
 }
 
 return M
