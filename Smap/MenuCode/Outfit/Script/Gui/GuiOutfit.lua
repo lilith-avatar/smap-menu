@@ -45,6 +45,7 @@ local MAINTYPE_BTN_OFFSET_Y = 20
 local SUBTYPE_BTN_LEFT_MARGIN = 60
 local SUBTYPE_BTN_SPACE_X = 80
 local ITEM_LOADING_CYCLE_TIME = 1 -- second
+local ITEM_COUNTDOWN_TXT_TIMER_OFFSET_X = 10
 local TIPS_IMG_OFFSET_Y = -240
 
 --* 动画相关
@@ -651,6 +652,30 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
     end
     invoke(adjustText)
 
+    -- GUI 限时服装
+    if data.Expiration > -1 then
+        _obj.Img_Countdown.Enable = true
+
+        -- 剩余时间
+        local restTime = data.Expiration - os.time()
+        _obj.Img_Countdown.Txt_Timer.Text = ShowRestTime(restTime)
+
+        if restTime > 0 then
+            --* 显示限时倒计时
+            _obj.Btn_Item.Clickable = true
+            _obj.Img_Countdown.Img_Timer.Enable = true
+            _obj.Img_Countdown.Txt_Timer.Offset = Vector2(ITEM_COUNTDOWN_TXT_TIMER_OFFSET_X, 0)
+        else
+            --TODO: 已过期：需要Disable，改GUI
+            _obj.Btn_Item.Clickable = false
+            _obj.Img_Countdown.Img_Timer.Enable = false
+            _obj.Img_Countdown.Txt_Timer.Offset = Vector2.Zero
+            _obj.Img_Item.Alpha = 0.3
+        end
+    else
+        _obj.Img_Countdown.Enable = false
+    end
+
     -- loading 动画
     _obj.Img_Load.Tween.Properties = {Angle = 0.003}
     _obj.Img_Load.Tween.EaseCurve = Enum.EaseCurve.Linear
@@ -681,6 +706,32 @@ function StopAllTween()
             obj.Img_Load.Tween:Complete()
         end
     end
+end
+
+--- 恢复默认标签
+function ResetToDefault()
+    currMainType = defaultMainType
+    currSubType = defaultSubType
+end
+
+--- 得到当前剩余时间
+-- @param @number _restTime 剩余时间（秒）
+-- @return @string 显示文本
+function ShowRestTime(_restTime)
+    local day = M.Xls.GlobalText.Day.Text
+    local hour = M.Xls.GlobalText.Hour.Text
+    local minute = M.Xls.GlobalText.Minute.Text
+    local expired = M.Xls.GlobalText.Expired.Text
+    if _restTime >= 86400 then
+        return string.format('%s %s', math.floor(_restTime / 86400), day)
+    elseif _restTime >= 3600 then
+        return string.format('%s %s', math.floor(_restTime / 3600), hour)
+    elseif _restTime >= 60 then
+        return string.format('%s %s', math.floor(_restTime / 60), minute)
+    elseif _restTime > 0 then
+        return string.format('< 1 %s', minute)
+    end
+    return expired
 end
 
 --! GUI 动画
@@ -721,6 +772,8 @@ end
 
 --- 打开界面
 function GuiOpen()
+    -- 恢复默认页签
+    ResetToDefault()
     gui.Enable = true
 
     -- 显示默认页签
@@ -735,6 +788,8 @@ end
 function GuiClose()
     --! 延缓关闭
     gui.Enable = false
+    -- 恢复默认页签
+    ResetToDefault()
 end
 
 --- 判断GUI是否开启
