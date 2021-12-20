@@ -3,6 +3,11 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
+local wait, localPlayer = wait, localPlayer
+local Enum, EulerDegree = Enum, EulerDegree
+local Game, ResourceManager = Game, ResourceManager
+
+--* 模块
 local M = {}
 
 -- 根节点（Init时候被赋值）
@@ -10,18 +15,29 @@ local root
 local booth  -- 换装亭
 local npc  -- 换装模特
 local avatar  -- 模特形象
-local currAnim  --当前动画
+local currBodyAnim  --当前全身动画
+local currEmoAnim  --当前表情动画
+
+-- 当前已播放标签动画
+local emoAnimIsPlaying = false
 
 -- 动画资源根目录
 local RES_ANIM_ROOT_PATH = 'Outfit/Anim/'
+
+-- 眨眼间隔时间
+local BLINK_MIN, BLINK_MAX = 2, 6
 
 -- NPC形象默认旋转
 local NPC_DEFAULT_LOCAL_ROT = EulerDegree(0, 0, 0)
 
 -- 动画资源名称
 local anims = {
-    idle = 'm_01_idle_stand_01',
-    sit = 'h_01_sit_loop_02'
+    body = {
+        idle = 'm_01_idle_stand_01'
+    },
+    emo = {
+        blink = 'u_01_face_emotion_blink_01'
+    }
 }
 
 --- 初始化
@@ -37,7 +53,8 @@ function InitLocalVars()
     booth = root.Booth
     npc = booth.Npc
     avatar = npc.NpcAvatar
-    currAnim = 'idle'
+    currBodyAnim = 'idle'
+    currEmoAnim = 'blink'
 
     -- 状态
     npc.Enable = false
@@ -56,9 +73,11 @@ function EventHandler(_event, ...)
         booth.Position = args[1] or localPlayer.Position
         localPlayer.Enable = false
         npc.Enable = true
-        currAnim = 'idle' -- TODO: 目前默认只有idle
+        currBodyAnim = 'idle' -- TODO: 目前默认只有idle
+        currEmoAnim = 'blink'
         avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
-        PlayAnim()
+        PlayBodyAnim()
+        PlayEmoAnim()
     elseif _event == M.Event.Enum.CLOSE then
         booth.Enable = false
         localPlayer.Enable = true
@@ -81,10 +100,22 @@ function UpdateNpcRotation(_localRot, _deltaRotY)
     end
 end
 
---- 播放动画
-function PlayAnim()
-    avatar:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims[currAnim]))
-    avatar:PlayAnimation(anims[currAnim], 2, 1, 0, true, true, 1)
+--- 播放身体动画
+function PlayBodyAnim()
+    avatar:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims.body[currBodyAnim]))
+    avatar:PlayAnimation(anims.body[currBodyAnim], 2, 1, 0, true, true, 1)
+end
+
+--- 播放表情动画
+function PlayEmoAnim()
+    if not emoAnimIsPlaying then
+        emoAnimIsPlaying = true
+        while (wait(math.random(BLINK_MIN, BLINK_MAX))) do
+            local head = avatar:GetHeadObject()
+            head:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims.emo[currEmoAnim]))
+            head:PlayAnimation(anims.emo[currEmoAnim], 2, 1, 0, true, false, 1)
+        end
+    end
 end
 
 --! public method
