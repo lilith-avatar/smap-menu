@@ -189,7 +189,6 @@ end
 
 function TranslateSp(_tab)
     for _,v in pairs(_tab) do
-        print('为啥没法啊')
         M.Kit.Util.Net.Fire_C('TranslateTextEvent', localPlayer, v[currLang], v['Key'])
     end
 end
