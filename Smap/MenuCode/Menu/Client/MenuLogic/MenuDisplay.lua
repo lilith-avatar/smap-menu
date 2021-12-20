@@ -579,7 +579,6 @@ end
 
 --! Event handlers
 function TranslateTextEventHandler(_text, _com)
-    print('收到了呀')
     if _com == 'TextPlayNum' then
         playerText = _text
     elseif _com == 'TextFriList' then
