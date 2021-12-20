@@ -5,6 +5,7 @@
 
 -- Local Caches
 local world, invoke, Game, PlayerHub = world, invoke, Game, PlayerHub
+local VoiceManager, channel = VoiceManager, nil
 local S = _G.mS
 
 --* 模块
@@ -20,6 +21,7 @@ local headPortrait
 ---初始化
 function Init()
     InitEvents()
+    InitVoiceChannel()
 end
 
 ---初始化游戏事件
@@ -32,8 +34,8 @@ end
 
 ---玩家加入事件
 function OnPlayerAdded(_player)
+    SwitchChannel(_player, true)
     GetPlayerProfile(_player)
-
     playerInfoTab[_player] = headPortrait
     table.insert(playerList, _player)
 
@@ -47,6 +49,7 @@ function OnPlayerAdded(_player)
 end
 
 function OnPlayerRemoved(_player)
+    SwitchChannel(_player, false)
     playerInfoTab[_player.UserId] = {}
     for k, v in pairs(playerList) do
         if v == _player then
@@ -87,10 +90,24 @@ function GetPlayerProfile(_player)
     PlayerHub.GetPlayerProfile(_player.UserId, callback)
 end
 
-function MuteLocalEventHandler(_playerId, _isOn)
-    for _, v in pairs(playerList) do
-        M.Kit.Util.Net.Fire_C('MuteSpecificPlayerEvent', v, _playerId, not _isOn)
+function SwitchChannel(_player, _type)
+    if _type then
+        channel:AddSpeaker(_player)
+    else
+        channel:RemoveSpeaker(_player)
     end
+end
+
+function InitVoiceChannel()
+    VoiceManager.CreateChannel('DefaultVoiceChannel')
+    channel = VoiceManager.GetChannel('DefaultVoiceChannel')
+    channel.SpeakerAdded:Connect(function(_player)
+        channel:MuteSpeaker(_player, true)
+    end)
+end
+
+function MuteLocalEventHandler(_player, _isOn)
+    channel:MuteSpeaker(_player, not _isOn)
 end
 
 function TeleportPlayerToFriendGameEventHandler(_player, _roomId)

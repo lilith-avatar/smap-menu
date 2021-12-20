@@ -35,7 +35,7 @@ function Init()
 
     local initSubfun = function()
         Game.ShowSystemBar(false)
-        M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
+        M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
     end
     invoke(initSubfun, 5)
 end
@@ -193,7 +193,7 @@ function SwitchLocalVoice()
                 gui.ImgVoiceMask:SetActive(true)
                 isOn = true
             end
-            M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer.UserId, isOn)
+            M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
         end
     )
 end
