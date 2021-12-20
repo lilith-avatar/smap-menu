@@ -377,7 +377,7 @@ function BtnItemLongPressBegin(_btnObj)
         end
     else
         -- 隐藏tips
-        tipsObj.Enable = false
+        imgTips.Enable = false
     end
 end
 
