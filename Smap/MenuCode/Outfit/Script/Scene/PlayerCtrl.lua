@@ -4,8 +4,8 @@
 --- @author Yuancheng Zhang
 
 local wait, localPlayer = wait, localPlayer
-local Enum, EulerDegree = Enum, EulerDegree
-local Game, ResourceManager = Game, ResourceManager
+local Vector3, EulerDegree = Vector3, EulerDegree
+local ResourceManager = ResourceManager
 
 --* 模块
 local M = {}
@@ -73,6 +73,7 @@ function EventHandler(_event, ...)
         booth.Position = args[1] or localPlayer.Position
         localPlayer.Enable = false
         npc.Enable = true
+        avatar.LocalPosition = Vector3.Zero
         currBodyAnim = 'idle' -- TODO: 目前默认只有idle
         currEmoAnim = 'blink'
         avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
