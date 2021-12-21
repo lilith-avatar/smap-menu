@@ -506,7 +506,7 @@ function RefreshSubTypePnl()
                 newCnt = newCnt + newTypes[subtype]
             end
         end
-        btn.obj.Txt_Label.Img_Dot.Enable = newCnt > 0
+        btn.obj.Txt_Label.Img_Dot.Enable = btn.data.CheckNew and newCnt > 0
     end
 
     if needCalOffset then

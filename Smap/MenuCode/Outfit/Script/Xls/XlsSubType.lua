@@ -13,6 +13,7 @@ local SubTypeXls = {
         MainType = '01',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [2] = {
@@ -21,6 +22,7 @@ local SubTypeXls = {
         MainType = '01',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Short'
     },
     [3] = {
@@ -29,6 +31,7 @@ local SubTypeXls = {
         MainType = '01',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Medium'
     },
     [4] = {
@@ -37,6 +40,7 @@ local SubTypeXls = {
         MainType = '01',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Long'
     },
     [5] = {
@@ -45,6 +49,7 @@ local SubTypeXls = {
         MainType = '01',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Braids'
     },
     [6] = {
@@ -53,6 +58,7 @@ local SubTypeXls = {
         MainType = '01',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Special'
     },
     [7] = {
@@ -61,6 +67,7 @@ local SubTypeXls = {
         MainType = '02',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [8] = {
@@ -69,6 +76,7 @@ local SubTypeXls = {
         MainType = '02',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Accessories'
     },
     [9] = {
@@ -77,6 +85,7 @@ local SubTypeXls = {
         MainType = '02',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Hats'
     },
     [10] = {
@@ -85,6 +94,7 @@ local SubTypeXls = {
         MainType = '02',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Fun'
     },
     [11] = {
@@ -93,6 +103,7 @@ local SubTypeXls = {
         MainType = '03',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [12] = {
@@ -101,6 +112,7 @@ local SubTypeXls = {
         MainType = '03',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Glasses'
     },
     [13] = {
@@ -109,6 +121,7 @@ local SubTypeXls = {
         MainType = '03',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Others'
     },
     [14] = {
@@ -117,6 +130,7 @@ local SubTypeXls = {
         MainType = '04',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [15] = {
@@ -125,6 +139,7 @@ local SubTypeXls = {
         MainType = '04',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_MiniDresses'
     },
     [16] = {
@@ -133,6 +148,7 @@ local SubTypeXls = {
         MainType = '04',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_LongDresses'
     },
     [17] = {
@@ -141,6 +157,7 @@ local SubTypeXls = {
         MainType = '04',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Sets'
     },
     [18] = {
@@ -149,6 +166,7 @@ local SubTypeXls = {
         MainType = '04',
         Category = 'Outfit',
         Enable = false,
+        CheckNew = true,
         _Label = 'SubType_Label_Fun'
     },
     [19] = {
@@ -157,6 +175,7 @@ local SubTypeXls = {
         MainType = '05',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [20] = {
@@ -165,6 +184,7 @@ local SubTypeXls = {
         MainType = '05',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Tshirts'
     },
     [21] = {
@@ -173,6 +193,7 @@ local SubTypeXls = {
         MainType = '05',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Shirts'
     },
     [22] = {
@@ -181,6 +202,7 @@ local SubTypeXls = {
         MainType = '05',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Sweaters'
     },
     [23] = {
@@ -189,6 +211,7 @@ local SubTypeXls = {
         MainType = '05',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_CropTops'
     },
     [24] = {
@@ -197,6 +220,7 @@ local SubTypeXls = {
         MainType = '06',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [25] = {
@@ -205,6 +229,7 @@ local SubTypeXls = {
         MainType = '06',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_ShortJackets'
     },
     [26] = {
@@ -213,6 +238,7 @@ local SubTypeXls = {
         MainType = '06',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Jackets'
     },
     [27] = {
@@ -221,6 +247,7 @@ local SubTypeXls = {
         MainType = '06',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Coats'
     },
     [28] = {
@@ -229,6 +256,7 @@ local SubTypeXls = {
         MainType = '07',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [29] = {
@@ -237,6 +265,7 @@ local SubTypeXls = {
         MainType = '07',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Shorts'
     },
     [30] = {
@@ -245,6 +274,7 @@ local SubTypeXls = {
         MainType = '07',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_LongShorts'
     },
     [31] = {
@@ -253,6 +283,7 @@ local SubTypeXls = {
         MainType = '07',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Pants'
     },
     [32] = {
@@ -261,6 +292,7 @@ local SubTypeXls = {
         MainType = '08',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [33] = {
@@ -269,6 +301,7 @@ local SubTypeXls = {
         MainType = '08',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Skirts'
     },
     [34] = {
@@ -277,6 +310,7 @@ local SubTypeXls = {
         MainType = '08',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_MidSkirts'
     },
     [35] = {
@@ -285,6 +319,7 @@ local SubTypeXls = {
         MainType = '08',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Dresses'
     },
     [36] = {
@@ -293,6 +328,7 @@ local SubTypeXls = {
         MainType = '09',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [37] = {
@@ -301,6 +337,7 @@ local SubTypeXls = {
         MainType = '09',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Anklets'
     },
     [38] = {
@@ -309,6 +346,7 @@ local SubTypeXls = {
         MainType = '09',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Socks'
     },
     [39] = {
@@ -317,6 +355,7 @@ local SubTypeXls = {
         MainType = '09',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_LongSocks'
     },
     [40] = {
@@ -325,6 +364,7 @@ local SubTypeXls = {
         MainType = '09',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Leggings'
     },
     [41] = {
@@ -333,6 +373,7 @@ local SubTypeXls = {
         MainType = '09',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Pantyhoses'
     },
     [42] = {
@@ -341,6 +382,7 @@ local SubTypeXls = {
         MainType = '10',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [43] = {
@@ -349,6 +391,7 @@ local SubTypeXls = {
         MainType = '10',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_LeatherShoes'
     },
     [44] = {
@@ -357,6 +400,7 @@ local SubTypeXls = {
         MainType = '10',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Sneakers'
     },
     [45] = {
@@ -365,6 +409,7 @@ local SubTypeXls = {
         MainType = '10',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Slippers'
     },
     [46] = {
@@ -373,6 +418,7 @@ local SubTypeXls = {
         MainType = '10',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Boots'
     },
     [47] = {
@@ -381,6 +427,7 @@ local SubTypeXls = {
         MainType = '11',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [48] = {
@@ -389,6 +436,7 @@ local SubTypeXls = {
         MainType = '11',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Bracelets'
     },
     [49] = {
@@ -397,6 +445,7 @@ local SubTypeXls = {
         MainType = '11',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Necklaces'
     },
     [50] = {
@@ -405,6 +454,7 @@ local SubTypeXls = {
         MainType = '11',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Earrings'
     },
     [51] = {
@@ -413,6 +463,7 @@ local SubTypeXls = {
         MainType = '12',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = false,
         _Label = 'SubType_Label_All'
     },
     [52] = {
@@ -421,6 +472,7 @@ local SubTypeXls = {
         MainType = '12',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Bags'
     },
     [53] = {
@@ -429,6 +481,7 @@ local SubTypeXls = {
         MainType = '12',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Gloves'
     },
     [54] = {
@@ -437,6 +490,7 @@ local SubTypeXls = {
         MainType = '12',
         Category = 'Outfit',
         Enable = true,
+        CheckNew = true,
         _Label = 'SubType_Label_Others'
     }
 }

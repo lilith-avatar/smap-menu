@@ -172,7 +172,7 @@ function EventHandler(_event, ...)
         DodoChangeClothes({id})
         -- 取消红点
         if isNew then
-            ClearRedDot(id)
+            ClearRedDot({id})
         end
     elseif _event == M.Event.Enum.ACTION.UNDO then
         UndoChangeClothes()
@@ -345,17 +345,18 @@ end
 --! 玩家行为相关接口
 
 --- 取消红点
-function ClearRedDot(_id)
-    Debug.Log(string.format('[换装] 清除红点 id = %s', _id))
-    AvatarManager.ClearRedPot(1, _id)
+function ClearRedDot(_ids)
+    Debug.Log(string.format('[换装] 清除红点 id = %s', table.stringfy(_id)))
+    for _, id in pairs(_ids) do
+        AvatarManager.ClearRedPot(1, id)
 
-    local cos = outfits[_id]
-    if cos.New then
-        newTypes[cos.MainType] = newTypes[cos.MainType] - 1
-        newTypes[cos.SubType] = newTypes[cos.SubType] - 1
-        cos.New = false
+        local cos = outfits[id]
+        if cos.New then
+            newTypes[cos.MainType] = newTypes[cos.MainType] - 1
+            newTypes[cos.SubType] = newTypes[cos.SubType] - 1
+            cos.New = false
+        end
     end
-
     -- 触发GUI更新
     M.Fire(M.Event.Enum.REFRESH_GUI.MENU, newTypes)
 end
