@@ -19,7 +19,7 @@ local Xls = {
 M.Event = require('Outfit/Script/Event')
 local I18N = require('Outfit/Script/Util/I18N')
 local Engine = require('Outfit/Script/Scene/Engine')
-local PlayerCtrl = require('Outfit/Script/Scene/PlayerCtrl')
+local NpcCtrl = require('Outfit/Script/Scene/NpcCtrl')
 local GuiAvatar = require('Outfit/Script/Gui/GuiAvatar')
 local GuiOutfit = require('Outfit/Script/Gui/GuiOutfit')
 local GuiTransition = require('Outfit/Script/Gui/GuiTransition')
@@ -79,7 +79,7 @@ function InitSubModule()
     InitSubModuleAux(GuiAvatar, mt) -- GUI
     InitSubModuleAux(GuiTransition, mt) -- GUI
     InitSubModuleAux(Engine, mt) -- 引擎相关接口
-    InitSubModuleAux(PlayerCtrl, mt) -- 玩家控制器
+    InitSubModuleAux(NpcCtrl, mt) -- 玩家控制器
     InitSubModuleAux(Cam, mt) -- 相机
     InitSubModuleAux(MenuHub, mt) -- Menu相关
 end
