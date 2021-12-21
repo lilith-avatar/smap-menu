@@ -83,21 +83,6 @@ function EventHandler(_event, ...)
         booth.Enable = false
         localPlayer.Enable = true
         npc.Enable = false
-    elseif _event == M.Event.Enum.NPC_ROT then
-        local args = {...}
-        local diff = args[1]
-        UpdateNpcRotation(nil, diff)
-    end
-end
-
---- 更新玩家旋转
-function UpdateNpcRotation(_localRot, _deltaRotY)
-    if _localRot then
-        avatar.LocalRotation = _localRot
-    end
-
-    if _deltaRotY then
-        avatar:Rotate(0, _deltaRotY, 0)
     end
 end
 

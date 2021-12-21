@@ -32,7 +32,7 @@ local mousePos = nil --! TEST ONLY: 开启鼠标右键监听事件
 
 --* 枚举常量
 -- 事件常量
-local TOUCH_ZONE_PAN_2_NPC_ROT = -0.5 --* 手指滑动位移x转换成NPC转向位移系数
+local TOUCH_ZONE_PAN_2_NPC_ROT = -0.2 --* 手指滑动位移x转换成NPC转向位移系数
 local TOUCH_ZONE_INPUT_2_NPC_ROT = -0.2 --! TEST 鼠标右键滑动位移x转换成NPC转向位移系数
 
 --- 初始化
@@ -72,12 +72,13 @@ end
 --- 初始化界面
 function InitPnls()
     --* 拖动Fig转动人物
-    local OnPanStayHandler = function(_pos, _panDistance, _deltaDistance)
-        print('OnPanStayHandler', _pos)
-        local diff = _deltaDistance.X * TOUCH_ZONE_PAN_2_NPC_ROT
-        M.Fire(M.Event.Enum.NPC_ROT, diff)
+    local OnTouched = function(_touchInfo)
+        if #_touchInfo == 1 then
+            local diff = _touchInfo[1].DeltaPosition.X * TOUCH_ZONE_PAN_2_NPC_ROT
+            UpdateNpcRotation(nil, diff)
+        end
     end
-    figTouchZone.OnPanStay:Connect(OnPanStayHandler)
+    figTouchZone.OnTouched:Connect(OnTouched)
 
     --! TEST 鼠标右键旋转
     local OnKeyHoldHandler = function()
@@ -86,7 +87,7 @@ function InitPnls()
             if mousePos then
                 local diff = (pos.x - mousePos.x) * TOUCH_ZONE_INPUT_2_NPC_ROT
                 -- 发出事件
-                M.Fire(M.Event.Enum.NPC_ROT, diff)
+                UpdateNpcRotation(nil, diff)
             end
             mousePos = pos
         end
@@ -100,6 +101,19 @@ function InitPnls()
         end
     end
     Input.OnKeyUp:Connect(OnKeyUpHandler)
+end
+
+--! 人物旋转
+
+--- 更新玩家旋转
+function UpdateNpcRotation(_localRot, _deltaRotY)
+    if _localRot then
+        avatar.LocalRotation = _localRot
+    end
+
+    if _deltaRotY then
+        avatar:Rotate(0, _deltaRotY, 0)
+    end
 end
 
 --! public method
