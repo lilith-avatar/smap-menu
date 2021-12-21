@@ -174,6 +174,10 @@ function EventHandler(_event, ...)
         if isNew then
             ClearRedDot({id})
         end
+    elseif _event == M.Event.Enum.CLEAR_DOT then
+        local args = {...}
+        local ids = args[1]
+        ClearRedDot(ids)
     elseif _event == M.Event.Enum.ACTION.UNDO then
         UndoChangeClothes()
     elseif _event == M.Event.Enum.ACTION.REDO then
@@ -267,7 +271,8 @@ function GetPlayerOwnedList()
                     outfits[v.itemId] = {
                         Id = v.itemId,
                         Gender = v.gender,
-                        New = not v.viewed,
+                        -- New = not v.viewed,
+                        New = true,
                         MainType = string.sub(v.type, 1, 2),
                         SubType = v.type,
                         Enable = true,
@@ -346,7 +351,7 @@ end
 
 --- 取消红点
 function ClearRedDot(_ids)
-    Debug.Log(string.format('[换装] 清除红点 id = %s', table.stringfy(_id)))
+    Debug.Log(string.format('[换装] 清除红点 id = %s', table.stringfy(_ids)))
     for _, id in pairs(_ids) do
         AvatarManager.ClearRedPot(1, id)
 

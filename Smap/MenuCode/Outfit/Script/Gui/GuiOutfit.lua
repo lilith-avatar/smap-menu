@@ -37,6 +37,9 @@ local btnBack, btnRestore, btnRedo, btnUndo
 -- 服装的Scroller节点
 local sclOutfit
 
+--* 当前选中的SubType按钮
+local currStBtn
+
 --* 当前选中的ItemId
 local currId
 
@@ -308,15 +311,25 @@ function BtnSubTypeClicked(_btnObj)
     -- 停止全部Tween动画
     StopAllTween()
 
+    local stBtn
     -- 刷新按钮样式
     for st, btn in pairs(subTypePnls[currMainType].btns) do
         if btn.obj == _btnObj then
             if currSubType ~= st then
                 -- 更新当前SubType
                 currSubType = st
+                stBtn = btn
             end
+        elseif btn == currStBtn and btn.data.CheckNew then
+            -- 去掉旧的红点
+            local ids = {}
+            for _, item in pairs(currItemList) do
+                table.insert(ids, item.Id)
+            end
+            M.Fire(M.Event.Enum.CLEAR_DOT, ids)
         end
     end
+    currStBtn = stBtn
 
     M.Fire(M.Event.Enum.UPDATE_CURR_TYPES, currMainType, currSubType)
 end

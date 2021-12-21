@@ -30,7 +30,8 @@ local Event = {
         -- 已经获得玩家物品列表
         GOT_PLAYER_OWN_ITEMLIST = 6,
         -- 换装
-        CHANGE_CLOTHES = 7
+        CHANGE_CLOTHES = 7,
+        CLEAR_DOT = 8
     }
 }
 
