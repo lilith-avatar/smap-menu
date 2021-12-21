@@ -486,7 +486,7 @@ function SettingBind()
     end
 
     for i, j in pairs(gui.GraphicSetBtnTab) do
-        j.OnClick:Connect(
+        j.OnEnter:Connect(
             function()
                 Game.SetGraphicQuality(i)
             end

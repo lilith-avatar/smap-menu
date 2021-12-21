@@ -41,13 +41,13 @@ local LocalizationTab = {
     TextShut = {
         Key = 'TextShut',
         zh_CN = '关闭',
-        en = 'Shut',
+        en = 'OFF',
         id = 'Penutup'
     },
     TextOpen = {
         Key = 'TextOpen',
         zh_CN = '打开',
-        en = 'Open',
+        en = 'On',
         id = 'Membuka'
     },
     TextLow = {
@@ -89,13 +89,13 @@ local LocalizationTab = {
     BtnShut = {
         Key = 'BtnShut',
         zh_CN = '关闭',
-        en = 'Shut',
+        en = 'OFF',
         id = 'Penutup'
     },
     BtnOpen = {
         Key = 'BtnOpen',
         zh_CN = '打开',
-        en = 'Open',
+        en = 'On',
         id = 'Membuka'
     },
     BtnLow = {

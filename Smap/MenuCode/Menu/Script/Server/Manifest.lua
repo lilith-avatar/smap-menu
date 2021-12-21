@@ -9,7 +9,8 @@ Manifest.Events = {
     'InGamingImEvent',
     'MuteLocalEvent',
     'TeleportPlayerToFriendGameEvent',
-    'ConfirmNoticeEvent'
+    'ConfirmNoticeEvent',
+    'EnableSubChannel'
 }
 
 Manifest.Modules = {

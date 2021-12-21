@@ -31,6 +31,14 @@ function SwitchInGameMessage(_boolean)
     M.Kit.Util.Net.Fire_C('SwitchInGameMessageEvent', localPlayer, _boolean)
 end
 
+function EnableSubChannel(_boolean, _tab)
+    if _boolean then
+        M.Kit.Util.Net.Fire_S('EnableSubChannelEvent', _boolean, _tab)
+    else
+        M.Kit.Util.Net.Fire_S('EnableSubChannelEvent', _boolean)
+    end
+end
+
 -- 初始化换装
 local Outfit = require('Outfit/Script/Main')
 invoke(Outfit.Init)
@@ -41,6 +49,7 @@ M.MenuSwitch = MenuSwitch
 M.SwichOutfitEntrance = SwichOutfitEntrance
 M.SwitchVoice = SwitchVoice
 M.SwitchInGameMessage = SwitchInGameMessage
+M.EnableSubChannel = EnableSubChannel
 
 --* 换装相关API
 M.Outfit = {}

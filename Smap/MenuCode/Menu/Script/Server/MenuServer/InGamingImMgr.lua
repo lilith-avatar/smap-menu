@@ -12,27 +12,51 @@ local M = S.ModuleUtil.New('InGamingImMgr', S.Base)
 
 --* 本地变量
 local sender  -- 发送者
+local enableSub, tarPlayerTab, subPlayerList = false, {}, {}
 
 --- 发送聊天数据
-function SendToChat(_content)
+function SendToChat(_content, _tarTab)
     if sender.ClassName == 'PlayerInstance' then
-        for _, v in pairs(M.Other.MenuMgr.playerList) do
+        for _, v in pairs(_tarTab) do
             M.Kit.Util.Net.Fire_C('NormalImEvent', v, sender, _content)
         end
     elseif sender == 'Developer' then
         for _, v in pairs(M.Other.MenuMgr.playerList) do
-            M.Kit.Util.Net.Fire_C('NormalImEvent', v, 'Developer', _content)
+            M.Kit.Util.Net.Fire_C('NormalImEvent', v, 'OFFICIAL', _content)
         end
     end
 end
 
 function InGamingImEventHandler(_sendPlayer, _imContent)
-    -- 敏感词过滤
     local callback = function(_imContent, _msg)
-        SendToChat(_msg)
+        SendToChat(_msg, tarPlayerTab)
     end
+
     sender = _sendPlayer
+
+    if enableSub then
+        for _,v in pairs(subPlayerList) do
+            for i,j in pairs(v) do
+                if sender == j then
+                    tarPlayerTab = v
+                end
+            end
+        end
+    else
+        tarPlayerTab = M.Other.MenuMgr.playerList
+    end
+
     ChatManager.SensitiveWordCheck(_imContent, callback)
+end
+
+function EnableSubChannelEventHandler(_boolean, _list)
+    enableSub = _boolean
+    subPlayerList = _list
+    if _boolean then
+        for k,v in pairs(_list) do
+            list[tostring(k)] = v
+        end
+    end
 end
 
 --! Public methods
