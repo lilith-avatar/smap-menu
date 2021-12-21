@@ -104,17 +104,32 @@ end
 --- 播放身体动画
 function PlayBodyAnim()
     avatar:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims.body[currBodyAnim]))
-    avatar:PlayAnimation(anims.body[currBodyAnim], 2, 1, 0, true, true, 1)
+    local graph = avatar.AnimationGraph
+    local animBody = graph:AddAnimationTree('animBody')
+    local anim = animBody:AddClipNode(anims.body[currBodyAnim])
+    anim.Loop = true
+    graph:InstantiateAnimationGraphTo(avatar)
+    avatar:PlayAnimationTree('animBody')
+    -- avatar:PlayAnimation(anims.body[currBodyAnim], 2, 1, 0, true, true, 1)
 end
 
 --- 播放表情动画
 function PlayEmoAnim()
     if not emoAnimIsPlaying then
         emoAnimIsPlaying = true
+        local graph = avatar.AnimationGraph
+        local animEmo = graph:AddAnimationTree('animEmo')
+        local anim = animEmo:AddClipNode(anims.emo[currEmoAnim])
+        anim.Loop = false
         while (wait(math.random(BLINK_MIN, BLINK_MAX))) do
             local head = avatar:GetHeadObject()
-            head:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims.emo[currEmoAnim]))
-            head:PlayAnimation(anims.emo[currEmoAnim], 2, 1, 0, true, false, 1)
+            if head ~= nil then
+                head.BlendSpaceNodeEnabled = true
+                head:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims.emo[currEmoAnim]))
+                graph:InstantiateAnimationGraphTo(head)
+                head:PlayAnimationTree('animEmo')
+            -- head:PlayAnimation(anims.emo[currEmoAnim], 2, 1, 0, true, false, 1)
+            end
         end
     end
 end
