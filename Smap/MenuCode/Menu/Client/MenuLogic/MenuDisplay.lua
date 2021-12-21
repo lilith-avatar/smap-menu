@@ -105,7 +105,7 @@ function DebugOnly()
         else
             isShow = true
         end
-        gui.TestBtn:SetActive(isShow)
+        Game.ShowSystemBar(isShow)
     end
     gui.BtnOldMenu.OnClick:Connect(
         function()
@@ -113,19 +113,6 @@ function DebugOnly()
             if count > 5 then
                 count = 0
                 ShowTest()
-            end
-        end
-    )
-    --FIXME: debug only
-    local test = false
-    gui.TestBtn.OnClick:Connect(
-        function()
-            if test then
-                Game.ShowSystemBar(false)
-                test = false
-            else
-                Game.ShowSystemBar(true)
-                test = true
             end
         end
     )
@@ -236,11 +223,13 @@ function ImgImAni(_isDisplay)
     if _isDisplay then
         gui.ImgIm:SetActive(_isDisplay)
         tarProTab = {Offset = Vector2(40, -121), Color = Color(0, 0, 0, 180)}
+        gui.ImgImBubble.Texture = ResourceManager.GetTexture('MenuRes/svg_ic_comment1')
     else
         gui.InputFieldIm:SetActive(_isDisplay)
         gui.PnlIm:SetActive(_isDisplay)
         gui.BtnArrow:SetActive(_isDisplay)
         tarProTab = {Offset = Vector2(40, 0), Color = Color(0, 0, 0, 0)}
+        gui.ImgImBubble.Texture = ResourceManager.GetTexture('MenuRes/svg_ic_comment')
     end
     comFun = function()
         gui.InputFieldIm:SetActive(_isDisplay)
