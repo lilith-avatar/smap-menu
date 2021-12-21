@@ -4,7 +4,7 @@
 
 local M = {}
 
-M.ROOT_PATH = 'Menu/Client/'
+M.ROOT_PATH = 'Menu/Script/Client/'
 
 M.Events = {
     'NoticeEvent',

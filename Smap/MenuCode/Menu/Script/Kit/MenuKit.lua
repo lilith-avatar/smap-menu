@@ -14,8 +14,8 @@ Debug.EnableLog('ewi')
 local M = {}
 
 --* 常量
-local PATH_ROOT = 'Menu/'
-local PATH_MENUKIT = 'Menu/Kit/'
+local PATH_ROOT = 'Menu/Script/'
+local PATH_MENUKIT = 'Menu/Script/Kit/'
 local PATH_UTIL = PATH_MENUKIT .. 'Util/'
 local PATH_LUA_EXT = PATH_MENUKIT .. 'Util/LuaExt'
 local PATH_CLIENT = PATH_MENUKIT .. 'Framework/Client/'

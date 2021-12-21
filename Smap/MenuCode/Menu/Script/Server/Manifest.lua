@@ -3,7 +3,7 @@
 --- @copyright Lilith Games, Avatar Team
 local Manifest = {}
 
-Manifest.ROOT_PATH = 'Menu/Server/'
+Manifest.ROOT_PATH = 'Menu/Script/Server/'
 
 Manifest.Events = {
     'InGamingImEvent',
