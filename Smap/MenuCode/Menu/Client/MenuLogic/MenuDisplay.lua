@@ -32,14 +32,14 @@ local resReplaceTab = {
 
 --- 初始化
 function Init()
-    InitGui()
-    InitListener()
-
     Game.ShowSystemBar(false)
-    M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
-    local initSubfun = function()
+
+    local deferFun = function()
+        InitGui()
+        InitListener()
     end
-    invoke(initSubfun, 1)
+
+    invoke(deferFun, 0.1)
 end
 
 -- 更新
@@ -77,6 +77,8 @@ function InitGui()
     gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
     gui.PnlMenuTab = {gui.TweenMenuBg, gui.TweenImBubbleBg, gui.TweenVoiceBg}
+
+    M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
 end
 
 --- 事件绑定初始化
@@ -146,6 +148,8 @@ function OpenAndClose()
     gui.BtnMenu.OnClick:Connect(
         function()
             isOpen = true
+            gui.BtnBase.Size = Vector2(132, 0)
+            gui.DisplayBase.Size = Vector2(640, 0)
             DisableCtr(isOpen)
         end
     )
@@ -574,7 +578,7 @@ function TranslateTextEventHandler(_text, _com)
         friText = _text
         gui.TextFriList.Text = friText..'(' .. i .. ')'
     elseif _com == 'InputFieldIm' then
-        imText = _com
+        imText = _text
         gui.InputFieldIm.Tips = '<color=#dadada>'..imText..'</color>'
     end
 end
