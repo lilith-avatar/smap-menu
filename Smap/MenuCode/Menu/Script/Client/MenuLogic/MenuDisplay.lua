@@ -72,7 +72,7 @@ function InitGui()
     gui.ImgBase.Color = Color(255, 255, 255, 0)
     gui.DisplayBase:SetActive(false)
     gui.BtnBase:SetActive(false)
-    gui.InputFieldIm.Tips = '<color=#dadada>'..imText..'</color>'
+    gui.InputFieldIm.Tips = '<color=#dadada>' .. imText .. '</color>'
 
     gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
@@ -138,7 +138,7 @@ function SwitchTextureCtr(_tar, _tab)
     for _, v in pairs(_tab) do
         if v ~= _tar then
             v:GetChild(tostring(v.Name) .. 'Icon').Texture =
-                ResourceManager.GetTexture('MenuRes/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')])
+                ResourceManager.GetTexture('Menu/Gui/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')])
             v:GetChild(tostring(v.Name) .. 'Icon').Color = Color(0, 0, 0, 180)
         end
     end
@@ -179,11 +179,11 @@ function SwitchLocalVoice()
     gui.BtnVoice.OnClick:Connect(
         function()
             if isOn then
-                gui.ImgVoice.Texture = ResourceManager.GetTexture('MenuRes/svg_microoff')
+                gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
                 gui.ImgVoiceMask:SetActive(false)
                 isOn = false
             else
-                gui.ImgVoice.Texture = ResourceManager.GetTexture('MenuRes/svg_microon')
+                gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
                 gui.ImgVoiceMask:SetActive(true)
                 isOn = true
             end
@@ -227,13 +227,13 @@ function ImgImAni(_isDisplay)
     if _isDisplay then
         gui.ImgIm:SetActive(_isDisplay)
         tarProTab = {Offset = Vector2(40, -121), Color = Color(0, 0, 0, 180)}
-        gui.ImgImBubble.Texture = ResourceManager.GetTexture('MenuRes/svg_ic_comment1')
+        gui.ImgImBubble.Texture = ResourceManager.GetTexture('Menu/Gui/svg_ic_comment1')
     else
         gui.InputFieldIm:SetActive(_isDisplay)
         gui.PnlIm:SetActive(_isDisplay)
         gui.BtnArrow:SetActive(_isDisplay)
         tarProTab = {Offset = Vector2(40, 0), Color = Color(0, 0, 0, 0)}
-        gui.ImgImBubble.Texture = ResourceManager.GetTexture('MenuRes/svg_ic_comment')
+        gui.ImgImBubble.Texture = ResourceManager.GetTexture('Menu/Gui/svg_ic_comment')
     end
     comFun = function()
         gui.InputFieldIm:SetActive(_isDisplay)
@@ -276,10 +276,7 @@ function PnlMenuAni(_isOpen)
 end
 
 function ResetImgBase()
-    gui.BtnGamingIcon.Texture =
-        ResourceManager.GetTexture(
-        'MenuRes/svg_games1'
-    )
+    gui.BtnGamingIcon.Texture = ResourceManager.GetTexture('Menu/Gui/svg_games1')
     gui.BtnGamingIcon.Color = Color(0, 0, 0, 255)
     gui.ImgShadow.Offset = gui.BtnGaming.Offset
     SwitchTextureCtr(gui.BtnGaming, gui.FunBtnTab)
@@ -329,7 +326,7 @@ function ResourceReplaceAni()
                     function()
                         v:GetChild(tostring(v.Name) .. 'Icon').Texture =
                             ResourceManager.GetTexture(
-                            'MenuRes/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')] .. '1'
+                            'Menu/Gui/svg_' .. resReplaceTab[string.gsub(v.Name, 'Btn', '')] .. '1'
                         )
                         v:GetChild(tostring(v.Name) .. 'Icon').Color = Color(0, 0, 0, 255)
                         SwitchTextureCtr(v, gui.FunBtnTab)
@@ -359,11 +356,13 @@ function ProfileBgFix(_playerId)
 end
 
 function MuteAll(_isMuteAll)
-    if mutedPlayerTab == nil then return end
+    if mutedPlayerTab == nil then
+        return
+    end
     for _, v in pairs(mutedPlayerTab) do
         v['isMuted'] = _isMuteAll
         gui['ImgMic' .. v['num']]:SetActive(_isMuteAll)
-        gui['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('MenuRes/svg_ic_speakeroff1')
+        gui['ImgMic' .. v['num']].Texture = ResourceManager.GetTexture('Menu/Gui/svg_ic_speakeroff1')
     end
 end
 
@@ -378,12 +377,12 @@ function GamingBind()
                 gui.BtnTouch:SetActive(true)
                 mutedPlayerId = gui['FigBg' .. i].PlayerInfo.Value
                 if mutedPlayerTab[mutedPlayerId]['isMuted'] then
-                    gui.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
+                    gui.ImgProfileMute.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
                 else
-                    gui.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
+                    gui.ImgProfileMute.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeron')
                 end
                 if isMuteAll then
-                    gui.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
+                    gui.ImgProfileMute.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
                 end
             end
         )
@@ -394,12 +393,12 @@ function GamingBind()
                 isMuteAll = false
                 gui.TextMuteAll.Color = MUTEALL_OFF_COLOR
                 gui.ImgMuteAll.Color = MUTEALL_OFF_COLOR
-                gui.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
+                gui.ImgMuteAll.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeron')
             else
                 isMuteAll = true
                 gui.TextMuteAll.Color = MUTEALL_ON_COLOR
                 gui.ImgMuteAll.Color = MUTEALL_ON_COLOR
-                gui.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
+                gui.ImgMuteAll.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
             end
             MuteAll(isMuteAll)
             M.Kit.Util.Net.Fire_C('MuteAllEvent', localPlayer, isMuteAll)
@@ -415,12 +414,12 @@ function GamingBind()
     gui.BtnProfileMute.OnClick:Connect(
         function()
             if mutedPlayerTab[mutedPlayerId]['isMuted'] then
-                gui.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
-                gui.ImgMuteAll.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeron')
+                gui.ImgProfileMute.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeron')
+                gui.ImgMuteAll.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeron')
                 gui.ImgMuteAll.Color = MUTEALL_OFF_COLOR
                 gui.TextMuteAll.Color = MUTEALL_OFF_COLOR
             else
-                gui.ImgProfileMute.Texture = ResourceManager.GetTexture('MenuRes/svg_speakeroff')
+                gui.ImgProfileMute.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
             end
             mutedPlayerTab[mutedPlayerId]['isMuted'] = not mutedPlayerTab[mutedPlayerId]['isMuted']
             gui['ImgMic' .. mutedPlayerTab[mutedPlayerId]['num']]:SetActive(mutedPlayerTab[mutedPlayerId]['isMuted'])
@@ -436,7 +435,7 @@ function GamingBind()
     gui.BtnProfileAdd.OnClick:Connect(
         function()
             M.Kit.Util.Net.Fire_C('AddFriendsEvent', localPlayer, mutedPlayerId)
-            gui.ImgProfileAdd.Texture = ResourceManager.GetTexture('MenuRes/svg_addfriends1')
+            gui.ImgProfileAdd.Texture = ResourceManager.GetTexture('Menu/Gui/svg_addfriends1')
         end
     )
 end
@@ -576,10 +575,10 @@ function TranslateTextEventHandler(_text, _com)
         playerText = _text
     elseif _com == 'TextFriList' then
         friText = _text
-        gui.TextFriList.Text = friText..'(' .. i .. ')'
+        gui.TextFriList.Text = friText .. '(' .. i .. ')'
     elseif _com == 'InputFieldIm' then
         imText = _text
-        gui.InputFieldIm.Tips = '<color=#dadada>'..imText..'</color>'
+        gui.InputFieldIm.Tips = '<color=#dadada>' .. imText .. '</color>'
     end
 end
 
@@ -590,7 +589,7 @@ function GetFriendsListEventHandler(_list)
     for _ in pairs(_list) do
         i = i + 1
     end
-    gui.TextFriList.Text = friText..'(' .. i .. ')'
+    gui.TextFriList.Text = friText .. '(' .. i .. ')'
     ClearChildren(gui.PnlFriList)
     for k, v in pairs(_list) do
         gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
@@ -650,7 +649,7 @@ function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
-    gui.TextPlayNum.Text = playerText..' (' .. length .. ')'
+    gui.TextPlayNum.Text = playerText .. ' (' .. length .. ')'
     if _isAdded then
         headImgCache = _playerList
         AdjustHeadPos(headImgCache, _playerTab)
