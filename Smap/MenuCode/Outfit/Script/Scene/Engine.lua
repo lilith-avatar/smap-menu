@@ -210,6 +210,8 @@ function LoadAvatar()
             avatar.FaceType = localPlayer.Avatar.FaceType
             avatar.SkinColor = localPlayer.Avatar.SkinColor
             avatar.Gender = localPlayer.Avatar.Gender
+
+            avatarDownloaded = true
         else
             Debug.LogWarning(string.format('[换装] 下载服装资源, msg: %s', _msg))
         end
