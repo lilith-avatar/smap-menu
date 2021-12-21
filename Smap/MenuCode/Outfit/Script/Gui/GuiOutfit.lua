@@ -710,6 +710,10 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
             _obj.Img_Item.Enable = true
             _obj.Img_Load.Enable = false
             _obj.Img_Load.Tween:Complete()
+            if data.Id == currId then
+                -- 相同时，选中
+                currItemObj = _obj
+            end
         end
     end
 
