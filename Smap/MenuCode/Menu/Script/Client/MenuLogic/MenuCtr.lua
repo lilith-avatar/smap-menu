@@ -21,7 +21,6 @@ local tt, ot, isNone = 0, 0, true
 ---初始化
 function Init()
     InitListener()
-    GetFriendsList()
 end
 
 ---邀请和加入的事件初始化监听
@@ -58,13 +57,7 @@ function GetFriendsList()
 end
 
 function Update(_, dt)
-    tt = tt + dt
     ot = ot + dt
-    if tt > 60 then
-        GetFriendsList()
-        tt = 0
-    end
-
     if ot > 1 and isNone then
         ot = 0
         M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
@@ -77,6 +70,7 @@ function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     playerTab = _playerTab
     playerList = _playerList
+    GetFriendsList()
 end
 
 ---屏蔽所有人语音

@@ -22,6 +22,7 @@ local isNone = true
 local gui = {}
 local i, headPortrait = 0, nil
 local friText, playerText, imText = 'Friends', 'Player', 'Say Something'
+local ImgInviteBgArch, FigFriInfoArch = nil, nil
 
 local resReplaceTab = {
     Gaming = 'games',
@@ -37,9 +38,10 @@ function Init()
     local deferFun = function()
         InitGui()
         InitListener()
+        GetArchetypeRes()
     end
 
-    invoke(deferFun, 0.1)
+    invoke(deferFun)
 end
 
 -- 更新
@@ -645,6 +647,7 @@ function GetFriendsListEventHandler(_list)
 end
 
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    Game.ShowSystemBar(false)
     isNone = false
     M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     friTab = Friends.GetFriendshipList()
@@ -675,6 +678,26 @@ function NormalImEventHandler(_sender, _content)
     if not gui.ImgIm.ActiveSelf then
         gui.ImgRedDot:SetActive(true)
     end
+end
+
+function GetArchetypeRes()
+    local resCnt = 0
+    local callback = function()
+        resCnt = resCnt + 1
+
+        if resCnt < 2 then
+            return
+        end
+
+        local succCallback = function()
+            ImgInviteBgArch = ResourceManager.GetArchetype('Menu/Archetype/ImgInviteBg')
+            FigFriInfoArch = ResourceManager.GetArchetype('Menu/Archetype/FigFriInfo')
+        end
+
+        invoke(succCallback, 0.05)
+    end
+    ResourceManager.GetArchetype('Menu/Archetype/ImgInviteBg', callback)
+    ResourceManager.GetArchetype('Menu/Archetype/FigFriInfo', callback)
 end
 
 function SomeoneInviteEventHandler(_invitePlayer, _roomId)
