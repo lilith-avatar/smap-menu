@@ -197,5 +197,6 @@ end
 
 --! public method
 M.Init = Init
+M.NoticeEventHandler = NoticeEventHandler
 
 return M
