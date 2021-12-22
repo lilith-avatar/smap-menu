@@ -1,4 +1,4 @@
---- 菜单模块的外部API
+--- 菜单模块的外部客户端API
 --- @module MenuClientApi
 --- @copyright Lilith Games, Avatar Team
 --- @author ropztao, Yuancheng Zhang
