@@ -261,13 +261,13 @@ end
 
 function PnlMenuAni(_isOpen)
     if not _isOpen then
-        gui.TweenMenuBg.Properties = {Offset = Vector2(0, 800)}
-        gui.TweenImBubbleBg.Properties = {Offset = Vector2(84, 550)}
-        gui.TweenVoiceBg.Properties = {Offset = Vector2(168, 100)}
+        gui.TweenMenuBg.Properties = {Offset = Vector2(0, 900)}
+        gui.TweenImBubbleBg.Properties = {Offset = Vector2(98, 650)}
+        gui.TweenVoiceBg.Properties = {Offset = Vector2(196, 200)}
     else
         gui.TweenMenuBg.Properties = {Offset = Vector2(0, 0)}
-        gui.TweenImBubbleBg.Properties = {Offset = Vector2(84, 0)}
-        gui.TweenVoiceBg.Properties = {Offset = Vector2(168, 0)}
+        gui.TweenImBubbleBg.Properties = {Offset = Vector2(98, 0)}
+        gui.TweenVoiceBg.Properties = {Offset = Vector2(196, 0)}
     end
     for _, v in pairs(gui.PnlMenuTab) do
         v.Duration = 0.4
@@ -725,6 +725,7 @@ function CheckPnlMenu(_boolean, _gui)
 end
 
 function MenuSwitchEventHandler(_type, _boolean)
+    if gui.MenuGui == nil then return end
     if _type == 0 then
         gui.MenuGui:SetActive(_boolean)
     elseif _type == 1 then
