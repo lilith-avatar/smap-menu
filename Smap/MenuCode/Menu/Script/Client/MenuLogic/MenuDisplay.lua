@@ -685,16 +685,13 @@ function GetArchetypeRes()
     local resCnt = 0
     local callback = function()
         resCnt = resCnt + 1
-
         if resCnt < 2 then
             return
         end
-
         local succCallback = function()
             ImgInviteBgArch = ResourceManager.GetArchetype('Menu/Archetype/ImgInviteBg')
             FigFriInfoArch = ResourceManager.GetArchetype('Menu/Archetype/FigFriInfo')
         end
-
         invoke(succCallback, 0.05)
     end
     ResourceManager.GetArchetype('Menu/Archetype/ImgInviteBg', callback)
@@ -772,6 +769,16 @@ function SwitchInGameMessageEventHandler(_boolean)
     CheckPnlMenu(_boolean, gui.ImgImBubbleBg)
 end
 
+function DetectMenuDisplayStateEventHandler(_type)
+    if _type == 0 then
+        isDisplay = false
+        ImgImAni(isDisplay)
+    elseif _type == 1 then
+        isOpen = false
+        DisableCtr(isOpen)
+    end
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -785,5 +792,6 @@ M.SwitchOutfitEntranceEventHandler = SwitchOutfitEntranceEventHandler
 M.SwitchVoiceEventHandler = SwitchVoiceEventHandler
 M.SwitchInGameMessageEventHandler = SwitchInGameMessageEventHandler
 M.TranslateTextEventHandler = TranslateTextEventHandler
+M.DetectMenuDisplayStateEventHandler = DetectMenuDisplayStateEventHandler
 
 return M

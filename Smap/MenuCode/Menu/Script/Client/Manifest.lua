@@ -22,7 +22,8 @@ M.Events = {
     'SwitchOutfitEntranceEvent',
     'SwitchVoiceEvent',
     'SwitchInGameMessageEvent',
-    'TranslateTextEvent'
+    'TranslateTextEvent',
+    'DetectMenuDisplayStateEvent'
 }
 
 M.Modules = {

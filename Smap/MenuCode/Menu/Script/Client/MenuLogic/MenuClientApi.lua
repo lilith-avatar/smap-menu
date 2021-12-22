@@ -15,10 +15,13 @@ function DeveloperOfficialMsg(_content)
     M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)
 end
 
+-- @param _type 都关 = 0，只关外部三个按钮为1，只关菜单显示为2
+-- @param _boolean 打开还是关闭
 function MenuSwitch(_type, _boolean)
     M.Kit.Util.Net.Fire_C('MenuSwitchEvent', localPlayer, _type, _boolean)
 end
 
+-- @param _boolean 打开还是关闭，下同
 function SwichOutfitEntrance(_boolean)
     M.Kit.Util.Net.Fire_C('SwitchOutfitEntranceEvent', localPlayer, _boolean)
 end
@@ -29,6 +32,12 @@ end
 
 function SwitchInGameMessage(_boolean)
     M.Kit.Util.Net.Fire_C('SwitchInGameMessageEvent', localPlayer, _boolean)
+end
+
+-- 检测状态并反向操作（如果开则关，如果关则开）
+-- @param _type im弹窗为0,菜单显示为1
+function DetectMenuDisplayState(_type)
+    M.Kit.Util.Net.Fire_C('DetectMenuDisplayStateEvent', localPlayer, _type)
 end
 
 function EnableSubChannel(_boolean, _tab)
@@ -49,6 +58,7 @@ M.MenuSwitch = MenuSwitch
 M.SwichOutfitEntrance = SwichOutfitEntrance
 M.SwitchVoice = SwitchVoice
 M.SwitchInGameMessage = SwitchInGameMessage
+M.DetectMenuDisplayState = DetectMenuDisplayState
 M.EnableSubChannel = EnableSubChannel
 
 --* 换装相关API
