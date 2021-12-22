@@ -28,7 +28,7 @@ M.Events = {
 M.Modules = {
     'MenuLogic/MenuDisplay',
     'MenuLogic/MenuCtr',
-    'MenuLogic/MenuApi',
+    'MenuLogic/MenuClientApi',
     'MenuLogic/MenuLocalization'
 }
 

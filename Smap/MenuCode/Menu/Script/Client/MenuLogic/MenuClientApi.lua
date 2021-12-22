@@ -1,5 +1,5 @@
 --- 菜单模块的外部API
---- @module MenuApi
+--- @module MenuClientApi
 --- @copyright Lilith Games, Avatar Team
 --- @author ropztao, Yuancheng Zhang
 
@@ -9,7 +9,7 @@ local ChatManager = ChatManager
 local C = _G.mC
 
 --* 模块
-local M = C.ModuleUtil.New('MenuApi', C.Base)
+local M = C.ModuleUtil.New('MenuClientApi', C.Base)
 
 function DeveloperOfficialMsg(_content)
     M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)
