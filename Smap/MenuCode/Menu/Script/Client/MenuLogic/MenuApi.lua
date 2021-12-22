@@ -23,8 +23,8 @@ function SwichOutfitEntrance(_boolean)
     M.Kit.Util.Net.Fire_C('SwitchOutfitEntranceEvent', localPlayer, _boolean)
 end
 
-function SwitchVoice(_boolean)
-    M.Kit.Util.Net.Fire_C('SwitchVoiceEvent', localPlayer, _boolean)
+function SwitchVoice(_type, _boolean)
+    M.Kit.Util.Net.Fire_C('SwitchVoiceEvent', localPlayer, _type, _boolean)
 end
 
 function SwitchInGameMessage(_boolean)

@@ -175,7 +175,9 @@ function Init()
     for _, v in pairs(gui.MenuGui:GetDescendants()) do
         gui[v.Name] = v
     end
+end
 
+function NoticeEventHandler()
     Translate(LocalizationTab)
     TranslateSp(LocalizationTabSp)
 end

@@ -585,6 +585,7 @@ function TranslateTextEventHandler(_text, _com)
 end
 
 function GetFriendsListEventHandler(_list)
+    i = 0
     local callback = function(_profile)
         headPortrait = _profile.HeadPortrait
     end
@@ -736,6 +737,17 @@ function MenuSwitchEventHandler(_type, _boolean)
     end
 end
 
+function SwitchVoiceCtr()
+    if not isOn then
+        gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
+        gui.ImgVoiceMask:SetActive(false)
+    else
+        gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
+        gui.ImgVoiceMask:SetActive(true)
+    end
+    M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
+end
+
 function SwitchOutfitEntranceEventHandler(_boolean)
     if _boolean then
         gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting, gui.BtnDressUp}
@@ -747,8 +759,13 @@ function SwitchOutfitEntranceEventHandler(_boolean)
     gui.BtnDressUp:SetActive(_boolean)
 end
 
-function SwitchVoiceEventHandler(_boolean)
-    CheckPnlMenu(_boolean, gui.ImgVoiceBg)
+function SwitchVoiceEventHandler(_type, _boolean)
+    if _type == 0 then
+        CheckPnlMenu(_boolean, gui.ImgVoiceBg)
+    elseif _type == 1 then
+        isOn = _boolean
+        SwitchVoiceCtr()
+    end
 end
 
 function SwitchInGameMessageEventHandler(_boolean)
