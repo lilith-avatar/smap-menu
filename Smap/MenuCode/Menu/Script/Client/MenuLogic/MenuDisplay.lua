@@ -18,7 +18,7 @@ local MUTEALL_OFF_COLOR, MUTEALL_ON_COLOR = Color(38, 121, 217, 255), Color(222,
 -- 本地变量
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
-local isNone = true
+local isNone, isReady = true, false
 local gui = {}
 local i, headPortrait = 0, nil
 local friText, playerText, imText = 'Friends', 'Player', 'Say Something'
@@ -79,6 +79,8 @@ function InitGui()
     gui.PnlMenuTab = {gui.TweenMenuBg, gui.TweenImBubbleBg, gui.TweenVoiceBg}
 
     M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
+    M.Kit.Util.Net.Fire_C('ClientReadyEvent', localPlayer)
+    isReady = true
 end
 
 --- 事件绑定初始化
@@ -647,10 +649,13 @@ end
 
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     Game.ShowSystemBar(false)
-    isNone = false
-    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
+
+    if not isReady then return end
+    isNone = false
+    M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
+
     gui.TextPlayNum.Text = playerText .. ' (' .. length .. ')'
     if _isAdded then
         headImgCache = _playerList
@@ -701,7 +706,7 @@ function CheckPnlMenu(_boolean, _gui)
     if not gui.ImgImBubbleBg.ActiveSelf then
         gui.ImgVoiceBg.Offset = gui.ImgImBubbleBg.Offset
     else
-        gui.ImgVoiceBg.Offset = Vector2(168, 0)
+        gui.ImgVoiceBg.Offset = Vector2(196, 0)
     end
 end
 

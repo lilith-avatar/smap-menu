@@ -177,7 +177,7 @@ function Init()
     end
 end
 
-function NoticeEventHandler()
+function ClientReadyEventHandler()
     Translate(LocalizationTab)
     TranslateSp(LocalizationTabSp)
 end
