@@ -574,6 +574,7 @@ end
 
 --! Event handlers
 function TranslateTextEventHandler(_text, _com)
+    if not isReady then return end
     if _com == 'TextPlayNum' then
         playerText = _text
     elseif _com == 'TextFriList' then
@@ -586,6 +587,7 @@ function TranslateTextEventHandler(_text, _com)
 end
 
 function GetFriendsListEventHandler(_list)
+    if not isReady then return end
     i = 0
     local callback = function(_profile)
         headPortrait = _profile.HeadPortrait
@@ -674,6 +676,7 @@ end
 ---消息更新
 local messageCache, length = '', 0
 function NormalImEventHandler(_sender, _content)
+    if not isReady then return end
     length = string.len((_sender.Name) .. _content)
     gui.TextImContent.Text =
         messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
@@ -686,6 +689,7 @@ function NormalImEventHandler(_sender, _content)
 end
 
 function SomeoneInviteEventHandler(_invitePlayer, _roomId)
+    if not isReady then return end
     gui.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, gui.MenuGui)
     gui.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
     gui.BtnInviteOk.OnClick:Connect(
