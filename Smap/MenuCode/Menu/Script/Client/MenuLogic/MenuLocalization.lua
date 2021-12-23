@@ -198,5 +198,6 @@ end
 --! public method
 M.Init = Init
 M.NoticeEventHandler = NoticeEventHandler
+M.ClientReadyEventHandler = ClientReadyEventHandler
 
 return M
