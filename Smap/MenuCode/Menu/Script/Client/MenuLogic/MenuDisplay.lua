@@ -21,6 +21,7 @@ local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
 local isNone, isReady = true, false
 local gui = {}
 local i, headPortrait = 0, nil
+local voiceOff = Vector2(196, 0)
 local friText, playerText, imText = 'Friends', 'Player', 'Say Something'
 
 local resReplaceTab = {
@@ -267,7 +268,7 @@ function PnlMenuAni(_isOpen)
     else
         gui.TweenMenuBg.Properties = {Offset = Vector2(0, 0)}
         gui.TweenImBubbleBg.Properties = {Offset = Vector2(98, 0)}
-        gui.TweenVoiceBg.Properties = {Offset = Vector2(196, 0)}
+        gui.TweenVoiceBg.Properties = {Offset = voiceOff}
     end
     for _, v in pairs(gui.PnlMenuTab) do
         v.Duration = 0.4
@@ -704,9 +705,11 @@ end
 function CheckPnlMenu(_boolean, _gui)
     _gui:SetActive(_boolean)
     if not gui.ImgImBubbleBg.ActiveSelf then
-        gui.ImgVoiceBg.Offset = gui.ImgImBubbleBg.Offset
+        voiceOff = gui.ImgImBubbleBg.Offset
+        gui.ImgVoiceBg.Offset = voiceOff
     else
-        gui.ImgVoiceBg.Offset = Vector2(196, 0)
+        voiceOff = Vector2(196, 0)
+        gui.ImgVoiceBg.Offset = voiceOff
     end
 end
 

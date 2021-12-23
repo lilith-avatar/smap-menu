@@ -21,6 +21,6 @@ end
 M.EnableSubChannel = EnableSubChannel
 
 --! Global Public API
-_G.MenuServer = M
+_G.MenuServerApi = M
 
 return M
