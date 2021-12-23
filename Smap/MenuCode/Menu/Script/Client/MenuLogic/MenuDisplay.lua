@@ -22,7 +22,6 @@ local isNone = true
 local gui = {}
 local i, headPortrait = 0, nil
 local friText, playerText, imText = 'Friends', 'Player', 'Say Something'
-local ImgInviteBgArch, FigFriInfoArch = nil, nil
 
 local resReplaceTab = {
     Gaming = 'games',
@@ -38,7 +37,6 @@ function Init()
     local deferFun = function()
         InitGui()
         InitListener()
-        GetArchetypeRes()
     end
 
     invoke(deferFun)
@@ -597,7 +595,7 @@ function GetFriendsListEventHandler(_list)
     for k, v in pairs(_list) do
         gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
         gui[k].TextName.Text = v.Name
-        PlayerHub.GetPlayerProfile(k, callback)
+        -- PlayerHub.GetPlayerProfile(k, callback)
         gui[k].ImgHead.Texture = headPortrait
         if v.Status == 'PLAYING' then
             gui[k].BtnFriMore:SetActive(true)
@@ -679,23 +677,6 @@ function NormalImEventHandler(_sender, _content)
     if not gui.ImgIm.ActiveSelf then
         gui.ImgRedDot:SetActive(true)
     end
-end
-
-function GetArchetypeRes()
-    local resCnt = 0
-    local callback = function()
-        resCnt = resCnt + 1
-        if resCnt < 2 then
-            return
-        end
-        local succCallback = function()
-            ImgInviteBgArch = ResourceManager.GetArchetype('Menu/Archetype/ImgInviteBg')
-            FigFriInfoArch = ResourceManager.GetArchetype('Menu/Archetype/FigFriInfo')
-        end
-        invoke(succCallback, 0.05)
-    end
-    ResourceManager.GetArchetype('Menu/Archetype/ImgInviteBg', callback)
-    ResourceManager.GetArchetype('Menu/Archetype/FigFriInfo', callback)
 end
 
 function SomeoneInviteEventHandler(_invitePlayer, _roomId)

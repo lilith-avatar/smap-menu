@@ -16,7 +16,7 @@ local playerInfoTab, playerList = {}, {}
 local isSent, isArrived, addedPlayer = false, false
 
 --玩家头像
-local headPortrait
+local headPortrait = nil
 
 ---初始化
 function Init()
@@ -35,7 +35,7 @@ end
 ---玩家加入事件
 function OnPlayerAdded(_player)
     SwitchChannel(_player, true)
-    GetPlayerProfile(_player)
+    -- GetPlayerProfile(_player)
     playerInfoTab[_player] = headPortrait
     table.insert(playerList, _player)
 
