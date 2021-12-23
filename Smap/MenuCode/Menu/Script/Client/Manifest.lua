@@ -8,6 +8,7 @@ M.ROOT_PATH = 'Menu/Script/Client/'
 
 M.Events = {
     'NoticeEvent',
+    'ClientReadyEvent',
     'NormalImEvent',
     'MuteAllEvent',
     'MuteSpecificPlayerEvent',
