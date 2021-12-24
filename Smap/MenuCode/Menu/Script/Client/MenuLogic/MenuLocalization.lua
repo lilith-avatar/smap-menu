@@ -115,6 +115,18 @@ local LocalizationTab = {
         zh_CN = '高',
         en = 'High',
         id = 'Tinggi'
+    },
+    TextInviteFb = {
+        Key = 'TextInviteFb',
+        zh_CN = '已发送邀请',
+        en = 'Invitation sent',
+        id = 'Undangan terkirim'
+    },
+    TextAddFb = {
+        Key = 'TextAddFb',
+        zh_CN = '已发送好友申请',
+        en = 'Friend request sent',
+        id = 'Permintaan teman dikirim'
     }
 }
 

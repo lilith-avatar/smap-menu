@@ -435,10 +435,18 @@ function GamingBind()
         end
     )
 
+    local function showAdd()
+        gui.ImgAddFb:SetActive(true)
+        invoke(function()
+            gui.ImgAddFb:SetActive(false)
+        end,3)
+    end
+
     gui.BtnProfileAdd.OnClick:Connect(
         function()
             M.Kit.Util.Net.Fire_C('AddFriendsEvent', localPlayer, mutedPlayerId)
             gui.ImgProfileAdd.Texture = ResourceManager.GetTexture('Menu/Gui/svg_addfriends1')
+            showAdd()
         end
     )
 end
@@ -591,6 +599,13 @@ function TranslateTextEventHandler(_text, _com)
     end
 end
 
+local function showInvite()
+    gui.ImgInviteFb:SetActive(true)
+    invoke(function()
+        gui.ImgInviteFb:SetActive(false)
+    end,3)
+end
+
 function GetFriendsListEventHandler(_list)
     if not isReady then return end
     i = 0
@@ -634,12 +649,14 @@ function GetFriendsListEventHandler(_list)
         gui[k].BtnFriInviteOut.OnClick:Connect(
             function()
                 M.Kit.Util.Net.Fire_C('InviteFriendToGameEvent', localPlayer, k)
+                showInvite()
             end
         )
 
         gui[k].ImgFriMoreBg.BtnFriInvite.OnClick:Connect(
             function()
                 M.Kit.Util.Net.Fire_C('InviteFriendToGameEvent', localPlayer, k)
+                showInvite()
             end
         )
 
