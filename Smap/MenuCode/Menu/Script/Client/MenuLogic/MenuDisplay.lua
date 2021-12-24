@@ -80,7 +80,7 @@ function InitGui()
     gui.PnlMenuTab = {gui.TweenMenuBg, gui.TweenImBubbleBg, gui.TweenVoiceBg}
 
     M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
-    M.Kit.Util.Net.Fire_C('ClientReadyEvent', localPlayer)
+    M.Kit.Util.Net.Fire_C('ClientReadyEvent', localPlayer, true)
     isReady = true
 end
 
