@@ -154,9 +154,27 @@ local LocalizationTabSp = {
 local archTab = {
     TextInvite = {
         Key = 'TextInvite',
+        zh_CN = '邀请了你',
+        en = 'Invited you',
+        id = 'Mengundang Anda'
+    },
+    TextFriInviteOut = {
+        Key = 'TextFriInviteOut',
         zh_CN = '邀请',
         en = 'Invite',
         id = 'Undang'
+    },
+    TextFriInvite = {
+        Key = 'TextFriInvite',
+        zh_CN = '邀请',
+        en = 'Invite',
+        id = 'Undang'
+    },
+    TextFriJoin = {
+        Key = 'TextFriJoin',
+        zh_CN = '加入',
+        en = 'Join',
+        id = 'Ikuti'
     },
     BtnInviteOk = {
         Key = 'BtnInviteOk',
@@ -207,9 +225,21 @@ function TranslateSp(_tab)
     end
 end
 
+function CreateReadyEventHandler(_tarNode, _type, _invitePlayer)
+    if _tarNode == nil then return end
+    if _type == 0 then
+        _tarNode.BtnFriInviteOut.TextFriInviteOut.Text = archTab['TextFriInviteOut'][currLang]
+        _tarNode.ImgFriMoreBg.BtnFriInvite.TextFriInvite.Text = archTab['TextFriInvite'][currLang]
+        _tarNode.ImgFriMoreBg.BtnFriJoin.TextFriJoin.Text = archTab['TextFriJoin'][currLang]
+    elseif _type == 1 then
+        _tarNode.TextInvite.Text = tostring(_invitePlayer.Name).. archTab['TextInvite'][currLang]
+        _tarNode.BtnInviteOk.Text = archTab['BtnInviteOk'][currLang]
+    end
+end
+
 --! public method
 M.Init = Init
-M.NoticeEventHandler = NoticeEventHandler
 M.ClientReadyEventHandler = ClientReadyEventHandler
+M.CreateReadyEventHandler = CreateReadyEventHandler
 
 return M

@@ -24,6 +24,7 @@ M.Events = {
     'SwitchVoiceEvent',
     'SwitchInGameMessageEvent',
     'TranslateTextEvent',
+    'CreateReadyEvent',
     'DetectMenuDisplayStateEvent'
 }
 

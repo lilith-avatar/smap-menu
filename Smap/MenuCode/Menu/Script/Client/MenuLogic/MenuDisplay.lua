@@ -619,6 +619,8 @@ function GetFriendsListEventHandler(_list)
     ClearChildren(gui.PnlFriList)
     for k, v in pairs(_list) do
         gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
+        M.Kit.Util.Net.Fire_C('CreateReadyEvent', localPlayer, gui[k], 0)
+
         gui[k].TextName.Text = v.Name
         -- PlayerHub.GetPlayerProfile(k, callback)
         gui[k].ImgHead.Texture = headPortrait
@@ -714,6 +716,9 @@ function SomeoneInviteEventHandler(_invitePlayer, _roomId)
     if not isReady then return end
     gui.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, gui.MenuGui)
     gui.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
+
+    M.Kit.Util.Net.Fire_C('CreateReadyEvent', localPlayer, gui.ImgInviteBg, 1, _invitePlayer)
+
     gui.BtnInviteOk.OnClick:Connect(
         function()
             M.Kit.Util.Net.Fire_C('ConfirmInviteEvent', localPlayer, _invitePlayer, _roomId)
