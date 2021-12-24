@@ -65,6 +65,7 @@ invoke(Outfit.Init)
 M.ClientReadyEventHandler = ClientReadyEventHandler
 M.DeveloperOfficialMsg = DeveloperOfficialMsg
 M.MenuSwitch = MenuSwitch
+M.SwitchVoice = SwitchVoice
 M.SwitchOutfitEntrance = SwitchOutfitEntrance
 M.SwitchInGameMessage = SwitchInGameMessage
 M.DetectMenuDisplayState = DetectMenuDisplayState
