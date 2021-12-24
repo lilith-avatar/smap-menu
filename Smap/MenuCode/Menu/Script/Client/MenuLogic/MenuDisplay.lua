@@ -463,11 +463,15 @@ function SettingBind()
     gui.GraphicSetBtnTab[2] = gui.BtnMedium
     gui.GraphicSetBtnTab[1] = gui.BtnLow
 
+    gui.GraphicMask.Color = Color(230, 230, 230, 150)
+    gui.TextGraphicSetting.Color = Color(98, 98, 98, 150)
+
     gui.TextShut.OnEnter:Connect(
         function()
             gui.BtnShut:SetActive(true)
             gui.BtnOpen:SetActive(false)
             gui.GraphicMask:SetActive(false)
+            gui.TextGraphicSetting.Color = Color(98, 98, 98, 255)
         end
     )
 
@@ -476,6 +480,7 @@ function SettingBind()
             gui.BtnShut:SetActive(false)
             gui.BtnOpen:SetActive(true)
             gui.GraphicMask:SetActive(true)
+            gui.TextGraphicSetting.Color = Color(98, 98, 98, 150)
             Game.SetGraphicQuality(0)
         end
     )
