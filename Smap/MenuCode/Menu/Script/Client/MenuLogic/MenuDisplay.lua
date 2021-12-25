@@ -472,7 +472,7 @@ function SettingBind()
     gui.GraphicSetBtnTab[1] = gui.BtnLow
 
     gui.GraphicMask.Color = Color(230, 230, 230, 150)
-    gui.TextGraphicSetting.Color = Color(98, 98, 98, 150)
+    gui.TextGraphicSetting.Color = Color(98, 98, 98, 120)
 
     gui.TextShut.OnEnter:Connect(
         function()
@@ -488,7 +488,7 @@ function SettingBind()
             gui.BtnShut:SetActive(false)
             gui.BtnOpen:SetActive(true)
             gui.GraphicMask:SetActive(true)
-            gui.TextGraphicSetting.Color = Color(98, 98, 98, 150)
+            gui.TextGraphicSetting.Color = Color(98, 98, 98, 120)
             Game.SetGraphicQuality(0)
         end
     )
@@ -622,7 +622,7 @@ function GetFriendsListEventHandler(_list)
         M.Kit.Util.Net.Fire_C('CreateReadyEvent', localPlayer, gui[k], 0)
 
         gui[k].TextName.Text = v.Name
-        -- PlayerHub.GetPlayerProfile(k, callback)
+        PlayerHub.GetPlayerProfile(k, callback)
         gui[k].ImgHead.Texture = headPortrait
         if v.Status == 'PLAYING' then
             gui[k].BtnFriMore:SetActive(true)
