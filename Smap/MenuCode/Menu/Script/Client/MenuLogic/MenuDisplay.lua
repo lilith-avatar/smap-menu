@@ -471,7 +471,7 @@ function SettingBind()
     gui.GraphicSetBtnTab[2] = gui.BtnMedium
     gui.GraphicSetBtnTab[1] = gui.BtnLow
 
-    gui.GraphicMask.Color = Color(230, 230, 230, 150)
+    gui.GraphicMask.Color = Color(230, 230, 230, 120)
     gui.TextGraphicSetting.Color = Color(98, 98, 98, 120)
 
     gui.TextShut.OnEnter:Connect(
