@@ -1,0 +1,54 @@
+LocalizeKey,Note,Default,id,en,zh_CN
+SubType_Label_All,全部,All,Semua,All,全部
+SubType_Label_Short,短发,Short,Pendek,Short,短发
+SubType_Label_Medium,中长发,Medium,Medium,Medium,中长发
+SubType_Label_Long,长发,Long,Panjang,Long,长发
+SubType_Label_Braids,辫子,Braids,Kepang,Braids,辫子
+SubType_Label_Special,特殊,Special,Spesial,Special,特殊
+SubType_Label_Accessories,配饰,Accessories,Aksesori,Accessories,配饰
+SubType_Label_Hats,帽子,Hats,Topi,Hats,帽子
+SubType_Label_Fun,趣味,Fun,Seru,Fun,趣味
+SubType_Label_Glasses,眼镜,Glasses,Kacamata,Glasses,眼镜
+SubType_Label_Others,其他,Others,Lainnya,Others,其他
+SubType_Label_MiniDresses,迷你连衣裙,Mini Dresses,Gaun Mini,Mini Dresses,迷你连衣裙
+SubType_Label_LongDresses,长款连衣裙,Long Dresses,Gaun Panjang,Long Dresses,长款连衣裙
+SubType_Label_Sets,套装,Sets,Set,Sets,套装
+SubType_Label_Tshirts,T恤,T-shirts,Kaus,T-shirts,T恤
+SubType_Label_Shirts,衬衫,Shirts,Kemeja,Shirts,衬衫
+SubType_Label_Sweaters,卫衣,Sweaters,Sweter,Sweaters,卫衣
+SubType_Label_CropTops,露脐装,Crop Tops,Crop Top,Crop Tops,露脐装
+SubType_Label_ShortJackets,短外套,Short Jackets,Jaket Pendek,Short Jackets,短外套
+SubType_Label_Jackets,中长外套,Jackets,Jaket,Jackets,中长外套
+SubType_Label_Coats,长外套,Coats,Mantel,Coats,长外套
+SubType_Label_Shorts,短裤,Shorts,Celana Pendek,Shorts,短裤
+SubType_Label_LongShorts,中长裤,Long Shorts,Celana Tiga Perempat,Long Shorts,中长裤
+SubType_Label_Pants,长裤,Pants,Celana,Pants,长裤
+SubType_Label_Skirts,短裙,Skirts,Rok,Skirts,短裙
+SubType_Label_MidSkirts,中长裙,Mid Skirts,Rok Panjang,Mid Skirts,中长裙
+SubType_Label_Dresses,长裙,Dresses,Gaun,Dresses,长裙
+SubType_Label_Anklets,船袜,Anklets,Gelang Kaki,Anklets,船袜
+SubType_Label_Socks,短袜,Socks,Kaus Kaki,Socks,短袜
+SubType_Label_LongSocks,小腿袜,Long Socks,Kaus Kaki Panjang,Long Socks,小腿袜
+SubType_Label_Leggings,大腿袜,Leggings,Legging,Leggings,大腿袜
+SubType_Label_Pantyhoses,连裤袜,Pantyhoses,Stoking,Pantyhoses,连裤袜
+SubType_Label_LeatherShoes,皮鞋,Leather Shoes,Sepatu Kulit,Leather Shoes,皮鞋
+SubType_Label_Sneakers,运动鞋,Sneakers,Sneaker,Sneakers,运动鞋
+SubType_Label_Slippers,拖鞋,Slippers,Selop,Slippers,拖鞋
+SubType_Label_Boots,靴子,Boots,Sepatu Bot,Boots,靴子
+SubType_Label_Bracelets,手链,Bracelets,Gelang,Bracelets,手链
+SubType_Label_Necklaces,项链,Necklaces,Kalung,Necklaces,项链
+SubType_Label_Earrings,耳环,Earrings,Anting,Earrings,耳环
+SubType_Label_Bags,包,Bags,Tas,Bags,包
+SubType_Label_Gloves,手套,Gloves,Sarung Tangan,Gloves,手套
+SubType_Label_Face,脸型,Face,Wajah,Face,脸型
+SubType_Label_Body,体型,Body,Bodi,Body,体型
+Category_Title_Outfit,服装,Outfit,Pakaian,Outfit,服装
+Category_Title_Physique,体型,Physique,Fisik,Physique,体型
+Global_Text_Source,获取途径,Source,Sumber,Source,获取途径
+Global_Text_ErrorTips,啊哦~新形象生成出现问题，请返回检查一下吧！,"Oh no, something wrong happened, check again!","Oh tidak, terjadi kesalahan, periksa lagi!","Oh no, something wrong happened, check again!",啊哦~新形象生成出现问题，请返回检查一下吧！
+Global_Text_Day,天,{1} d,{1} h,{1} d,{1} 天
+Global_Text_Hour,小时,{1} h,{1} j,{1} h,{1} 小时
+Global_Text_Minute,分钟,{1} m,{1} m,{1} m,{1} 分钟
+Global_Text_Second,秒,{1} s,{1} d,{1} s,{1} 秒
+Global_Text_Expired,已到期,Expired,Kedaluwarsa,Expired,已到期
+Global_Text_Tips,提示（富文本）,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSource: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSumber: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSource: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\n获取途径：{3}</color></size>
