@@ -25,7 +25,7 @@ local emoAnimIsPlaying = false
 local RES_ANIM_ROOT_PATH = 'Outfit/Anim/'
 
 -- 眨眼间隔时间
-local BLINK_MIN, BLINK_MAX = 2, 6
+local EMO_MIN, EMO_MAX = 3, 5
 
 -- NPC形象默认旋转
 local NPC_DEFAULT_LOCAL_ROT = EulerDegree(0, 0, 0)
@@ -36,7 +36,8 @@ local anims = {
         idle = 'm_01_idle_stand_01'
     },
     emo = {
-        blink = 'u_01_face_emotion_blink_01'
+        default = 'u_01_face_emotion_default_01',
+        special = 'u_01_face_emotion_special_01'
     }
 }
 
@@ -104,12 +105,20 @@ function PlayEmoAnim()
         emoAnimIsPlaying = true
         local graph = avatar.AnimationGraph
         local animEmo = graph:AddAnimationTree('animEmo')
-        local anim = animEmo:AddClipNode(anims.emo[currEmoAnim])
-        anim.Loop = false
-        while (wait(math.random(BLINK_MIN, BLINK_MAX))) do
+        for _, name in pairs(anims.emo) do
+            local clip = animEmo:AddClipNode(name)
+            clip.Loop = false
+        end
+        while (wait(math.random(EMO_MIN, EMO_MAX))) do
             local head = avatar:GetHeadObject()
             if head ~= nil then
                 head.BlendSpaceNodeEnabled = true
+                if currEmoAnim == 'default' then
+                    currEmoAnim = 'special'
+                else
+                    currEmoAnim = 'default'
+                end
+                -- Debug.LogWarning(string.format('[换装]当前动画：%s', anims.emo[currEmoAnim]))
                 head:ImportAnimation(ResourceManager.GetAnimation(RES_ANIM_ROOT_PATH .. anims.emo[currEmoAnim]))
                 graph:InstantiateAnimationGraphTo(head)
                 head:PlayAnimationTree('animEmo')

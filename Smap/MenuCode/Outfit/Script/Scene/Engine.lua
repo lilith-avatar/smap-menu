@@ -48,12 +48,12 @@ local MSG_FAILED = 'failed'
 local Action = {}
 
 --- 行为栈：新建行为
--- @param _dressIds 穿上的服装IDs
+-- @param _newIds 穿上的服装IDs
 -- @param _undressIds 需要脱下的服装IDs
-function Action:New(_dressIds)
+function Action:New(_newIds)
     local inst = {
-        dressIds = _dressIds,
-        undressIds = {},
+        newIds = _newIds,
+        oldIds = {},
         dodo = self.Dodo,
         redo = self.Redo,
         undo = self.Undo
@@ -61,7 +61,7 @@ function Action:New(_dressIds)
     local mt = {
         __index = self,
         __tostring = function()
-            return string.format('dressIds = %s, undressIds = %s', stringfy(_dressIds), stringfy(_undressIds))
+            return string.format('newIds = %s, oldIds = %s', stringfy(_newIds), stringfy(_undressIds))
         end
     }
     setmetatable(inst, mt)
@@ -71,13 +71,15 @@ end
 --- 行为栈：执行
 function Action:Dodo()
     -- 换装：新衣服
-    ChangeClothesAux(self.dressIds)
+    ChangeClothesAux(self.newIds)
 
     -- 找到脱掉的服装IDs
     local getTakeOffClothesCallback = function(_newDressedIds)
         --- 返回当前玩家身上的服装插值，在换装后执行
         -- Debug.Log(string.format('==> [01]: %s', stringfy(dressedIds)))
         -- Debug.Log(string.format('==> [02]: %s', stringfy(_newDressedIds)))
+
+        local oldIds = {}
         for _, v1 in pairs(dressedIds) do
             local exist = false
             for _, v2 in pairs(_newDressedIds) do
@@ -88,14 +90,23 @@ function Action:Dodo()
             end
             if not exist then
                 --* 找到脱掉的衣服
-                table.insert(self.undressIds, v1)
+                table.insert(oldIds, v1)
             end
         end
-
         --* 这里赋值dressedIds
         dressedIds = _newDressedIds
 
-        Debug.Log(string.format('[换装] 脱掉服装IDs, %s', stringfy(self.undressIds)))
+        --* 需要针对套装去重
+        -- https://stackoverflow.com/questions/20066835/lua-remove-duplicate-elements
+        local hash = {}
+        for _, v in ipairs(oldIds) do
+            if (not hash[v]) then
+                self.oldIds[#self.oldIds + 1] = v -- you could print here instead of saving to result table if you wanted
+                hash[v] = true
+            end
+        end
+
+        Debug.Log(string.format('[换装] 脱掉服装IDs, %s', stringfy(self.oldIds)))
     end
 
     -- 更新当前服装
@@ -108,7 +119,7 @@ end
 --- 行为栈：重做
 function Action:Redo()
     -- 换装：新衣服
-    ChangeClothesAux(self.dressIds)
+    ChangeClothesAux(self.newIds)
     -- 更新当前服装
     GetCurrClothesIds(avatar, dressedIds, 0.02)
     -- 更新当前ID
@@ -118,7 +129,7 @@ end
 --- 行为栈：撤销
 function Action:Undo()
     -- 换装：旧衣服
-    ChangeClothesAux(self.undressIds)
+    ChangeClothesAux(self.oldIds)
     -- 更新当前服装
     GetCurrClothesIds(avatar, dressedIds, 0.02)
     -- 更新当前ID
@@ -148,9 +159,9 @@ end
 --- 事件处理
 function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
-        gender = localPlayer.Avatar.Gender
         -- 读取玩家形象
         LoadAvatar()
+        wait()
         -- 读取玩家服装信息
         GetPlayerOwnedList()
         -- 清空行为栈
@@ -176,7 +187,7 @@ function EventHandler(_event, ...)
         local isNew = args[2]
         Debug.Assert(id ~= nil and id ~= '', '[换装] id为空')
         -- 换装
-        DodoChangeClothes({id})
+        Dodo({id})
         -- 取消红点
         if isNew then
             ClearRedDot({id})
@@ -186,11 +197,11 @@ function EventHandler(_event, ...)
         local ids = args[1]
         ClearRedDot(ids)
     elseif _event == M.Event.Enum.ACTION.UNDO then
-        UndoChangeClothes()
+        Undo()
     elseif _event == M.Event.Enum.ACTION.REDO then
-        RedoChangeClothes()
+        Redo()
     elseif _event == M.Event.Enum.ACTION.RESTORE then
-        RestoreClothes()
+        Restore()
     end
 end
 
@@ -198,29 +209,27 @@ end
 
 --- 读取玩家形象
 function LoadAvatar()
+    print('LoadAvatar')
     -- 读取玩家形象回调
     local callback = function(_itemIds, _msg)
         Debug.Log(string.format('[换装] 下载服装资源, msg: %s', _msg))
         -- Debug.Log(string.format('[换装] 服装id列表: %s', dump(_itemIds)))
 
         if _msg == MSG_SUCCEEDED then
-            Debug.Log(string.format('[换装] Download Current Exterior Callback, msg: %s', _msg))
-            -- Debug.Log(string.format('[换装] 服装id列表: %s', stringfy(_itemIds)))
-
-            -- 将NPC变为白模
-            avatar:ResetToDefault()
+            --* 先清空玩家身上的服装，防止重复替换服装消失
+            -- avatar:ResetToDefault() --! 有bug风险，先禁用 @黄帅
             -- 将玩家身上的服装IDs拷贝在NPC身上
-            ChangeClothesAux(_itemIds)
+            ChangeClothesAux(_itemIds, false)
 
             -- 初始化玩家当前身上的服装IDs
             GetCurrClothesIds(avatar, defaultIds)
             GetCurrClothesIds(avatar, dressedIds)
+            avatarDownloaded = true
 
             -- 把localPlayer的属性赋值给NPC
             avatar.BodyType = localPlayer.Avatar.BodyType
             avatar.FaceType = localPlayer.Avatar.FaceType
             avatar.SkinColor = localPlayer.Avatar.SkinColor
-            avatar.Gender = localPlayer.Avatar.Gender
 
             avatarDownloaded = true
         else
@@ -237,7 +246,6 @@ function SaveAvatar()
     localPlayer.Avatar.BodyType = avatar.BodyType
     localPlayer.Avatar.FaceType = avatar.FaceType
     localPlayer.Avatar.SkinColor = avatar.SkinColor
-    localPlayer.Avatar.Gender = avatar.Gender
 
     --- 保存玩家形象回调
     local callback = function(_msg)
@@ -377,6 +385,8 @@ end
 --- 同步三个行为状态
 function SyncActionStates()
     -- 检查三个状态
+    print(table.dump(defaultIds))
+    print(table.dump(dressedIds))
     local canRestore = not (table.concat(defaultIds) == table.concat(dressedIds))
     local canUndo = UndoStack:Size() > 0
     local canRedo = RedoStack:Size() > 0
@@ -384,7 +394,7 @@ function SyncActionStates()
 end
 
 --- 做：换衣服
-function DodoChangeClothes(_ids)
+function Dodo(_ids)
     -- 创建玩家行为
     local action = Action:New(_ids)
     action:Dodo()
@@ -397,7 +407,7 @@ function DodoChangeClothes(_ids)
 end
 
 --- 撤销：换衣服
-function UndoChangeClothes()
+function Undo()
     if not UndoStack:IsEmpty() then
         local action = UndoStack:Pop()
         action:Undo()
@@ -408,7 +418,7 @@ function UndoChangeClothes()
 end
 
 --- 重做：换衣服
-function RedoChangeClothes()
+function Redo()
     if not RedoStack:IsEmpty() then
         local action = RedoStack:Pop()
         action:Redo()
@@ -419,9 +429,9 @@ function RedoChangeClothes()
 end
 
 --- 恢复初始服装
-function RestoreClothes()
-    -- 将NPC变为白模
-    avatar:ResetToDefault()
+function Restore()
+    --* 先清空玩家身上的服装，防止重复替换服装消失
+    avatar:ResetToDefaultClothes()
 
     -- 创建默认服装列表的IDs
     local ids = {}
@@ -430,7 +440,7 @@ function RestoreClothes()
     end
 
     -- 执行正常换装
-    DodoChangeClothes(ids)
+    Dodo(ids)
 end
 
 --- 换衣服的引擎接口

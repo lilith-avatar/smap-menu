@@ -130,7 +130,7 @@ function EventHandler(_event, ...)
     elseif _event == M.Event.Enum.GET_CURR_IDS then
         local args = {...}
         currOutfitId = args[1]
-        print(table.dump(currOutfitId))
+        -- print(table.dump(currOutfitId))
         RefreshAllScollerItemClickState()
     end
 end
