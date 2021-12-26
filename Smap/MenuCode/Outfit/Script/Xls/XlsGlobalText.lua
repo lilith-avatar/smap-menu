@@ -4,7 +4,7 @@
 --- @see Official Website: https://www.projectdavinci.com/
 --- @see Dev Framework: https://github.com/lilith-avatar/avatar-ava
 --- @see X2L Tool: https://github.com/lilith-avatar/avatar-ava-xls2lua
---- source file: ./xls/i18n.xlsx
+--- source file: ./xls/GlobalText.xlsx
 
 local GlobalTextXls = {
     Day = {
@@ -27,9 +27,13 @@ local GlobalTextXls = {
         Key = 'Expired',
         _Text = 'Global_Text_Expired'
     },
-    Source = {
-        Key = 'Source',
-        _Text = 'Global_Text_Source'
+    Tips = {
+        Key = 'Tips',
+        _Text = 'Global_Text_Tips'
+    },
+    ErrorTips = {
+        Key = 'ErrorTips',
+        _Text = 'Global_Text_ErrorTips'
     }
 }
 
