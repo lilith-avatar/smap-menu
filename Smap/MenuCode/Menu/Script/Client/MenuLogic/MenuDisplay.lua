@@ -501,7 +501,6 @@ function SettingBind()
             gui.BtnOpen:SetActive(true)
             gui.GraphicMask:SetActive(true)
             gui.TextGraphicSetting.Color = Color(98, 98, 98, 120)
-            Game.SetGraphicQuality(0)
         end
     )
 
