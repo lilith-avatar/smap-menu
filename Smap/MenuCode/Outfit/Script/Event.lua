@@ -31,7 +31,8 @@ local Event = {
         GOT_PLAYER_OWN_ITEMLIST = 6,
         -- 换装
         CHANGE_CLOTHES = 7,
-        CLEAR_DOT = 8
+        CLEAR_DOT = 8,
+        GET_CURR_IDS = 9 -- 获得当前选中的物品id
     }
 }
 

@@ -17,7 +17,6 @@ local defaultMainType, defaultSubType  -- 打开时，默认类型的ID，
 local currMainType, currSubType  -- 当前类型的ID
 local currItemList  -- 当前的服装
 local newTypes  -- MainType和SubType包含新服装的数量
-local currItemObj = nil -- 当前选中的服装
 local itemDataDict = {} -- obj -> data 关联表
 
 -- GUI
@@ -41,7 +40,7 @@ local sclOutfit
 local currStBtn
 
 --* 当前选中的ItemId
-local currId
+local currOutfitId
 
 -- 节点列表
 local mainTypeBtns = {}
@@ -116,7 +115,6 @@ function EventHandler(_event, ...)
     elseif _event == M.Event.Enum.REFRESH_GUI.ITEMLIST then
         local args = {...}
         currItemList = args[1] or {}
-        currId = args[2]
         RefreshScroller()
     elseif _event == M.Event.Enum.REFRESH_GUI.MENU then
         local args = {...}
@@ -129,6 +127,11 @@ function EventHandler(_event, ...)
         local args = {...}
         local canRestore, canRedo, canUndo = args[1], args[2], args[3]
         RefreshActionBtns(canRestore, canRedo, canUndo)
+    elseif _event == M.Event.Enum.GET_CURR_IDS then
+        local args = {...}
+        currOutfitId = args[1]
+        print(currOutfitId)
+        RefreshAllScollerItemClickState()
     end
 end
 
@@ -282,8 +285,6 @@ end
 
 --- MainType按钮点击
 function BtnMainTypeClicked(_btnObj)
-    -- 取消当前选中
-    currItemObj = nil
     -- 停止全部Tween动画
     StopAllTween()
 
@@ -306,12 +307,9 @@ end
 
 --- SubType按钮点击
 function BtnSubTypeClicked(_btnObj)
-    -- 取消当前选中
-    currItemObj = nil
     -- 停止全部Tween动画
     StopAllTween()
 
-    local stBtn
     -- 刷新按钮样式
     for st, btn in pairs(subTypePnls[currMainType].btns) do
         if btn.obj == _btnObj then
@@ -329,7 +327,6 @@ function BtnSubTypeClicked(_btnObj)
             M.Fire(M.Event.Enum.CLEAR_DOT, ids)
         end
     end
-    currStBtn = stBtn
 
     M.Fire(M.Event.Enum.UPDATE_CURR_TYPES, currMainType, currSubType)
 end
@@ -341,20 +338,14 @@ function BtnItemClicked(_btnObj)
     local dataIdx = itemDataDict[_btnObj].dataIdx
     if dataIdx ~= nil and dataIdx <= #currItemList then
         local data = currItemList[dataIdx]
-        local prevItemObj = currItemObj
-        -- 更新当前ItemObj
-        currItemObj = _btnObj
-        if prevItemObj == currItemObj then
-            currId = nil
-            currItemObj = nil
-        end
         local id = currItemList[dataIdx].Id
         -- 调用引擎接口换装、红点
         M.Fire(M.Event.Enum.CHANGE_CLOTHES, id, data.New)
+        -- 脱衣服时，取消选中
+        if id == currOutfitId then
+            currOutfitId = nil
+        end
     end
-
-    -- 刷新item点击状态
-    RefreshAllScollerItemClickState()
 end
 
 --- Item按钮长按开始
@@ -477,8 +468,6 @@ end
 
 --- 刷新SubType的Panel
 function RefreshSubTypePnl()
-    --* 当前选中的SubType按钮
-    local currStBtn
     --* 当前SubType的下划线
     local imgUnderline = subTypePnls[currMainType].obj.Img_Underline
 
@@ -592,9 +581,14 @@ function RefreshAllScollerItemClickState()
         for _, obj in ipairs(line:GetChildren()) do
             if obj.ClassName == 'UiPanelObject' then
                 -- 按钮的外轮廓
-                obj.Img_Frame.Enable = obj == currItemObj
-                -- 红点
-                obj.Img_Dot.Enable = obj.Img_Dot.Enable and obj ~= currItemObj
+                obj.Img_Frame.Enable = false
+                if itemDataDict[obj] and itemDataDict[obj].dataIdx then
+                    local data = currItemList[itemDataDict[obj].dataIdx]
+                    if data and data.Id == currOutfitId then
+                        obj.Img_Frame.Enable = true
+                        obj.Img_Dot.Enable = false
+                    end
+                end
             else
                 -- 其他，包括：Tips
                 obj.Enable = false
@@ -665,7 +659,6 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
     -- 根据PreferredSize来给文本补行，以免字体过大
     -- 先隐藏字体颜色，算好PreferredSize之后再将正确的颜色赋值回来
     local obj = _obj
-    local color = obj.Txt_Item.Color
     obj.Txt_Item.Color = Color(255, 255, 255, 1)
     local adjustText = function()
         wait()
@@ -717,15 +710,12 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
     -- 加载服装Thumbnail资源
     local callback = function(_resRef, _msg)
         if _resRef then
-            _obj.Img_Frame.Enable = data.Id == currId
+            _obj.Img_Frame.Enable = data.Id == currOutfitId
+            _obj.Img_Dot.Enable = _obj.Img_Dot.Enable and data.Id ~= currOutfitId
             _obj.Img_Item.Texture = _resRef
             _obj.Img_Item.Enable = true
             _obj.Img_Load.Enable = false
             _obj.Img_Load.Tween:Complete()
-            if data.Id == currId then
-                -- 相同时，选中
-                currItemObj = _obj
-            end
         end
     end
 

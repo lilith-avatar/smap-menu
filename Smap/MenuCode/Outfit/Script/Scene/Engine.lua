@@ -1,5 +1,5 @@
---- 换装系统引擎API调用
---- @module Outfit Engine API
+--- 换装、换体型系统引擎API调用
+--- @module Costom Engine API
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
@@ -7,6 +7,7 @@
 local localPlayer = localPlayer
 local Stack = Stack
 local stringfy, dump, clear = table.stringfy, table.dump, table.clear
+local invoke, wait = invoke, wait
 local Debug, AvatarManager = Debug, AvatarManager
 
 --* 模块
@@ -24,19 +25,19 @@ local dressedIds = {}
 -- MainType和SubType包含新服装的数量
 local newTypes = {}
 
--- 行动栈
+-- 行动栈（撤销栈）
 local UndoStack = Stack:New() --* 可撤销栈
 local RedoStack = Stack:New() --* 可重做栈
 
 -- 全局引用
 local avatar  -- 换装模特
-local gender  -- 玩家性别
 
 -- 外观信息下载成功
 local avatarDownloaded = false
 
 -- 当前数据
-local currId
+local currItemList = {}
+local currOutfitId
 
 -- 常量
 local MSG_SUCCEEDED = 'succeeded'
@@ -99,7 +100,9 @@ function Action:Dodo()
 
     -- 更新当前服装
     --* 传入一个新的{}作为newDressedIds，在回调里赋值dressedIds
-    GetCurrClothesIds(avatar, {}, getTakeOffClothesCallback)
+    GetCurrClothesIds(avatar, {}, 0.02, getTakeOffClothesCallback)
+    -- 更新当前ID
+    invoke(GetOutfitCurrId, 0.02)
 end
 
 --- 行为栈：重做
@@ -107,7 +110,9 @@ function Action:Redo()
     -- 换装：新衣服
     ChangeClothesAux(self.dressIds)
     -- 更新当前服装
-    GetCurrClothesIds(avatar, dressedIds)
+    GetCurrClothesIds(avatar, dressedIds, 0.02)
+    -- 更新当前ID
+    invoke(GetOutfitCurrId, 0.02)
 end
 
 --- 行为栈：撤销
@@ -115,7 +120,9 @@ function Action:Undo()
     -- 换装：旧衣服
     ChangeClothesAux(self.undressIds)
     -- 更新当前服装
-    GetCurrClothesIds(avatar, dressedIds)
+    GetCurrClothesIds(avatar, dressedIds, 0.02)
+    -- 更新当前ID
+    invoke(GetOutfitCurrId, 0.02)
 end
 
 --! 初始化
@@ -294,7 +301,7 @@ end
 
 --- 刷新更新服装列表
 function UpdateItemList(_subType)
-    local currItemList = {}
+    currItemList = {}
     Debug.Assert(_subType ~= nil, '[换装] _subType为空')
 
     -- 根据SubType拿到服装列表
@@ -309,9 +316,9 @@ function UpdateItemList(_subType)
 
     local callback = function()
         -- 触发GUI物品列表更新
-        M.Fire(M.Event.Enum.REFRESH_GUI.ITEMLIST, currItemList, currId)
+        M.Fire(M.Event.Enum.REFRESH_GUI.ITEMLIST, currItemList)
     end
-    GetOutfitCurrId(currItemList, callback)
+    GetOutfitCurrId(callback)
 end
 
 --- 更新有红点的MainType和SubType
@@ -330,19 +337,31 @@ function UpdateNewTypes()
 end
 
 --- 得到当前的服装
-function GetOutfitCurrId(_currItemList, _callback)
-    currId = nil
+function GetOutfitCurrId(_callback)
+    currOutfitId = nil
     local findCurrId = function(_items)
-        for _, v1 in pairs(_currItemList) do
+        for k, v in ipairs(_items) do
+            print(k, v)
+        end
+        local breakFlag = false
+        for _, v1 in pairs(currItemList) do
             for _, v2 in pairs(_items) do
                 if v1.Id == v2 then
-                    currId = v2
-                    _callback()
-                    return
+                    currOutfitId = v2
+                    breakFlag = true
+                end
+                if breakFlag then
+                    break
                 end
             end
+            if breakFlag then
+                break
+            end
         end
-        _callback()
+        M.Fire(M.Event.Enum.GET_CURR_IDS, currOutfitId)
+        if _callback and type(_callback) == 'function' then
+            _callback()
+        end
     end
     avatar:GetCurrentSuits(findCurrId)
 end
@@ -434,7 +453,10 @@ function ChangeClothesAux(_ids)
 end
 
 --- 返回当前玩家身上的服装IDs
-function GetCurrClothesIds(_avatar, _outItems, _cb)
+function GetCurrClothesIds(_avatar, _outItems, _delay, _cb)
+    if _delay and _delay > 0 then
+        wait(_delay)
+    end
     -- 回调函数
     local callback = function(_items)
         -- Debug.Log(stringfy(_items))
