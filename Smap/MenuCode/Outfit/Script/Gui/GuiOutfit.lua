@@ -216,7 +216,6 @@ function CreateMainTypeBtn(_idx, _data)
     btnObj.Offset = Vector2(MAINTYPE_BTN_OFFSET_X, -MAINTYPE_BTN_OFFSET_Y - 1 * (_idx - 1) * MAINBTN_BTN_SPACE_Y)
     btnObj.Transition = Enum.UITransition.Image
     btnObj.Texture = ResourceManager.GetTexture(_data.ResIcon)
-    btnObj.HoverImage = ResourceManager.GetTexture(_data.ResIconPressed)
 
     -- 存储节点列表
     mainTypeBtns[_data.MainType] = {
