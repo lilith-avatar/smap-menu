@@ -279,9 +279,9 @@ function PnlMenuAni(_isOpen)
         gui.TweenVoiceBg.Properties = {Offset = voiceOff}
     end
     for _, v in pairs(gui.PnlMenuTab) do
+        v:Flush()
         v.Duration = 0.4
         v.EaseCurve = Enum.EaseCurve.QuinticInOut
-        v:Flush()
         v:Play()
     end
 end
@@ -313,10 +313,10 @@ function ImgBaseAni(_isOpen)
 end
 
 function TweenAni(_tarTween, _tarProTab, _tarDur, _tarEase, _comFun)
+    _tarTween:Flush()
     _tarTween.Properties = _tarProTab
     _tarTween.Duration = _tarDur
     _tarTween.EaseCurve = _tarEase
-    _tarTween:Flush()
     _tarTween:Play()
     if _comFun ~= nil then
         _tarTween.OnComplete:Connect(_comFun)
@@ -328,10 +328,10 @@ function ResourceReplaceAni()
         v.OnClick:Connect(
             function()
                 local aniTween = gui.ImgShadow.aniTween
+                aniTween:Flush()
                 aniTween.Properties = {Offset = v.Offset}
                 aniTween.Duration = 0.1
                 aniTween.EaseCurve = Enum.EaseCurve.Linear
-                aniTween:Flush()
                 aniTween:Play()
                 aniTween.OnComplete:Connect(
                     function()
