@@ -13,11 +13,9 @@ local _ = require('Outfit/Script/Util/LuaExt')
 local Xls = {
     MainType = require('Outfit/Script/Xls/XlsMainType'),
     SubType = require('Outfit/Script/Xls/XlsSubType'),
-    GlobalText = require('Outfit/Script/Xls/XlsGlobalText'),
-    I18N = require('Outfit/Script/Xls/XlsI18N')
+    GlobalText = require('Outfit/Script/Xls/XlsGlobalText')
 }
 M.Event = require('Outfit/Script/Event')
-local I18N = require('Outfit/Script/Util/I18N')
 local Engine = require('Outfit/Script/Scene/Engine')
 local NpcCtrl = require('Outfit/Script/Scene/NpcCtrl')
 local GuiAvatar = require('Outfit/Script/Gui/GuiAvatar')
@@ -73,8 +71,6 @@ function InitSubModule()
         }
     }
 
-    InitSubModuleAux(I18N, mt) -- 本地化
-    TranslateXls() -- 翻译本地化Xls
     InitSubModuleAux(GuiOutfit, mt) -- GUI
     InitSubModuleAux(GuiAvatar, mt) -- GUI
     InitSubModuleAux(GuiTransition, mt) -- GUI
@@ -88,13 +84,6 @@ end
 function InitSubModuleAux(_module, _mt)
     setmetatable(_module, _mt)
     _module.Init(root)
-end
-
---- 翻译本地化Xls
-function TranslateXls()
-    -- 需要本地化的表格
-    I18N.Translate(Xls.SubType)
-    I18N.Translate(Xls.GlobalText)
 end
 
 --- 发出事件

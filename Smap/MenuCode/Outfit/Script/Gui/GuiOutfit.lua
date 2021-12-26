@@ -373,21 +373,19 @@ function BtnItemLongPressBegin(_btnObj)
     if data ~= nil then
         -- 显示tips
         local lineIdx = (dataIdx - 1) % 4 + 1
-        local richText =
-            string.format(
-            '<size=26><color=#FFFFFF><b>%s</b></color></size>\n<size=24><color=#FFFFFF>%s\n%s: %s</color></size>',
-            data.Title,
-            data.Description,
-            M.Xls.GlobalText.Source.Text,
-            data.Source
-            -- 'Kacamata hitam mata kucing',
-            -- 'Kamu duduk di kolam gua yang menghadap ke Santorini. Koin di kalung, dikatakan membawa pertemuan kebetulan, berayun ditiup angin, membentur tembok, dan menciptakan suara yang indah...',
-            -- 'Sumber',
-            -- 'Hadiah login pertama yang valid selama 15 hari. Pakaian ini akan menjadi tidak valid setelah event (xxxx/xx/xx).'
-        )
+
+        --! TEST 最长字符串
+        -- data.Title = 'Kacamata hitam mata kucing'
+        -- data.Description =
+        --     'Kamu duduk di kolam gua yang menghadap ke Santorini. Koin di kalung, dikatakan membawa pertemuan kebetulan, berayun ditiup angin, membentur tembok, dan menciptakan suara yang indah...'
+        -- data.Source =
+        --     'Hadiah login pertama yang valid selama 15 hari. Pakaian ini akan menjadi tidak valid setelah event (xxxx/xx/xx).'
 
         imgTips.Enable = true
-        imgTips.Txt_RichText.Text = richText
+        imgTips.Txt_RichText.LocalizeKey = M.Xls.GlobalText.Tips._Text
+        imgTips.Txt_RichText.Variable1 = data.Title
+        imgTips.Txt_RichText.Variable2 = data.Description
+        imgTips.Txt_RichText.Variable3 = data.Source
         local btnScnPos = _btnObj.ScreenPosition
         local pnlRightSize = pnlRight.FinalSize
         local anchorX = 1 / 2
@@ -495,7 +493,7 @@ function RefreshSubTypePnl()
         wait() --! 等一帧让Panel显示，否则无法触发Dirty
         for _, btn in pairs(subTypePnls[currMainType].btns) do
             -- 计算按钮的Offset
-            btn.obj.Txt_Label.Text = btn.data.Label
+            btn.obj.Txt_Label.LocalizeKey = btn.data._Label
             btn.obj.Offset = Vector2(-500, btn.obj.Offset.Y)
         end
         wait() --! 等一帧让Txt_Label计算Size
@@ -537,7 +535,6 @@ function RefreshSubTypePnl()
             cumOffsetX = cumOffsetX + btn.obj.Txt_Label.Size.X + SUBTYPE_BTN_SPACE_X
         end
 
-        -- print(btn.obj.Txt_Label.Text, btn.obj.Txt_Label.FinalSize, gui.Enable)
         subTypePnls[currMainType].obj.ScrollRange = cumOffsetX - SUBTYPE_BTN_SPACE_X + SUBTYPE_BTN_LEFT_MARGIN
         subTypePnls[currMainType].calOffset = true
         -- 下划线
@@ -661,7 +658,7 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
 
     -- GUI
     _obj.Img_Dot.Enable = data.New or false
-    _obj.Txt_Item.Text = data.Title or ''
+    _obj.Txt_Item.Text = data.Title
     _obj.Btn_Item.Clickable = true
     _obj.Img_Item.Alpha = 1
 
@@ -687,7 +684,9 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
 
         -- 剩余时间
         local restTime = data.Expiration - os.time()
-        _obj.Img_Countdown.Txt_Timer.Text = ShowRestTime(restTime)
+        local var1, key = ShowRestTime(restTime)
+        _obj.Img_Countdown.Txt_Timer.LocalizeKey = key
+        _obj.Img_Countdown.Txt_Timer.Variable1 = var1
 
         if restTime > 0 then
             --* 显示限时倒计时
@@ -752,18 +751,18 @@ end
 -- @param @number _restTime 剩余时间（秒）
 -- @return @string 显示文本
 function ShowRestTime(_restTime)
-    local day = M.Xls.GlobalText.Day.Text
-    local hour = M.Xls.GlobalText.Hour.Text
-    local minute = M.Xls.GlobalText.Minute.Text
-    local expired = M.Xls.GlobalText.Expired.Text
+    local day = M.Xls.GlobalText.Day._Text
+    local hour = M.Xls.GlobalText.Hour._Text
+    local minute = M.Xls.GlobalText.Minute._Text
+    local expired = M.Xls.GlobalText.Expired._Text
     if _restTime >= 86400 then
-        return string.format('%s %s', math.floor(_restTime / 86400), day)
+        return tostring(math.floor(_restTime / 86400)), day
     elseif _restTime >= 3600 then
-        return string.format('%s %s', math.floor(_restTime / 3600), hour)
+        return tostring(math.floor(_restTime / 3600)), hour
     elseif _restTime >= 60 then
-        return string.format('%s %s', math.floor(_restTime / 60), minute)
+        return tostring(math.floor(_restTime / 60)), minute
     elseif _restTime > 0 then
-        return string.format('< 1 %s', minute)
+        return '< 1', minute
     end
     return expired
 end
