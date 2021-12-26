@@ -652,7 +652,7 @@ function GetFriendsListEventHandler(_list)
             gui[k].BtnFriMore:SetActive(true)
             gui[k].BtnFriInviteOut:SetActive(false)
             gui[k].ImgInGame:SetActive(true)
-            gui[k].TextGameName.Text = 'Playing' .. v.GameName
+            gui[k].TextGameName.Text = 'Playing ' .. v.GameName
             gui[k].TextName.AnchorsY = Vector2(0.7, 0.7)
         else
             gui[k].BtnFriMore:SetActive(false)
