@@ -280,23 +280,21 @@ function GetPlayerOwnedList()
         if _ownedItems ~= nil and _ownedItems ~= {} then
             outfits = {}
             for _, v in ipairs(_ownedItems) do
-                if v.gender == 0 or v.gender == gender then
-                    -- 判断服装是否可用，性别是否相符
-                    outfits[v.itemId] = {
-                        Id = v.itemId,
-                        Gender = v.gender,
-                        New = not v.viewed,
-                        -- New = true,
-                        MainType = string.sub(v.type, 1, 2),
-                        SubType = v.type,
-                        Enable = true,
-                        Title = v.name,
-                        Description = v.descriptionText,
-                        Source = v.source,
-                        Expiration = v.expiredTimestamp or -1
-                        -- Expiration = math.random(os.time() - 1000000, os.time() + 2592000) --FIXME: --!TEST 测试一个随机90天的倒计时
-                    }
-                end
+                -- 判断服装是否可用，性别是否相符
+                outfits[v.itemId] = {
+                    Id = v.itemId,
+                    Gender = v.gender,
+                    New = not v.viewed,
+                    -- New = true,
+                    MainType = string.sub(v.type, 1, 2),
+                    SubType = v.type,
+                    Enable = true,
+                    Title = v.name,
+                    Description = v.descriptionText,
+                    Source = v.source,
+                    Expiration = v.expiredTimestamp or -1
+                    -- Expiration = math.random(os.time() - 1000000, os.time() + 2592000) --FIXME: --!TEST 测试一个随机90天的倒计时
+                }
             end
         end
 
