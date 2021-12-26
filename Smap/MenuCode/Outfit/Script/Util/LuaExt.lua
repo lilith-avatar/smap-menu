@@ -18,6 +18,19 @@ table.clear = table.clear or function(t)
         end
     end
 
+--- 查找表格里是否包含元素
+--- @param table
+--- @param value
+--- @return @boolean
+table.contains = table.contains or function(_t, _val)
+        for _, value in ipairs(_t) do
+            if value == _val then
+                return true
+            end
+        end
+        return false
+    end
+
 --- 打印table中的所有内容
 --- @param data table
 --- @param @boolean showMetatable 是否显示元表
