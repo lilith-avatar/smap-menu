@@ -508,17 +508,22 @@ function SettingBind()
         v.OnEnter:Connect(
             function()
                 SwitchNodeCtr(gui[string.gsub(v.Name, 'Text', 'Btn')], gui.GraphicSetBtnTab, false)
+                for i, j in pairs(gui.GraphicSetBtnTab) do
+                    if j == gui[string.gsub(v.Name, 'Text', 'Btn')] then
+                        Game.SetGraphicQuality(i)
+                    end
+                end
             end
         )
     end
 
-    for i, j in pairs(gui.GraphicSetBtnTab) do
-        j.OnEnter:Connect(
-            function()
-                Game.SetGraphicQuality(i)
-            end
-        )
-    end
+    -- for i, j in pairs(gui.GraphicSetBtnTab) do
+    --     j.OnEnter:Connect(
+    --         function()
+    --             Game.SetGraphicQuality(i)
+    --         end
+    --     )
+    -- end
 end
 
 --* 换装事件绑定
