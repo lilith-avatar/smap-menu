@@ -23,6 +23,14 @@ local gui = {}
 local i, headPortrait = 0, nil
 local voiceOff = Vector2(196, 0)
 local friText, playerText, imText = 'Friends', 'Player', 'Say Something'
+local headColorTab = {
+    Color(255, 94, 94, 255),
+    Color(230, 210, 92, 255),
+    Color(91, 25, 157, 255),
+    Color(128, 130, 204, 255),
+    Color(77, 215, 203, 255),
+    Color(81, 155, 72, 255)
+}
 
 local resReplaceTab = {
     Gaming = 'games',
@@ -34,7 +42,7 @@ local resReplaceTab = {
 --- 初始化
 function Init()
     Game.ShowSystemBar(false)
-
+    math.randomseed(os.time())
     local deferFun = function()
         InitGui()
         InitListener()
@@ -437,9 +445,12 @@ function GamingBind()
 
     local function showAdd()
         gui.ImgAddFb:SetActive(true)
-        invoke(function()
-            gui.ImgAddFb:SetActive(false)
-        end,3)
+        invoke(
+            function()
+                gui.ImgAddFb:SetActive(false)
+            end,
+            3
+        )
     end
 
     gui.BtnProfileAdd.OnClick:Connect(
@@ -563,7 +574,12 @@ end
 
 function AdjustHeadPos(_tarTab, _playerTab)
     for k, v in pairs(_tarTab) do
-        gui['ImgHead' .. k].Texture = _playerTab[v]
+        local callback = function(_profile)
+            gui['ImgHead' .. k].Texture = _profile.HeadPortrait
+            gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)]
+        end
+
+        PlayerHub.GetPlayerProfile(v.UserId, callback)
         gui['FigBg' .. k]:SetActive(true)
         gui['FigBg' .. k].PlayerInfo.Value = v.UserId
         gui['TextName' .. k].Text = v.Name
@@ -587,7 +603,9 @@ end
 
 --! Event handlers
 function TranslateTextEventHandler(_text, _com)
-    if not isReady then return end
+    if not isReady then
+        return
+    end
     if _com == 'TextPlayNum' then
         playerText = _text
     elseif _com == 'TextFriList' then
@@ -601,17 +619,19 @@ end
 
 local function showInvite()
     gui.ImgInviteFb:SetActive(true)
-    invoke(function()
-        gui.ImgInviteFb:SetActive(false)
-    end,3)
+    invoke(
+        function()
+            gui.ImgInviteFb:SetActive(false)
+        end,
+        3
+    )
 end
 
 function GetFriendsListEventHandler(_list)
-    if not isReady then return end
-    i = 0
-    local callback = function(_profile)
-        headPortrait = _profile.HeadPortrait
+    if not isReady then
+        return
     end
+    i = 0
     for _ in pairs(_list) do
         i = i + 1
     end
@@ -622,18 +642,21 @@ function GetFriendsListEventHandler(_list)
         M.Kit.Util.Net.Fire_C('CreateReadyEvent', localPlayer, gui[k], 0)
 
         gui[k].TextName.Text = v.Name
+        local callback = function(_profile)
+            gui[k].ImgBg.ImgHead.Texture = _profile.HeadPortrait
+            gui[k].ImgBg.Color = headColorTab[math.random(1, 6)]
+        end
         PlayerHub.GetPlayerProfile(k, callback)
-        gui[k].ImgHead.Texture = headPortrait
         if v.Status == 'PLAYING' then
             gui[k].BtnFriMore:SetActive(true)
             gui[k].BtnFriInviteOut:SetActive(false)
-            gui[k].ImgHead.ImgInGame:SetActive(true)
+            gui[k].ImgInGame:SetActive(true)
             gui[k].TextGameName.Text = 'Playing' .. v.GameName
             gui[k].TextName.AnchorsY = Vector2(0.7, 0.7)
         else
             gui[k].BtnFriMore:SetActive(false)
             gui[k].BtnFriInviteOut:SetActive(true)
-            gui[k].ImgHead.ImgInGame:SetActive(false)
+            gui[k].ImgInGame:SetActive(false)
             gui[k].TextName.AnchorsY = Vector2(0.5, 0.5)
         end
         gui[k].BtnFriMore.OnClick:Connect(
@@ -679,7 +702,9 @@ function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
 
-    if not isReady then return end
+    if not isReady then
+        return
+    end
     isNone = false
     M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
 
@@ -700,7 +725,9 @@ end
 ---消息更新
 local messageCache, length = '', 0
 function NormalImEventHandler(_sender, _content)
-    if not isReady then return end
+    if not isReady then
+        return
+    end
     length = string.len((_sender.Name) .. _content)
     gui.TextImContent.Text =
         messageCache .. '\n' .. '<color=#dfdfdf>' .. '[' .. _sender.Name .. ']' .. '</color>' .. _content
@@ -713,9 +740,23 @@ function NormalImEventHandler(_sender, _content)
 end
 
 function SomeoneInviteEventHandler(_invitePlayer, _roomId)
-    if not isReady then return end
+    if not isReady then
+        return
+    end
+
+    if gui.ImgInviteBg then
+        return
+    end
+
     gui.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, gui.MenuGui)
     gui.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
+
+    local callback = function(_profile)
+        gui.ImgInviteBg.ImgProfileBg.ImgProfile.Texture = _profile.HeadPortrait
+        gui.ImgInviteBg.ImgProfileBg.Color = headColorTab[math.random(1, 6)]
+    end
+
+    PlayerHub.GetPlayerProfile(_invitePlayer.UserId, callback)
 
     M.Kit.Util.Net.Fire_C('CreateReadyEvent', localPlayer, gui.ImgInviteBg, 1, _invitePlayer)
 
@@ -745,7 +786,9 @@ function CheckPnlMenu(_boolean, _gui)
 end
 
 function MenuSwitchEventHandler(_type, _boolean)
-    if gui.MenuGui == nil then return end
+    if gui.MenuGui == nil then
+        return
+    end
     if _type == 0 then
         gui.MenuGui:SetActive(_boolean)
     elseif _type == 1 then
