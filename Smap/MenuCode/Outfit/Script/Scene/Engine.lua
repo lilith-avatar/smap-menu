@@ -159,10 +159,10 @@ end
 --- 事件处理
 function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
-        -- 读取玩家形象
-        LoadAvatar()
         -- 读取玩家服装信息
         GetPlayerOwnedList()
+        -- 读取玩家形象
+        LoadAvatar()
         -- 清空行为栈
         UndoStack:Clear()
         RedoStack:Clear()
@@ -231,6 +231,9 @@ function LoadAvatar()
         else
             Debug.LogWarning(string.format('[换装] 下载服装资源, msg: %s', _msg))
         end
+
+        --- 同步三个行为状态
+        SyncActionStates()
     end
 
     AvatarManager.DownloadCurrentAvatarResource(callback)
