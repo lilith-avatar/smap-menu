@@ -382,7 +382,8 @@ function GamingBind()
         gui['BtnMic' .. i].OnClick:Connect(
             function()
                 ProfileBgFix(gui['FigBg' .. i].PlayerInfo.Value)
-                gui.ImgProfileHead.Texture = gui['ImgHead' .. i].Texture
+                gui.ImgProfileHeadBg.Color = gui['ImgBg' .. i].Color
+                gui.ImgProfileHeadBg.ImgProfileHead.Texture = gui['ImgHead' .. i].Texture
                 gui.TextProfileName.Text = gui['TextName' .. i].Text
                 gui.ImgProfileBg:SetActive(true)
                 gui.BtnTouch:SetActive(true)
