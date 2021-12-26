@@ -338,24 +338,13 @@ end
 
 --- 得到当前的服装
 function GetOutfitCurrId(_callback)
-    currOutfitId = nil
+    currOutfitId = {}
     local findCurrId = function(_items)
-        for k, v in ipairs(_items) do
-            print(k, v)
-        end
-        local breakFlag = false
         for _, v1 in pairs(currItemList) do
             for _, v2 in pairs(_items) do
                 if v1.Id == v2 then
-                    currOutfitId = v2
-                    breakFlag = true
+                    table.insert(currOutfitId, v2)
                 end
-                if breakFlag then
-                    break
-                end
-            end
-            if breakFlag then
-                break
             end
         end
         M.Fire(M.Event.Enum.GET_CURR_IDS, currOutfitId)

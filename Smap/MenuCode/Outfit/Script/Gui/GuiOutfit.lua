@@ -130,7 +130,7 @@ function EventHandler(_event, ...)
     elseif _event == M.Event.Enum.GET_CURR_IDS then
         local args = {...}
         currOutfitId = args[1]
-        print(currOutfitId)
+        print(table.dump(currOutfitId))
         RefreshAllScollerItemClickState()
     end
 end
@@ -584,7 +584,7 @@ function RefreshAllScollerItemClickState()
                 obj.Img_Frame.Enable = false
                 if itemDataDict[obj] and itemDataDict[obj].dataIdx then
                     local data = currItemList[itemDataDict[obj].dataIdx]
-                    if data and data.Id == currOutfitId then
+                    if data and table.contains(currOutfitId, data.Id) then
                         obj.Img_Frame.Enable = true
                         obj.Img_Dot.Enable = false
                     end
@@ -710,8 +710,8 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
     -- 加载服装Thumbnail资源
     local callback = function(_resRef, _msg)
         if _resRef then
-            _obj.Img_Frame.Enable = data.Id == currOutfitId
-            _obj.Img_Dot.Enable = _obj.Img_Dot.Enable and data.Id ~= currOutfitId
+            _obj.Img_Frame.Enable = table.contains(currOutfitId, data.Id)
+            _obj.Img_Dot.Enable = _obj.Img_Dot.Enable and not table.contains(currOutfitId, data.Id)
             _obj.Img_Item.Texture = _resRef
             _obj.Img_Item.Enable = true
             _obj.Img_Load.Enable = false
