@@ -100,7 +100,7 @@ function Open()
     end
 
     -- 发出打开事件
-    Fire(M.Event.Enum.OPEN, M.ShowPos)
+    Fire(M.Event.Enum.OPEN)
 end
 
 --- 关闭换装系统
@@ -134,6 +134,5 @@ M.Open = Open
 M.Close = Close
 M.IsOpen = IsOpen
 M.Toggle = Toggle
-M.ShowPos = nil
 
 return M

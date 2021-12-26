@@ -208,7 +208,6 @@ end
 
 --- 读取玩家形象
 function LoadAvatar()
-    print('LoadAvatar')
     -- 读取玩家形象回调
     local callback = function(_itemIds, _msg)
         Debug.Log(string.format('[换装] 下载服装资源, msg: %s', _msg))
@@ -382,8 +381,6 @@ end
 --- 同步三个行为状态
 function SyncActionStates()
     -- 检查三个状态
-    print(table.dump(defaultIds))
-    print(table.dump(dressedIds))
     local canRestore = not (table.concat(defaultIds) == table.concat(dressedIds))
     local canUndo = UndoStack:Size() > 0
     local canRedo = RedoStack:Size() > 0
@@ -442,7 +439,7 @@ end
 
 --- 换衣服的引擎接口
 function ChangeClothesAux(_ids)
-    Debug.Log(string.format('[换装] 更新服装IDs, %s', stringfy(_ids)))
+    -- Debug.Log(string.format('[换装] 更新服装IDs, %s', stringfy(_ids)))
     for _, id in ipairs(_ids) do
         avatar:ChangeClothes(id, true)
     end
