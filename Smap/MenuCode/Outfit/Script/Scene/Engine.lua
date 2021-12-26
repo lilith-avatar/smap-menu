@@ -271,8 +271,8 @@ function GetPlayerOwnedList()
                     outfits[v.itemId] = {
                         Id = v.itemId,
                         Gender = v.gender,
-                        -- New = not v.viewed,
-                        New = true,
+                        New = not v.viewed,
+                        -- New = true,
                         MainType = string.sub(v.type, 1, 2),
                         SubType = v.type,
                         Enable = true,
