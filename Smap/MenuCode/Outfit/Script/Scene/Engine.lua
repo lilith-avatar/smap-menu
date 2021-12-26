@@ -161,7 +161,6 @@ function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
         -- 读取玩家形象
         LoadAvatar()
-        wait()
         -- 读取玩家服装信息
         GetPlayerOwnedList()
         -- 清空行为栈
@@ -170,11 +169,11 @@ function EventHandler(_event, ...)
         -- 更新Action状态
         SyncActionStates()
     elseif _event == M.Event.Enum.CLOSE then
-        -- 保存玩家形象
-        SaveAvatar()
         -- 清空行为栈
         UndoStack:Clear()
         RedoStack:Clear()
+        -- 保存玩家形象
+        SaveAvatar()
     elseif _event == M.Event.Enum.UPDATE_CURR_TYPES then
         local args = {...}
         local mainType, subType = args[1], args[2]
@@ -217,7 +216,7 @@ function LoadAvatar()
 
         if _msg == MSG_SUCCEEDED then
             --* 先清空玩家身上的服装，防止重复替换服装消失
-            -- avatar:ResetToDefault() --! 有bug风险，先禁用 @黄帅
+            avatar:ResetToDefaultClothes()
             -- 将玩家身上的服装IDs拷贝在NPC身上
             ChangeClothesAux(_itemIds, false)
 
@@ -230,8 +229,6 @@ function LoadAvatar()
             avatar.BodyType = localPlayer.Avatar.BodyType
             avatar.FaceType = localPlayer.Avatar.FaceType
             avatar.SkinColor = localPlayer.Avatar.SkinColor
-
-            avatarDownloaded = true
         else
             Debug.LogWarning(string.format('[换装] 下载服装资源, msg: %s', _msg))
         end
