@@ -208,6 +208,10 @@ end
 
 --- 读取玩家形象
 function LoadAvatar()
+    if not localPlayer.Avatar then
+        Debug.LogWarning('localPlayer.Avatar 不存在!')
+        return
+    end
     -- 读取玩家形象回调
     local callback = function(_itemIds, _msg)
         Debug.Log(string.format('[换装] 下载服装资源, msg: %s', _msg))
@@ -241,6 +245,10 @@ end
 
 --- 保存玩家形象
 function SaveAvatar()
+    if not localPlayer.Avatar then
+        Debug.LogWarning('localPlayer.Avatar 不存在!')
+        return
+    end
     -- 保存玩家体型
     localPlayer.Avatar.BodyType = avatar.BodyType
     localPlayer.Avatar.FaceType = avatar.FaceType
