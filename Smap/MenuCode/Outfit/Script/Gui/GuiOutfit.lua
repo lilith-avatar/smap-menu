@@ -45,6 +45,8 @@ local currOutfitId
 -- 节点列表
 local mainTypeBtns = {}
 local subTypePnls = {}
+-- 计数器
+local resCnt, RES_THRESHOLD = 0, 3 -- GUI Archetype资源加载数和最大数
 
 -- 资源常量
 local RES_MAINTYPE_BTN = 'Outfit/Archetype/Gui/Btn_Landscape_MainType'
@@ -183,20 +185,45 @@ end
 
 --- 根据数据，初始化Panels
 function InitGuiNodes()
-    local cnt = 1
-    for _, data in ipairs(M.Xls.MainType) do
-        if data.Enable then
-            CreateSubTypePnl(data) -- SubType
-            CreateMainTypeBtn(cnt, data) -- MainType
-            cnt = cnt + 1
+    GetGuiArchetypes()
+end
+
+-- 加载Archetype
+function GetGuiArchetypes()
+    local callback = function()
+        resCnt = resCnt + 1
+        Debug.Log('[换装] GUI Archetypes 加载#' .. tostring(resCnt))
+
+        if resCnt < RES_THRESHOLD then
+            return
         end
+
+        --TODO: 叶人铭：native的包跟web的包好像游戏启动的时序有差异，我在自己打的包上测不到这个问题。
+        --TODO: 叶人铭：我在12月6号之前想办法把这个bug搞掉
+        --TODO: 叶人铭：着急的话可以先用这个invoke临时办法解一下
+        local succCallback = function()
+            local cnt = 1
+            for _, data in ipairs(M.Xls.MainType) do
+                if data.Enable then
+                    CreateSubTypePnl(data) -- SubType
+                    CreateMainTypeBtn(cnt, data) -- MainType
+                    cnt = cnt + 1
+                end
+            end
+
+            -- 根据按钮数量调整滚动区间
+            pnlMainType.ScrollRange = MAINTYPE_BTN_OFFSET_X + (cnt - 1) * MAINBTN_BTN_SPACE_Y
+
+            -- Scroller
+            InitScroller()
+        end
+
+        invoke(succCallback, 0.02)
     end
 
-    -- 根据按钮数量调整滚动区间
-    pnlMainType.ScrollRange = MAINTYPE_BTN_OFFSET_X + (cnt - 1) * MAINBTN_BTN_SPACE_Y
-
-    -- Scroller
-    InitScroller()
+    ResourceManager.GetArchetype(RES_MAINTYPE_BTN, callback)
+    ResourceManager.GetArchetype(RES_SUBTYPE_PNL, callback)
+    ResourceManager.GetArchetype(RES_SUBTYPE_BTN, callback)
 end
 
 --- 初始化Scroller
