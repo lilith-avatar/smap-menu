@@ -2,7 +2,6 @@
 *AutoSave_*
 *AutoBackup_*
 xls/*.lua
-xls/*.csv
 csv/*.lua
 csv/*.xls
 csv/*.xlsm
