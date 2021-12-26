@@ -824,6 +824,7 @@ function GuiOpen()
     -- 恢复默认页签
     ResetToDefault()
     gui.Enable = true
+    root.IsOpen.Value = true
 
     -- 显示默认页签
     currMainType = defaultMainType
@@ -837,6 +838,7 @@ end
 function GuiClose()
     --! 延缓关闭
     gui.Enable = false
+    root.IsOpen.Value = false
     -- 恢复默认页签
     ResetToDefault()
 end
