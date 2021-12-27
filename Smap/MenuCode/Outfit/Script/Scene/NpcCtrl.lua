@@ -31,6 +31,9 @@ local EMO_MIN, EMO_MAX = 3, 5
 -- NPC形象默认旋转
 local NPC_DEFAULT_LOCAL_ROT = EulerDegree(0, 0, 0)
 
+-- 隐藏点深度
+local SHELTER_POS_Y = -50
+
 -- localPlayer 的临时缓存位置
 local cachePos
 
@@ -76,6 +79,7 @@ function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
         booth.Enable = true
         shelter.Enable = true
+        shelter.Position = Vector3(localPlayer.Position.X, SHELTER_POS_Y, localPlayer.Position.Z)
         booth.Position = localPlayer.Position
         booth.Rotation = EulerDegree(0, localPlayer.Rotation.Y, 0)
         cachePos = localPlayer.Position
