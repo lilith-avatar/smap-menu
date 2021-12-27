@@ -644,6 +644,7 @@ end
 function RefreshScrollerItemOutfit(_obj, _dataIdx)
     local data = currItemList[_dataIdx]
     _obj.Enable = true
+    _obj.Txt_Item.Enable = true
     _obj.Img_Item.Enable = false
     _obj.Img_Load.Enable = true
     _obj.Img_Load.Angle = 360
