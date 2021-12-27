@@ -8,13 +8,8 @@ local M = {}
 -- 本地缓存
 local wait = wait
 local Enum, Vector2, Vector3, EulerDegree = Enum, Vector2, Vector3, EulerDegree
-local world, Game, Debug, Input, ResourceManager, ScreenCapture =
-    world,
-    Game,
-    Debug,
-    Input,
-    ResourceManager,
-    ScreenCapture
+local world, Game, Debug, Input = world, Game, Debug, Input
+local Utility, ResourceManager, ScreenCapture = Utility, ResourceManager, ScreenCapture
 
 -- 根节点（Init时候被赋值）
 local root
@@ -33,8 +28,8 @@ local rawAngle, interpAngle
 
 --* 枚举常量
 -- 事件常量
-local TOUCH_ZONE_PAN_2_NPC_ROT = -0.2 --* 手指滑动位移x转换成NPC转向位移系数
-local TOUCH_ZONE_INPUT_2_NPC_ROT = -0.2 --! TEST 鼠标右键滑动位移x转换成NPC转向位移系数
+local TOUCH_ZONE_PAN_2_NPC_ROT = -0.80 --* 手指滑动位移x转换成NPC转向位移系数
+local TOUCH_ZONE_INPUT_2_NPC_ROT = -0.5 --! TEST 鼠标右键滑动位移x转换成NPC转向位移系数
 
 --- 初始化
 function Init(_root)
