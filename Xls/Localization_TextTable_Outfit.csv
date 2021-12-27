@@ -51,4 +51,6 @@ Global_Text_Hour,小时,{1} h,{1} j,{1} h,{1} 小时
 Global_Text_Minute,分钟,{1} m,{1} m,{1} m,{1} 分钟
 Global_Text_Second,秒,{1} s,{1} d,{1} s,{1} 秒
 Global_Text_Expired,已到期,Expired,Kedaluwarsa,Expired,已到期
-Global_Text_Tips,提示（富文本）,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSource: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSumber: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSource: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\n获取途径：{3}</color></size>
+Global_Text_New,新获取,New,Baru,New,新获取
+Global_Text_Tips,永久服装提示（富文本）,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}</color></size>
+Global_Text_TipsWithSource,限时服装提示（富文本）,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSource: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSumber: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\nSource: {3}</color></size>,<size=28><color=#FFFFFF><b>{1}</b></color></size>\n<size=26><color=#CCCCCC>{2}\n\n获取途径：{3}</color></size>
