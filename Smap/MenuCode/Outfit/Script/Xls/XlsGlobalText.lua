@@ -27,9 +27,17 @@ local GlobalTextXls = {
         Key = 'Expired',
         _Text = 'Global_Text_Expired'
     },
+    New = {
+        Key = 'New',
+        _Text = 'Global_Text_New'
+    },
     Tips = {
         Key = 'Tips',
         _Text = 'Global_Text_Tips'
+    },
+    TipsWithSource = {
+        Key = 'TipsWithSource',
+        _Text = 'Global_Text_TipsWithSource'
     },
     ErrorTips = {
         Key = 'ErrorTips',

@@ -399,10 +399,17 @@ function BtnItemLongPressBegin(_btnObj)
         --     'Hadiah login pertama yang valid selama 15 hari. Pakaian ini akan menjadi tidak valid setelah event (xxxx/xx/xx).'
 
         imgTips.Enable = true
-        imgTips.Txt_RichText.LocalizeKey = M.Xls.GlobalText.Tips._Text
-        imgTips.Txt_RichText.Variable1 = data.Title
-        imgTips.Txt_RichText.Variable2 = data.Description
-        imgTips.Txt_RichText.Variable3 = data.Source
+        if data.Expiration > -1 then
+            imgTips.Txt_RichText.LocalizeKey = M.Xls.GlobalText.TipsWithSource._Text
+            imgTips.Txt_RichText.Variable1 = data.Title
+            imgTips.Txt_RichText.Variable2 = data.Description
+            imgTips.Txt_RichText.Variable3 = data.Source
+        else
+            imgTips.Txt_RichText.LocalizeKey = M.Xls.GlobalText.Tips._Text
+            imgTips.Txt_RichText.Variable1 = data.Title
+            imgTips.Txt_RichText.Variable2 = data.Description
+        end
+
         local btnScnPos = _btnObj.ScreenPosition
         local pnlRightSize = pnlRight.FinalSize
         local anchorX = 1 / 2
@@ -678,6 +685,7 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
 
     -- GUI
     _obj.Img_Dot.Enable = data.New or false
+    _obj.Img_Dot.Txt_New.LocalizeKey = M.Xls.GlobalText.New._Text
     _obj.Txt_Item.Text = data.Title
     _obj.Btn_Item.Clickable = true
     _obj.Img_Item.Alpha = 1
@@ -705,10 +713,10 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
         local restTime = data.Expiration - os.time()
         local var1, key = ShowRestTime(restTime)
         _obj.Img_Countdown.Txt_Timer.LocalizeKey = key
-        _obj.Img_Countdown.Txt_Timer.Variable1 = var1
 
         if restTime > 0 then
             --* 显示限时倒计时
+            _obj.Img_Countdown.Txt_Timer.Variable1 = var1
             _obj.Btn_Item.Clickable = true
             _obj.Img_Countdown.Img_Timer.Enable = true
             _obj.Img_Countdown.Txt_Timer.Offset = Vector2(ITEM_COUNTDOWN_TXT_TIMER_OFFSET_X, 0)
@@ -780,7 +788,7 @@ function ShowRestTime(_restTime)
     elseif _restTime > 0 then
         return '< 1', minute
     end
-    return expired
+    return '', expired
 end
 
 --! GUI 动画
