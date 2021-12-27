@@ -29,6 +29,7 @@ local figTouchZone  --* 触摸区域panel节点，也用于计算fig的大小
 
 --* 本地变量
 local mousePos = nil --! TEST ONLY: 开启鼠标右键监听事件
+local rawAngle, interpAngle
 
 --* 枚举常量
 -- 事件常量
@@ -63,8 +64,11 @@ end
 --- 事件处理
 function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
+        rawAngle, interpAngle = 0, 0
         guiAvatar.Enable = true
+        world.OnRenderStepped:Connect(UpdateNpcRotationSmooth)
     elseif _event == M.Event.Enum.CLOSE then
+        world.OnRenderStepped:Disconnect(UpdateNpcRotationSmooth)
         guiAvatar.Enable = false
     end
 end
@@ -74,8 +78,7 @@ function InitPnls()
     --* 拖动Fig转动人物
     local OnTouched = function(_touchInfo)
         if #_touchInfo == 1 then
-            local diff = _touchInfo[1].DeltaPosition.X * TOUCH_ZONE_PAN_2_NPC_ROT
-            UpdateNpcRotation(nil, diff)
+            rawAngle = rawAngle + _touchInfo[1].DeltaPosition.X * TOUCH_ZONE_PAN_2_NPC_ROT
         end
     end
     figTouchZone.OnTouched:Connect(OnTouched)
@@ -85,9 +88,7 @@ function InitPnls()
         if Input.GetPressKeyData(Enum.KeyCode.Mouse1) == Enum.KeyState.KeyStateHold then
             local pos = Input.GetMouseScreenPos()
             if mousePos then
-                local diff = (pos.x - mousePos.x) * TOUCH_ZONE_INPUT_2_NPC_ROT
-                -- 发出事件
-                UpdateNpcRotation(nil, diff)
+                rawAngle = rawAngle + (pos.x - mousePos.x) * TOUCH_ZONE_INPUT_2_NPC_ROT
             end
             mousePos = pos
         end
@@ -106,14 +107,10 @@ end
 --! 人物旋转
 
 --- 更新玩家旋转
-function UpdateNpcRotation(_localRot, _deltaRotY)
-    if _localRot then
-        avatar.LocalRotation = _localRot
-    end
-
-    if _deltaRotY then
-        avatar:Rotate(0, _deltaRotY, 0)
-    end
+function UpdateNpcRotationSmooth(_deltaTime)
+    -- print(rawAngle, interpAngle, _deltaTime)
+    interpAngle = Utility.InterpTo(interpAngle, rawAngle, _deltaTime, 0.999)
+    avatar.LocalRotation = EulerDegree(0, interpAngle, 0)
 end
 
 --! public method
