@@ -104,7 +104,7 @@ end
 --- 更新玩家旋转
 function UpdateNpcRotationSmooth(_deltaTime)
     -- print(rawAngle, interpAngle, _deltaTime)
-    interpAngle = Utility.InterpTo(interpAngle, rawAngle, _deltaTime, 0.999)
+    interpAngle = Utility.InterpTo(interpAngle, rawAngle, _deltaTime, 5)
     avatar.LocalRotation = EulerDegree(0, interpAngle, 0)
 end
 
