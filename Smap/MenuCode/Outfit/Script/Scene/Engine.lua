@@ -287,10 +287,11 @@ function GetPlayerOwnedList()
         -- end
         if _ownedItems ~= nil and _ownedItems ~= {} then
             outfits = {}
-            for _, v in ipairs(_ownedItems) do
+            for k, v in ipairs(_ownedItems) do
                 -- 判断服装是否可用，性别是否相符
                 outfits[v.itemId] = {
                     Id = v.itemId,
+                    index = k, -- 用于排序
                     Gender = v.gender,
                     New = not v.viewed,
                     -- New = true,
@@ -326,6 +327,12 @@ function UpdateItemList(_subType)
             end
         end
     end
+
+    -- 排序
+    local compare = function(a, b)
+        return a.index < b.index
+    end
+    table.sort(currItemList, compare)
 
     local callback = function()
         -- 触发GUI物品列表更新
