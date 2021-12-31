@@ -45,7 +45,7 @@ end
 
 --- 事件绑定
 function BindEvent()
-    M.Event.Root:Connect(EventHandler)
+    M.AddEventListener(EventHandler)
 end
 
 --- 事件处理

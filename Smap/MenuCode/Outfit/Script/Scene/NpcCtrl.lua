@@ -72,7 +72,7 @@ end
 
 --- 事件绑定
 function BindEvent()
-    M.Event.Root:Connect(EventHandler)
+    M.AddEventListener(EventHandler)
 end
 
 --- 事件处理
@@ -90,8 +90,8 @@ function EventHandler(_event, ...)
         currBodyAnim = 'idle' -- TODO: 目前默认只有idle
         currEmoAnim = 'blink'
         avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
-        PlayBodyAnim()
-        PlayEmoAnim()
+        invoke(PlayBodyAnim)
+        invoke(PlayEmoAnim)
     elseif _event == M.Event.Enum.CLOSE then
         booth.Enable = false
         shelter.Enable = false

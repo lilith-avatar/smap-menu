@@ -3,6 +3,11 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
+-- Local Cache
+local world = world
+local Debug = Debug
+
+--* 模块
 local M = {}
 
 --开启Debug日志输出
@@ -15,7 +20,8 @@ local Xls = {
     SubType = require('Outfit/Script/Xls/XlsSubType'),
     GlobalText = require('Outfit/Script/Xls/XlsGlobalText')
 }
-M.Event = require('Outfit/Script/Event')
+local EventSys = require('Outfit/Script/Event/EventSys')
+local Event = require('Outfit/Script/Event/Event')
 local Engine = require('Outfit/Script/Scene/Engine')
 local NpcCtrl = require('Outfit/Script/Scene/NpcCtrl')
 local GuiAvatar = require('Outfit/Script/Gui/GuiAvatar')
@@ -24,6 +30,8 @@ local GuiTransition = require('Outfit/Script/Gui/GuiTransition')
 local Cam = require('Outfit/Script/Scene/Cam')
 local MenuHub = require('Outfit/Script/Scene/MenuHub')
 
+-- 全局事件 --! Public
+M.Event = Event
 -- 全局枚举 --! Public
 M.Enum = {
     TYPE = {
@@ -49,14 +57,7 @@ end
 
 --- 初始化事件
 function InitEvent()
-    -- 创建事件节点
-    if root.Events == nil then
-        local eventsNode = world:CreateObject('FolderObject', 'Events', root)
-        if root.Events.Outfit == nil then
-            world:CreateObject('CustomEvent', 'Outfit', eventsNode)
-        end
-    end
-    M.Event.Root = root.Events.Outfit
+    M.Event.Root = EventSys.Root
 end
 
 --- 初始化其他模块
@@ -65,19 +66,20 @@ function InitSubModule()
     local mt = {
         __index = {
             Fire = Fire,
+            AddEventListener = AddEventListener,
             Event = M.Event,
             Enum = M.Enum,
             Xls = Xls
         }
     }
 
+    InitSubModuleAux(MenuHub, mt) -- Menu相关
+    InitSubModuleAux(NpcCtrl, mt) -- 玩家控制器
     InitSubModuleAux(GuiOutfit, mt) -- GUI
     InitSubModuleAux(GuiAvatar, mt) -- GUI
     InitSubModuleAux(GuiTransition, mt) -- GUI
     InitSubModuleAux(Engine, mt) -- 引擎相关接口
-    InitSubModuleAux(NpcCtrl, mt) -- 玩家控制器
     InitSubModuleAux(Cam, mt) -- 相机
-    InitSubModuleAux(MenuHub, mt) -- Menu相关
 end
 
 -- 初始化辅助函数
@@ -89,7 +91,12 @@ end
 --- 发出事件
 function Fire(_event, ...)
     Debug.Assert(_event ~= nil, '[换装] 事件不能为空')
-    M.Event.Root:Fire(_event, ...)
+    EventSys.Dispatch(_event, ...)
+end
+
+--- 绑定事件Listener
+function AddEventListener(_handler)
+    EventSys.AddListener(_handler)
 end
 
 --- 打开换装系统
