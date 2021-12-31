@@ -13,7 +13,6 @@ local M = {}
 -- 根节点（Init时候被赋值）
 local root
 local booth  -- 换装亭
-local shelter  -- 玩家隐藏点
 local npc  -- 换装模特
 local avatar  -- 模特形象
 local currBodyAnim  --当前全身动画
@@ -60,7 +59,6 @@ end
 function InitLocalVars()
     -- 变量
     booth = root.Booth
-    shelter = root.Shelter
     npc = booth.Npc
     avatar = npc.NpcAvatar
     currBodyAnim = 'idle'
@@ -79,23 +77,19 @@ end
 function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
         booth.Enable = true
-        shelter.Enable = true
-        shelter.Position = Vector3(localPlayer.Position.X, SHELTER_POS_Y, localPlayer.Position.Z)
         booth.Position = localPlayer.Position
         booth.Rotation = EulerDegree(0, localPlayer.Rotation.Y, 0)
-        cachePos = localPlayer.Position
-        localPlayer.Position = shelter.Position
+        localPlayer.Avatar.AvatarDisplay.Enable = false
         npc.Enable = true
         avatar.LocalPosition = Vector3.Zero
+        avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
         currBodyAnim = 'idle' -- TODO: 目前默认只有idle
         currEmoAnim = 'blink'
-        avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
         invoke(PlayBodyAnim)
         invoke(PlayEmoAnim)
     elseif _event == M.Event.Enum.CLOSE then
         booth.Enable = false
-        shelter.Enable = false
-        localPlayer.Position = cachePos
+        localPlayer.Avatar.AvatarDisplay.Enable = true
         npc.Enable = false
     end
 end
