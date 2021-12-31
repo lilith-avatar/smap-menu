@@ -141,5 +141,6 @@ M.Open = Open
 M.Close = Close
 M.IsOpen = IsOpen
 M.Toggle = Toggle
+M.ToggleEvent = root.IsOpen.OnValueChanged
 
 return M

@@ -78,6 +78,7 @@ M.Outfit.Open = Outfit.Open
 M.Outfit.Close = Outfit.Close
 M.Outfit.IsOpen = Outfit.IsOpen
 M.Outfit.Toggle = Outfit.Toggle
+M.Outfit.ToggleEvent = Outfit.ToggleEvent
 
 --! Global Public API
 _G.Menu = M
