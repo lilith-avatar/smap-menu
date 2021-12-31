@@ -3,8 +3,10 @@
 --- @copyright Lilith Games, Avatar Team
 --- @author Yuancheng Zhang
 
-local wait, localPlayer = wait, localPlayer
-local Vector3, EulerDegree = Vector3, EulerDegree
+local wait, invoke = wait, invoke
+local localPlayer = localPlayer
+local Vector2, Vector3, EulerDegree = Vector2, Vector3, EulerDegree
+local NotReplicate = NotReplicate
 local ResourceManager = ResourceManager
 
 --* 模块
@@ -15,6 +17,7 @@ local root
 local booth  -- 换装亭
 local npc  -- 换装模特
 local avatar  -- 模特形象
+local gui  -- 玩家头上的SurfaceGUI，用于显示换装标志
 local currBodyAnim  --当前全身动画
 local currEmoAnim  --当前表情动画
 
@@ -30,11 +33,9 @@ local EMO_MIN, EMO_MAX = 3, 5
 -- NPC形象默认旋转
 local NPC_DEFAULT_LOCAL_ROT = EulerDegree(0, 0, 0)
 
--- 隐藏点深度
-local SHELTER_POS_Y = -50
-
--- localPlayer 的临时缓存位置
-local cachePos
+-- 玩家头顶的换装标志路径
+local RES_SIGN = 'Outfit/Gui/Icon/svg_Sic_clothes'
+local SIGN_LOCAL_POS = Vector3(0, 2.5, 0)
 
 -- 动画资源名称
 local anims = {
@@ -51,9 +52,10 @@ local anims = {
 function Init(_root)
     root = _root
     InitLocalVars()
-    BindEvent()
+    InitSurfaceGui()
     SetGraphicsQuality()
     avatar:SetEnableBatch(false)
+    BindEvent()
 end
 
 --- 初始化本地变量
@@ -67,6 +69,16 @@ function InitLocalVars()
 
     -- 状态
     npc.Enable = false
+end
+
+function InitSurfaceGui()
+    gui = world:CreateObject('UiSurfaceUiObject', 'Gui_Outfit_Sign', localPlayer)
+    gui.LocalPosition = SIGN_LOCAL_POS
+    gui.Billboard = true
+    local img = world:CreateObject('UiImageObject', 'Img_Sign', gui)
+    img.Size = Vector2(80, 80)
+    img.Texture = ResourceManager.GetTexture(RES_SIGN)
+    gui.Enable = false
 end
 
 --- 事件绑定
@@ -84,6 +96,16 @@ function EventHandler(_event, ...)
         npc.Enable = true
         avatar.LocalPosition = Vector3.Zero
         avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
+
+        -- Sign
+        gui.Enable = true
+        NotReplicate(
+            function()
+                gui.Enable = false
+            end
+        )
+
+        -- Anim
         currBodyAnim = 'idle' -- TODO: 目前默认只有idle
         currEmoAnim = 'blink'
         invoke(PlayBodyAnim)
@@ -92,6 +114,7 @@ function EventHandler(_event, ...)
         booth.Enable = false
         localPlayer.Avatar.AvatarDisplay.Enable = true
         npc.Enable = false
+        gui.Enable = false
     end
 end
 
