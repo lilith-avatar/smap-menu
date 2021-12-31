@@ -53,6 +53,7 @@ function Init(_root)
     root = _root
     InitLocalVars()
     BindEvent()
+    SetGraphicsQuality()
 end
 
 --- 初始化本地变量
@@ -97,6 +98,13 @@ function EventHandler(_event, ...)
         localPlayer.Position = cachePos
         npc.Enable = false
     end
+end
+
+--- 设置人物和画面质量
+function SetGraphicsQuality()
+    -- 人物LOD设为最高的
+    avatar:SetAutoSwitchLOD(false)
+    avatar:ForceSwitchToLODLevel(0)
 end
 
 --- 播放身体动画
