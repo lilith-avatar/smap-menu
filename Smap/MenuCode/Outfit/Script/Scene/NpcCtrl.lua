@@ -53,6 +53,7 @@ function Init(_root)
     InitLocalVars()
     BindEvent()
     SetGraphicsQuality()
+    avatar:SetEnableBatch(false)
 end
 
 --- 初始化本地变量
