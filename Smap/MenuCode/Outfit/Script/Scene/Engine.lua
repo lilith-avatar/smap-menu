@@ -50,13 +50,14 @@ local Action = {}
 --- 行为栈：新建行为
 -- @param _newIds 穿上的服装IDs
 -- @param _undressIds 需要脱下的服装IDs
-function Action:New(_newIds)
+function Action:New(_newIds, _canTakeOff)
     local inst = {
         newIds = _newIds,
         oldIds = {},
         dodo = self.Dodo,
         redo = self.Redo,
-        undo = self.Undo
+        undo = self.Undo,
+        canTakeOff = _canTakeOff
     }
     local mt = {
         __index = self,
@@ -71,7 +72,7 @@ end
 --- 行为栈：执行
 function Action:Dodo()
     -- 换装：新衣服
-    ChangeClothesAux(self.newIds)
+    ChangeClothesAux(self.newIds, self.canTakeOff)
 
     -- 找到脱掉的服装IDs
     local getTakeOffClothesCallback = function(_newDressedIds)
@@ -119,7 +120,7 @@ end
 --- 行为栈：重做
 function Action:Redo()
     -- 换装：新衣服
-    ChangeClothesAux(self.newIds)
+    ChangeClothesAux(self.newIds, self.canTakeOff)
     -- 更新当前服装
     GetCurrClothesIds(avatar, dressedIds, 0.02)
     -- 更新当前ID
@@ -129,7 +130,7 @@ end
 --- 行为栈：撤销
 function Action:Undo()
     -- 换装：旧衣服
-    ChangeClothesAux(self.oldIds)
+    ChangeClothesAux(self.oldIds, self.canTakeOff)
     -- 更新当前服装
     GetCurrClothesIds(avatar, dressedIds, 0.02)
     -- 更新当前ID
@@ -186,7 +187,7 @@ function EventHandler(_event, ...)
         local isNew = args[2]
         Debug.Assert(id ~= nil and id ~= '', '[换装] id为空')
         -- 换装
-        Dodo({id})
+        Dodo({id}, true)
         -- 取消红点
         if isNew then
             ClearRedDot({id})
@@ -404,9 +405,9 @@ function SyncActionStates()
 end
 
 --- 做：换衣服
-function Dodo(_ids)
+function Dodo(_ids, _canTakeOff)
     -- 创建玩家行为
-    local action = Action:New(_ids)
+    local action = Action:New(_ids, _canTakeOff)
     action:Dodo()
 
     -- 栈操作
@@ -440,24 +441,23 @@ end
 
 --- 恢复初始服装
 function Restore()
+    -- 创建默认服装列表的IDs
+    local outfitIds = {}
+    for _, id in ipairs(defaultIds) do
+        table.insert(outfitIds, id)
+    end
     --* 先清空玩家身上的服装，防止重复替换服装消失
     avatar:ResetToDefaultClothes()
-
-    -- 创建默认服装列表的IDs
-    local ids = {}
-    for _, id in ipairs(defaultIds) do
-        table.insert(ids, id)
-    end
-
+    wait()
     -- 执行正常换装
-    Dodo(ids)
+    Dodo(outfitIds, false)
 end
 
 --- 换衣服的引擎接口
-function ChangeClothesAux(_ids)
+function ChangeClothesAux(_ids, _canTakeOff)
     -- Debug.Log(string.format('[换装] 更新服装IDs, %s', stringfy(_ids)))
     for _, id in ipairs(_ids) do
-        avatar:ChangeClothes(id, true)
+        avatar:ChangeClothes(id, _canTakeOff)
     end
 end
 
