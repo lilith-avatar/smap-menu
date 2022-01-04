@@ -521,7 +521,7 @@ function ClearChildren(_parent)
 end
 
 local function SettingSwitch(_clickBtn)
-    for k,v in pairs(gui.ImgSettingBg:GetChildren()) do
+    for _,v in pairs(gui.ImgSettingBg:GetChildren()) do
         if v == _clickBtn then
             v.BtnConfirmIc:SetActive(true)
             v.Color = Color(0, 0, 0, 255)
@@ -535,14 +535,19 @@ local function SettingSwitch(_clickBtn)
 end
 
 function SettingBind()
-    gui.GraphicSetTextTab = {gui.TextHigh, gui.TextMedium, gui.TextLow}
     gui.GraphicSetBtnTab = {}
     gui.GraphicSetBtnTab[3] = gui.BtnHigh
     gui.GraphicSetBtnTab[2] = gui.BtnMedium
     gui.GraphicSetBtnTab[1] = gui.BtnLow
+    gui.GraphicSetBtnTab[0] = gui.BtnMin
     for _,v in pairs(gui.ImgSettingBg:GetChildren()) do
         v.OnClick:Connect(function()
             SettingSwitch(v)
+            for i,j in pairs(gui.GraphicSetBtnTab) do
+                if j == v then
+                    Game.SetGraphicQuality(i)
+                end
+            end
         end)
     end
 end
