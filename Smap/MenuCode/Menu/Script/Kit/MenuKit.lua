@@ -39,6 +39,7 @@ function RequireUtils()
     -- Require Utils
     require(PATH_LUA_EXT)
     Kit.Util.Mod = require(PATH_UTIL .. 'Module')
+    Kit.Util.LuaJson = require(PATH_UTIL .. 'LuaJson')
     Kit.Util.Net = require(PATH_UTIL .. 'Net')
     Kit.Util.Event = require(PATH_UTIL .. 'Event')
 end

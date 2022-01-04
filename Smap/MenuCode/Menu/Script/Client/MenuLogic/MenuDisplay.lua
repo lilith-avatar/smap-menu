@@ -39,6 +39,43 @@ local resReplaceTab = {
     DressUp = 'figure'
 }
 
+local GAME_TAG = 'avatar_menu'
+local MSG_NATIVE_TO_LUA = 'msg_native_exterior_mgr'
+local MSG_LUA_TO_NATIVE = 'msg_exterior_mgr'
+--native to lua
+local NATIVE_TO_LUA = 'getKeyValueEvent'
+--lua to native
+local LUA_TO_NATIVE = 'setKeyValueEvent'
+local curGraphicQuality = 1
+local function Native2Lua(_event, ...)
+    if _event == MSG_NATIVE_TO_LUA then
+        local args = ...
+        local json = M.Kit.Util.LuaJson:decode(args[1])
+        local test = json.eventData
+        print('测试一下', test)
+    end
+end
+
+local function Lua2Native(_param)
+    if _param == 0 then
+        local msg = {
+            gameTag = GAME_TAG,
+            eventKey = LUA_TO_NATIVE,
+            eventData = {lua_start_menu = -1}
+        }
+        local strMsg = M.Kit.Util.LuaJson:encode(msg)
+        Game.EngineEvent:Fire(MSG_LUA_TO_NATIVE, strMsg)
+    elseif _param == 1 then
+        local msg = {
+            gameTag = GAME_TAG,
+            eventKey = LUA_TO_NATIVE,
+            eventData = {lua_finish_menu = curGraphicQuality}
+        }
+        local strMsg = M.Kit.Util.LuaJson:encode(msg)
+        Game.EngineEvent:Fire(MSG_LUA_TO_NATIVE, strMsg)
+    end
+end
+
 --- 初始化
 function Init()
     Game.ShowSystemBar(false)
@@ -49,6 +86,7 @@ function Init()
     end
 
     invoke(deferFun)
+    Lua2Native(0)
 end
 
 -- 更新
@@ -94,6 +132,9 @@ end
 
 --- 事件绑定初始化
 function InitListener()
+    if Game.PlayHubEvent then
+        Game.PlayHubEvent:Connect(Native2Lua)
+    end
     -- 顶部三个按钮动画
     OpenAndClose()
     SwitchLocalVoice()
@@ -547,6 +588,7 @@ function QuitBind()
         function()
             gui.BtnTouch:SetActive(true)
             gui.ImgPopUps:SetActive(true)
+            Lua2Native(1)
         end
     )
 
