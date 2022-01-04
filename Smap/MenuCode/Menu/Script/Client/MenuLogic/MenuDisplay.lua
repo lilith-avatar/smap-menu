@@ -521,7 +521,7 @@ function ClearChildren(_parent)
 end
 
 local function SettingSwitch(_clickBtn)
-    for _,v in pairs(gui.ImgSettingBg:GetChildren()) do
+    for _, v in pairs(gui.ImgSettingBg:GetChildren()) do
         if v == _clickBtn then
             v.BtnConfirmIc:SetActive(true)
             v.Color = Color(0, 0, 0, 255)
@@ -540,15 +540,17 @@ function SettingBind()
     gui.GraphicSetBtnTab[2] = gui.BtnMedium
     gui.GraphicSetBtnTab[1] = gui.BtnLow
     gui.GraphicSetBtnTab[0] = gui.BtnMin
-    for _,v in pairs(gui.ImgSettingBg:GetChildren()) do
-        v.OnClick:Connect(function()
-            SettingSwitch(v)
-            for i,j in pairs(gui.GraphicSetBtnTab) do
-                if j == v then
-                    Game.SetGraphicQuality(i)
+    for _, v in pairs(gui.ImgSettingBg:GetChildren()) do
+        v.OnClick:Connect(
+            function()
+                SettingSwitch(v)
+                for i, j in pairs(gui.GraphicSetBtnTab) do
+                    if j == v then
+                        Game.SetGraphicQuality(i)
+                    end
                 end
             end
-        end)
+        )
     end
 end
 
@@ -642,7 +644,7 @@ function TranslateTextEventHandler(_text, _com)
         playerText = _text
     elseif _com == 'TextFriList' then
         friText = _text
-        gui.TextFriList.Text = friText .. '(' .. i .. ')'
+        gui.TextFriList.Text = friText .. ' ' .. '(' .. i .. ')'
     elseif _com == 'InputFieldIm' then
         imText = _text
         gui.InputFieldIm.Tips = '<color=#dadada>' .. imText .. '</color>'
@@ -667,7 +669,7 @@ function GetFriendsListEventHandler(_list)
     for _ in pairs(_list) do
         i = i + 1
     end
-    gui.TextFriList.Text = friText .. '(' .. i .. ')'
+    gui.TextFriList.Text = friText .. ' ' .. '(' .. i .. ')'
     ClearChildren(gui.PnlFriList)
     for k, v in pairs(_list) do
         gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
