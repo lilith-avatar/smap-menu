@@ -342,7 +342,7 @@ function ImgBaseAni(_isOpen)
     local tarProTab, comFun
     if _isOpen then
         gui.ImgBase:SetActive(_isOpen)
-        tarProTab = {Offset = Vector2(80, 0), Color = Color(255, 255, 255, 180)}
+        tarProTab = {Offset = Vector2(80, 0), Color = Color(255, 255, 255, 242)}
     else
         tarProTab = {Offset = Vector2(0, 100), Color = Color(255, 255, 255, 0)}
         gui.BtnBase:SetActive(_isOpen)

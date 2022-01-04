@@ -28,25 +28,25 @@ local LocalizationTab = {
     },
     TextMin = {
         Key = 'TextMin',
-        zh_CN = '极低',
+        zh_CN = '极低画质',
         en = 'Min',
         id = 'Min'
     },
     TextLow = {
         Key = 'TextLow',
-        zh_CN = '低',
+        zh_CN = '低画质',
         en = 'Low',
         id = 'Rendah'
     },
     TextMedium = {
         Key = 'TextMedium',
-        zh_CN = '中',
+        zh_CN = '中画质',
         en = 'Medium',
         id = 'Sedang'
     },
     TextHigh = {
         Key = 'TextHigh',
-        zh_CN = '高',
+        zh_CN = '高画质',
         en = 'High',
         id = 'Tinggi'
     },
