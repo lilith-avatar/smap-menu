@@ -26,29 +26,11 @@ local LocalizationTab = {
         en = 'Setting',
         id = 'Pengaturan'
     },
-    TextAutoSet = {
-        Key = 'TextAutoSet',
-        zh_CN = '画质自动',
-        en = 'Graphic Auto Set',
-        id = 'Grafik atur otomatis'
-    },
-    TextGraphicSetting = {
-        Key = 'TextGraphicSetting',
-        zh_CN = '画质设定',
-        en = 'Graphic Setting',
-        id = 'Pengaturan Grafis'
-    },
-    TextShut = {
-        Key = 'TextShut',
-        zh_CN = '关闭',
-        en = 'OFF',
-        id = 'Penutup'
-    },
-    TextOpen = {
-        Key = 'TextOpen',
-        zh_CN = '打开',
-        en = 'On',
-        id = 'Membuka'
+    TextMin = {
+        Key = 'TextMin',
+        zh_CN = '极低',
+        en = 'Min',
+        id = 'Min'
     },
     TextLow = {
         Key = 'TextLow',
@@ -85,36 +67,6 @@ local LocalizationTab = {
         zh_CN = '确定',
         en = 'Ok',
         id = 'Oke'
-    },
-    BtnShut = {
-        Key = 'BtnShut',
-        zh_CN = '关闭',
-        en = 'OFF',
-        id = 'Penutup'
-    },
-    BtnOpen = {
-        Key = 'BtnOpen',
-        zh_CN = '打开',
-        en = 'On',
-        id = 'Membuka'
-    },
-    BtnLow = {
-        Key = 'BtnLow',
-        zh_CN = '低',
-        en = 'Low',
-        id = 'Rendah'
-    },
-    BtnMedium = {
-        Key = 'BtnMedium',
-        zh_CN = '中',
-        en = 'Medium',
-        id = 'Sedang'
-    },
-    BtnHigh = {
-        Key = 'BtnHigh',
-        zh_CN = '高',
-        en = 'High',
-        id = 'Tinggi'
     },
     TextInviteFb = {
         Key = 'TextInviteFb',

@@ -125,6 +125,9 @@ function InitGui()
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
     gui.PnlMenuTab = {gui.TweenMenuBg, gui.TweenImBubbleBg, gui.TweenVoiceBg}
 
+    gui.BtnBase.Size = Vector2(132, 0)
+    gui.DisplayBase.Size = Vector2(640, 0)
+
     M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
     M.Kit.Util.Net.Fire_C('ClientReadyEvent', localPlayer, true)
     isReady = true
@@ -517,54 +520,31 @@ function ClearChildren(_parent)
     end
 end
 
+local function SettingSwitch(_clickBtn)
+    for k,v in pairs(gui.ImgSettingBg:GetChildren()) do
+        if v == _clickBtn then
+            v.BtnConfirmIc:SetActive(true)
+            v.Color = Color(0, 0, 0, 255)
+            gui[string.gsub(v.Name, 'Btn', 'Text')].Color = Color(255, 255, 255, 255)
+        else
+            v.BtnConfirmIc:SetActive(false)
+            v.Color = Color(0, 0, 0, 0)
+            gui[string.gsub(v.Name, 'Btn', 'Text')].Color = Color(0, 0, 0, 255)
+        end
+    end
+end
+
 function SettingBind()
     gui.GraphicSetTextTab = {gui.TextHigh, gui.TextMedium, gui.TextLow}
     gui.GraphicSetBtnTab = {}
     gui.GraphicSetBtnTab[3] = gui.BtnHigh
     gui.GraphicSetBtnTab[2] = gui.BtnMedium
     gui.GraphicSetBtnTab[1] = gui.BtnLow
-
-    gui.GraphicMask.Color = Color(230, 230, 230, 120)
-    gui.TextGraphicSetting.Color = Color(98, 98, 98, 120)
-
-    gui.TextShut.OnEnter:Connect(
-        function()
-            gui.BtnShut:SetActive(true)
-            gui.BtnOpen:SetActive(false)
-            gui.GraphicMask:SetActive(false)
-            gui.TextGraphicSetting.Color = Color(98, 98, 98, 255)
-        end
-    )
-
-    gui.TextOpen.OnEnter:Connect(
-        function()
-            gui.BtnShut:SetActive(false)
-            gui.BtnOpen:SetActive(true)
-            gui.GraphicMask:SetActive(true)
-            gui.TextGraphicSetting.Color = Color(98, 98, 98, 120)
-        end
-    )
-
-    for _, v in pairs(gui.GraphicSetTextTab) do
-        v.OnEnter:Connect(
-            function()
-                SwitchNodeCtr(gui[string.gsub(v.Name, 'Text', 'Btn')], gui.GraphicSetBtnTab, false)
-                for i, j in pairs(gui.GraphicSetBtnTab) do
-                    if j == gui[string.gsub(v.Name, 'Text', 'Btn')] then
-                        Game.SetGraphicQuality(i)
-                    end
-                end
-            end
-        )
+    for _,v in pairs(gui.ImgSettingBg:GetChildren()) do
+        v.OnClick:Connect(function()
+            SettingSwitch(v)
+        end)
     end
-
-    -- for i, j in pairs(gui.GraphicSetBtnTab) do
-    --     j.OnEnter:Connect(
-    --         function()
-    --             Game.SetGraphicQuality(i)
-    --         end
-    --     )
-    -- end
 end
 
 --* 换装事件绑定
