@@ -46,13 +46,13 @@ local MSG_LUA_TO_NATIVE = 'msg_exterior_mgr'
 local NATIVE_TO_LUA = 'getKeyValueEvent'
 --lua to native
 local LUA_TO_NATIVE = 'setKeyValueEvent'
-local curGraphicQuality = 1
+local curGraphicQuality, recommendGraphicQuality = -1, nil
 local function Native2Lua(_event, ...)
     if _event == MSG_NATIVE_TO_LUA then
         local args = ...
         local json = M.Kit.Util.LuaJson:decode(args[1])
-        local test = json.eventData
-        print('测试一下', test)
+        local test = M.Kit.Util.LuaJson:decode(json.eventData)
+        print(test)
     end
 end
 
@@ -61,7 +61,7 @@ local function Lua2Native(_param)
         local msg = {
             gameTag = GAME_TAG,
             eventKey = LUA_TO_NATIVE,
-            eventData = {lua_start_menu = -1}
+            eventData = {lua_start_menu = Game.GetGraphicQuality()}
         }
         local strMsg = M.Kit.Util.LuaJson:encode(msg)
         Game.EngineEvent:Fire(MSG_LUA_TO_NATIVE, strMsg)
@@ -80,6 +80,15 @@ end
 function Init()
     Game.ShowSystemBar(false)
     math.randomseed(os.time())
+
+    local co =
+        coroutine.create(
+        function()
+            GameSetting()
+        end
+    )
+    coroutine.resume(co)
+
     local deferFun = function()
         InitGui()
         InitListener()
@@ -87,6 +96,30 @@ function Init()
 
     invoke(deferFun)
     Lua2Native(0)
+end
+
+function GameSetting()
+    curGraphicQuality = Game.GetGraphicQuality()
+    Game.SetGlobalGraphicQuality(Enum.GraphicQualityLevel.Auto)
+    wait(0.1)
+    recommendGraphicQuality = Game.GetGraphicQuality()
+    Game.SetGlobalGraphicQuality(curGraphicQuality)
+    coroutine.yield()
+end
+
+function GraphicReady()
+    wait(0.1)
+    gui.GraphicSetBtnTab[curGraphicQuality].BtnConfirmIc:SetActive(true)
+    gui.GraphicSetBtnTab[curGraphicQuality].Color = Color(0, 0, 0, 255)
+    gui.GraphicSetBtnTab[curGraphicQuality][string.gsub(gui.GraphicSetBtnTab[curGraphicQuality].Name, 'Btn', 'Text')].Color =
+        Color(255, 255, 255, 255)
+
+    gui.GraphicSetBtnTab[recommendGraphicQuality][
+            string.gsub(gui.GraphicSetBtnTab[recommendGraphicQuality].Name, 'Btn', 'Text')
+        ].AnchorsY = Vector2(0.7, 0.7)
+    gui.GraphicSetBtnTab[recommendGraphicQuality][
+        string.gsub(gui.GraphicSetBtnTab[recommendGraphicQuality].Name, 'Btn', 'TextRec')
+    ]:SetActive(true)
 end
 
 -- 更新
@@ -152,6 +185,7 @@ function InitListener()
     OutfitBind() --* 换装
 
     DebugOnly()
+    GraphicReady()
 end
 
 function DebugOnly()
@@ -546,7 +580,7 @@ function SettingBind()
                 SettingSwitch(v)
                 for i, j in pairs(gui.GraphicSetBtnTab) do
                     if j == v then
-                        Game.SetGraphicQuality(i)
+                        Game.SetGlobalGraphicQuality(i)
                     end
                 end
             end
@@ -570,6 +604,7 @@ function OutfitBind()
 end
 
 function QuitBind()
+    --todo 安卓返回键
     ---Quit的二级弹窗
     gui.BtnQuit.OnClick:Connect(
         function()
@@ -851,6 +886,7 @@ function SwitchOutfitEntranceEventHandler(_boolean)
         gui.FunBtnTab = {gui.BtnGaming, gui.BtnFriList, gui.BtnSetting}
         gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting}
     end
+    gui.ImgDressUp:SetActive(_boolean)
     gui.BtnDressUp:SetActive(_boolean)
 end
 

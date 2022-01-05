@@ -79,7 +79,32 @@ local LocalizationTab = {
         zh_CN = '已发送好友申请',
         en = 'Friend request sent',
         id = 'Permintaan teman dikirim'
+    },
+    TextRecHigh = {
+        Key = 'TextRecHigh',
+        zh_CN = '推荐画质',
+        en = 'Recommend',
+        id = 'Menyarankan'
+    },
+    TextRecMedium = {
+        Key = 'TextRecMedium',
+        zh_CN = '推荐画质',
+        en = 'Recommend',
+        id = 'Menyarankan'
+    },
+    TextRecLow = {
+        Key = 'TextRecLow',
+        zh_CN = '推荐画质',
+        en = 'Recommend',
+        id = 'Menyarankan'
+    },
+    TextRecMin = {
+        Key = 'TextRecMin',
+        zh_CN = '推荐画质',
+        en = 'Recommend',
+        id = 'Menyarankan'
     }
+
 }
 
 local LocalizationTabSp = {
