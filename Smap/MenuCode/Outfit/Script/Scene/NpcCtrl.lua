@@ -53,8 +53,7 @@ function Init(_root)
     root = _root
     InitLocalVars()
     InitSurfaceGui()
-    SetGraphicsQuality()
-    avatar:SetEnableBatch(false)
+    SetAvatar()
     BindEvent()
 end
 
@@ -118,8 +117,10 @@ function EventHandler(_event, ...)
     end
 end
 
---- 设置人物和画面质量
-function SetGraphicsQuality()
+--- 设置人物相关属性
+function SetAvatar()
+    -- 关闭人物合批
+    avatar:SetEnableBatch(false)
     -- 人物LOD设为最高的
     avatar:SetAutoSwitchLOD(false)
     avatar:ForceSwitchToLODLevel(0)
