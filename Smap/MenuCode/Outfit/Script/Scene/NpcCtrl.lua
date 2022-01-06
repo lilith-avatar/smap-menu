@@ -21,6 +21,8 @@ local gui  -- 玩家头上的SurfaceGUI，用于显示换装标志
 local currBodyAnim  --当前全身动画
 local currEmoAnim  --当前表情动画
 
+local cacheShouldCulling
+
 -- 当前已播放标签动画
 local emoAnimIsPlaying = false
 
@@ -91,10 +93,14 @@ function EventHandler(_event, ...)
         booth.Enable = true
         booth.Position = localPlayer.Position
         booth.Rotation = EulerDegree(0, localPlayer.Rotation.Y, 0)
-        localPlayer.Avatar.AvatarDisplay.Enable = false
         npc.Enable = true
         avatar.LocalPosition = Vector3.Zero
         avatar.LocalRotation = NPC_DEFAULT_LOCAL_ROT
+        if localPlayer.Avatar.ShouldCulling ~= nil then
+            cacheShouldCulling = localPlayer.Avatar.ShouldCulling
+            localPlayer.Avatar.ShouldCulling = false
+        end
+        localPlayer.Avatar.AvatarDisplay.Enable = false
 
         -- Sign
         gui.Enable = true
@@ -111,9 +117,13 @@ function EventHandler(_event, ...)
         invoke(PlayEmoAnim)
     elseif _event == M.Event.Enum.CLOSE then
         booth.Enable = false
-        localPlayer.Avatar.AvatarDisplay.Enable = true
         npc.Enable = false
         gui.Enable = false
+        if localPlayer.Avatar.ShouldCulling ~= nil and cacheShouldCulling ~= nil then
+            localPlayer.Avatar.ShouldCulling = cacheShouldCulling
+            cacheShouldCulling = nil
+        end
+        localPlayer.Avatar.AvatarDisplay.Enable = true
     end
 end
 
