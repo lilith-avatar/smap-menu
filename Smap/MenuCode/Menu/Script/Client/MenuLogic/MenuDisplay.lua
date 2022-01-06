@@ -76,6 +76,16 @@ local function Lua2Native(_param)
     end
 end
 
+local function LowQualityWarning(_cur)
+    if _cur == 0 then
+        M.Kit.Util.Net.Fire_C('LowQualityWarningEvent', localPlayer, false)
+    elseif _cur == 1 then
+        M.Kit.Util.Net.Fire_C('LowQualityWarningEvent', localPlayer, false)
+    else
+        M.Kit.Util.Net.Fire_C('LowQualityWarningEvent', localPlayer, true)
+    end
+end
+
 --- 初始化
 function Init()
     Game.ShowSystemBar(false)
@@ -104,6 +114,7 @@ function GameSetting()
     wait(0.1)
     recommendGraphicQuality = Game.GetGraphicQuality()
     Game.SetGlobalGraphicQuality(curGraphicQuality)
+    LowQualityWarning(curGraphicQuality)
     coroutine.yield()
 end
 
@@ -568,6 +579,15 @@ local function SettingSwitch(_clickBtn)
     end
 end
 
+local function SettingGraphics(v)
+    for i, j in pairs(gui.GraphicSetBtnTab) do
+        if j == v then
+            Game.SetGlobalGraphicQuality(i)
+            LowQualityWarning(i)
+        end
+    end
+end
+
 function SettingBind()
     gui.GraphicSetBtnTab = {}
     gui.GraphicSetBtnTab[3] = gui.BtnHigh
@@ -575,16 +595,10 @@ function SettingBind()
     gui.GraphicSetBtnTab[1] = gui.BtnLow
     gui.GraphicSetBtnTab[0] = gui.BtnMin
     for _, v in pairs(gui.ImgSettingBg:GetChildren()) do
-        v.OnClick:Connect(
-            function()
-                SettingSwitch(v)
-                for i, j in pairs(gui.GraphicSetBtnTab) do
-                    if j == v then
-                        Game.SetGlobalGraphicQuality(i)
-                    end
-                end
-            end
-        )
+        v.OnClick:Connect(function()
+            SettingSwitch(v)
+            SettingGraphics(v)
+        end)
     end
 end
 

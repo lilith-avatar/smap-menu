@@ -5,7 +5,7 @@
 
 -- Local Caches
 local invoke, localPlayer = invoke, localPlayer
-local ChatManager = ChatManager
+local ChatManager, world = ChatManager, world
 local C = _G.mC
 local isReady = false
 
@@ -53,6 +53,14 @@ function ClientReadyEventHandler(_isReady)
     isReady = _isReady
 end
 
+function LowQualityWarningEventHandler(_bool)
+    if world.PerformanceEffects == nil then
+        return
+    else
+        world.PerformanceEffects:SetActive(_bool)
+    end
+end
+
 function IsReady()
     return isReady
 end
@@ -63,6 +71,7 @@ invoke(Outfit.Init)
 
 --! Public methods
 M.ClientReadyEventHandler = ClientReadyEventHandler
+M.LowQualityWarningEventHandler = LowQualityWarningEventHandler
 M.DeveloperOfficialMsg = DeveloperOfficialMsg
 M.MenuSwitch = MenuSwitch
 M.SwitchVoice = SwitchVoice
