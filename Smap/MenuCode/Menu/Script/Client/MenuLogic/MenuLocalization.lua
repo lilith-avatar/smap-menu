@@ -11,14 +11,14 @@ local LocalizationTab = {
     TextGameName = {
         Key = 'TextGameName',
         zh_CN = '游戏中',
-        en = 'Gaming',
-        id = 'Dalam permainan'
+        en = 'In a game',
+        id = 'Dalam game'
     },
     TextMuteAll = {
         Key = 'TextMuteAll',
         zh_CN = '静音所有',
         en = 'Mute All',
-        id = 'Bisu semua'
+        id = 'Senyapkan Semua'
     },
     TextSetting= {
         Key = 'TextSetting',
@@ -30,7 +30,7 @@ local LocalizationTab = {
         Key = 'TextMin',
         zh_CN = '极低画质',
         en = 'Min',
-        id = 'Min'
+        id = 'Sangat rendah'
     },
     TextLow = {
         Key = 'TextLow',
@@ -42,7 +42,7 @@ local LocalizationTab = {
         Key = 'TextMedium',
         zh_CN = '中画质',
         en = 'Medium',
-        id = 'Sedang'
+        id = 'Medium'
     },
     TextHigh = {
         Key = 'TextHigh',
@@ -53,56 +53,56 @@ local LocalizationTab = {
     TextPopUps = {
         Key = 'TextPopUps',
         zh_CN = '确定要退出吗？',
-        en = 'Quit Game?',
+        en = 'Really leave?',
         id = 'Keluar dari permainan?'
     },
     BtnCancel = {
         Key = 'BtnCancel',
         zh_CN = '取消',
         en = 'Cancel',
-        id = 'Tidak'
+        id = 'Batal'
     },
     BtnOk = {
         Key = 'BtnOk',
         zh_CN = '确定',
-        en = 'Ok',
-        id = 'Oke'
+        en = 'OK',
+        id = 'OK'
     },
     TextInviteFb = {
         Key = 'TextInviteFb',
         zh_CN = '已发送邀请',
         en = 'Invitation sent',
-        id = 'Undangan terkirim'
+        id = 'Undangan dikirim'
     },
     TextAddFb = {
         Key = 'TextAddFb',
         zh_CN = '已发送好友申请',
         en = 'Friend request sent',
-        id = 'Permintaan teman dikirim'
+        id = 'Permintaan teman terkirim'
     },
     TextRecHigh = {
         Key = 'TextRecHigh',
         zh_CN = '推荐画质',
         en = 'Recommend',
-        id = 'Menyarankan'
+        id = 'Rekomendasi'
     },
     TextRecMedium = {
         Key = 'TextRecMedium',
         zh_CN = '推荐画质',
         en = 'Recommend',
-        id = 'Menyarankan'
+        id = 'Rekomendasi'
     },
     TextRecLow = {
         Key = 'TextRecLow',
         zh_CN = '推荐画质',
         en = 'Recommend',
-        id = 'Menyarankan'
+        id = 'Rekomendasi'
     },
     TextRecMin = {
         Key = 'TextRecMin',
         zh_CN = '推荐画质',
         en = 'Recommend',
-        id = 'Menyarankan'
+        id = 'Rekomendasi'
     }
 
 }
@@ -112,7 +112,7 @@ local LocalizationTabSp = {
         Key = 'TextFriList',
         zh_CN = '好友',
         en = 'Friends',
-        id = 'Teman-Teman'
+        id = 'Teman'
     },
     TextPlayNum = {
         Key = 'TextPlayNum',
@@ -132,8 +132,8 @@ local archTab = {
     TextInvite = {
         Key = 'TextInvite',
         zh_CN = '邀请了你',
-        en = 'Invited you',
-        id = 'Mengundang Anda'
+        en = 'has invited you',
+        id = 'telah mengundangmu'
     },
     TextFriInviteOut = {
         Key = 'TextFriInviteOut',
@@ -151,13 +151,13 @@ local archTab = {
         Key = 'TextFriJoin',
         zh_CN = '加入',
         en = 'Join',
-        id = 'Ikuti'
+        id = 'Bergabung'
     },
     BtnInviteOk = {
         Key = 'BtnInviteOk',
         zh_CN = '确定',
-        en = 'Ok',
-        id = 'Oke'
+        en = 'OK',
+        id = 'OK'
     }
 }
 
