@@ -706,13 +706,18 @@ function RefreshScrollerItemOutfit(_obj, _dataIdx)
     local obj = _obj
     obj.Txt_Item.Color = Color(255, 255, 255, 1)
     local adjustText = function()
-        wait()
-        if obj.Txt_Item.PreferredSize.X < obj.Txt_Item.Size.X then
-            local txt = obj.Txt_Item.Text
-            txt = txt:gsub('\n', '') -- 删掉原有的换行
-            obj.Txt_Item.Text = txt .. '\n' -- 加上新的换行
-        end
-        obj.Txt_Item.Color = Color(0, 0, 0, 255)
+        local cnt, MAX = 0, 20
+        local txt
+        repeat
+            wait()
+            cnt = cnt + 1
+            if obj.Txt_Item.PreferredSize.X > 0 and obj.Txt_Item.PreferredSize.X < obj.Txt_Item.Size.X then
+                txt = obj.Txt_Item.Text
+                txt = txt:gsub('\n', '') -- 删掉原有的换行
+                obj.Txt_Item.Text = txt .. '\n' -- 加上新的换行
+            end
+            obj.Txt_Item.Color = Color(0, 0, 0, 255)
+        until (obj.Txt_Item.PreferredSize.X > 0 or cnt > MAX)
     end
     invoke(adjustText)
 
