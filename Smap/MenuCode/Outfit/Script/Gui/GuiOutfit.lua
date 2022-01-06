@@ -154,33 +154,13 @@ end
 --- 初始化功能按钮
 function InitBtns()
     -- 返回 Back
-    btnBack.OnClick:Connect(
-        function()
-            -- 关闭界面
-            M.Fire(M.Event.Enum.CLOSE_TRANSITION)
-        end
-    )
+    btnBack.OnClick:Connect(BtnBackClicked)
     -- 重置 Restore
-    btnRestore.OnClick:Connect(
-        function()
-            Debug.Log('[换装] 重置 Restore')
-            M.Fire(M.Event.Enum.ACTION.RESTORE) -- 触发引擎更新行为栈
-        end
-    )
+    btnRestore.OnClick:Connect(BtnRestoreClicked)
     -- 重做 Redo
-    btnRedo.OnClick:Connect(
-        function()
-            Debug.Log('[换装] 重做 Redo')
-            M.Fire(M.Event.Enum.ACTION.REDO) -- 触发引擎更新行为栈
-        end
-    )
+    btnRedo.OnClick:Connect(BtnRedoClicked)
     -- 撤销 Undo
-    btnUndo.OnClick:Connect(
-        function()
-            Debug.Log('[换装] 撤销 Undo')
-            M.Fire(M.Event.Enum.ACTION.UNDO) -- 触发引擎更新行为栈
-        end
-    )
+    btnUndo.OnClick:Connect(BtnUndoClicked)
 end
 
 --- 根据数据，初始化Panels
@@ -308,6 +288,36 @@ function CreateSubTypeBtn(_idx, _root, _data)
 end
 
 --! 点击事件
+
+-- 返回 Back 按钮点击
+function BtnBackClicked()
+    -- 关闭界面
+    M.Fire(M.Event.Enum.CLOSE_TRANSITION)
+end
+
+-- 重置 Restore 按钮点击
+function BtnRestoreClicked()
+    Debug.Log('[换装] 重置 Restore')
+    RefreshActionBtns(false, false, false)
+    RefreshAllScollerItemClickState()
+    M.Fire(M.Event.Enum.ACTION.RESTORE) -- 触发引擎更新行为栈
+end
+
+-- 重做 Redo 按钮点击
+function BtnRedoClicked()
+    Debug.Log('[换装] 重做 Redo')
+    RefreshActionBtns(false, false, false)
+    RefreshAllScollerItemClickState()
+    M.Fire(M.Event.Enum.ACTION.REDO) -- 触发引擎更新行为栈
+end
+
+-- 撤销 Undo 按钮点击
+function BtnUndoClicked()
+    Debug.Log('[换装] 撤销 Undo')
+    RefreshActionBtns(false, false, false)
+    RefreshAllScollerItemClickState()
+    M.Fire(M.Event.Enum.ACTION.UNDO) -- 触发引擎更新行为栈
+end
 
 --- MainType按钮点击
 function BtnMainTypeClicked(_btnObj)
