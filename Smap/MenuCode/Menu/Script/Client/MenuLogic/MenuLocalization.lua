@@ -54,7 +54,7 @@ local LocalizationTab = {
         Key = 'TextPopUps',
         zh_CN = '确定要退出吗？',
         en = 'Really leave?',
-        id = 'Keluar dari permainan?'
+        id = 'Benar-benar keluar?'
     },
     BtnCancel = {
         Key = 'BtnCancel',
