@@ -25,7 +25,8 @@ M.Events = {
     'SwitchInGameMessageEvent',
     'TranslateTextEvent',
     'CreateReadyEvent',
-    'DetectMenuDisplayStateEvent'
+    'DetectMenuDisplayStateEvent',
+    'LowQualityWarningEvent'
 }
 
 M.Modules = {
