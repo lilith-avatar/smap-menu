@@ -35,8 +35,8 @@ function InGamingImEventHandler(_sendPlayer, _imContent)
     sender = _sendPlayer
 
     if enableSub then
-        for _,v in pairs(subPlayerList) do
-            for i,j in pairs(v) do
+        for _, v in pairs(subPlayerList) do
+            for i, j in pairs(v) do
                 if sender == j then
                     tarPlayerTab = v
                 end
@@ -52,11 +52,6 @@ end
 function EnableSubChannelEventHandler(_boolean, _list)
     enableSub = _boolean
     subPlayerList = _list
-    if _boolean then
-        for k,v in pairs(_list) do
-            list[tostring(k)] = v
-        end
-    end
 end
 
 --! Public methods
