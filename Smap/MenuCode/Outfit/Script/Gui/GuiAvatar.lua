@@ -63,6 +63,9 @@ function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
         rawAngle, interpAngle = 0, 0
         guiAvatar.Enable = true
+        figTouchZone.AnchorsX = Vector2.Up
+        figTouchZone.AnchorsY = Vector2.Up
+        figTouchZone.Size = Vector2.One
         rawAngle = avatar.LocalRotation.Y
         rawAnglePrevious = rawAngle
         interpAngle = rawAngle
