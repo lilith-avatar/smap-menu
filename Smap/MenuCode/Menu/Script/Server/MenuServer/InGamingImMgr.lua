@@ -56,4 +56,5 @@ end
 
 --! Public methods
 M.InGamingImEventHandler = InGamingImEventHandler
+M.EnableSubChannelEventHandler = EnableSubChannelEventHandler
 return M
