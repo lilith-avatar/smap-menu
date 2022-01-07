@@ -48,6 +48,9 @@ local subTypePnls = {}
 -- 计数器
 local resCnt, RES_THRESHOLD = 0, 3 -- GUI Archetype资源加载数和最大数
 
+-- 当前正在长按
+local isOnLongPress = false
+
 -- 资源常量
 local RES_MAINTYPE_BTN = 'Outfit/Archetype/Gui/Btn_Landscape_MainType'
 local RES_SUBTYPE_BTN = 'Outfit/Archetype/Gui/Btn_Landscape_SubType'
@@ -369,8 +372,9 @@ end
 
 --- Item按钮点击
 function BtnItemClicked(_btnObj)
-    -- print(_btnObj)
-    -- print(itemDataDict[_btnObj].dataIdx)
+    if isOnLongPress then
+        return
+    end
     local dataIdx = itemDataDict[_btnObj].dataIdx
     if dataIdx ~= nil and dataIdx <= #currItemList then
         local data = currItemList[dataIdx]
@@ -387,7 +391,7 @@ end
 --- Item按钮长按开始
 function BtnItemLongPressBegin(_btnObj)
     Debug.Log(string.format('[换装] 长按开始 btn = %s', _btnObj))
-    -- print(itemDataDict[_btnObj].dataIdx)
+    isOnLongPress = true
     local dataIdx, data = itemDataDict[_btnObj].dataIdx, nil
     if dataIdx ~= nil and dataIdx <= #currItemList then
         data = currItemList[dataIdx]
@@ -445,7 +449,7 @@ end
 --- Item按钮长按结束
 function BtnItemLongPressEnd(_btnObj)
     Debug.Log(string.format('[换装] 长按结束 btn = %s', _btnObj))
-    -- print(itemDataDict[_btnObj].dataIdx)
+    isOnLongPress = false
 
     -- 隐藏tips
     imgTips.Enable = false
