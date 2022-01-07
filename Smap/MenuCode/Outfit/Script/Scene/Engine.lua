@@ -448,7 +448,6 @@ function Restore()
     end
     --* 先清空玩家身上的服装，防止重复替换服装消失
     avatar:ResetToDefaultClothes()
-    wait()
     -- 执行正常换装
     Dodo(outfitIds, false)
 end
