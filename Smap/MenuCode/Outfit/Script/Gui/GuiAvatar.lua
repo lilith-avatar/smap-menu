@@ -23,10 +23,8 @@ local figTouchZone  --* 触摸区域panel节点，也用于计算fig的大小
 
 --* 本地变量
 local mousePos = nil --! TEST ONLY: 开启鼠标右键监听事件
-local rawAngle
-local rawAnglePrevious
-local interpAngle
-local maxDelta, delta
+local rawAngle, rawAnglePrevious, interpAngle = 0, 0, 0
+local maxDelta, delta = 0, 0
 
 --* 枚举常量
 -- 事件常量
