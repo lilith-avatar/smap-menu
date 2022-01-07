@@ -169,6 +169,7 @@ function InitGui()
     gui.FunDisplayTab = {gui.ImgGaming, gui.ImgFriList, gui.ImgSetting, gui.ImgDressUp}
     gui.PnlMenuTab = {gui.TweenMenuBg, gui.TweenImBubbleBg, gui.TweenVoiceBg}
 
+    gui.ImgBase.Size = Vector2(824, -150)
     gui.BtnBase.Size = Vector2(132, 0)
     gui.DisplayBase.Size = Vector2(640, 0)
 
@@ -595,10 +596,12 @@ function SettingBind()
     gui.GraphicSetBtnTab[1] = gui.BtnLow
     gui.GraphicSetBtnTab[0] = gui.BtnMin
     for _, v in pairs(gui.ImgSettingBg:GetChildren()) do
-        v.OnClick:Connect(function()
-            SettingSwitch(v)
-            SettingGraphics(v)
-        end)
+        v.OnClick:Connect(
+            function()
+                SettingSwitch(v)
+                SettingGraphics(v)
+            end
+        )
     end
 end
 
