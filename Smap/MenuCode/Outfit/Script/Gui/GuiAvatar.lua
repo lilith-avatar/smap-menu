@@ -6,10 +6,9 @@
 local M = {}
 
 -- 本地缓存
-local wait = wait
-local Enum, Vector2, Vector3, EulerDegree = Enum, Vector2, Vector3, EulerDegree
-local world, Game, Debug, Input = world, Game, Debug, Input
-local Utility, ResourceManager, ScreenCapture = Utility, ResourceManager, ScreenCapture
+local Enum, EulerDegree = Enum, EulerDegree
+local world, Input = world, Input
+local Utility = Utility
 
 -- 根节点（Init时候被赋值）
 local root
@@ -24,12 +23,17 @@ local figTouchZone  --* 触摸区域panel节点，也用于计算fig的大小
 
 --* 本地变量
 local mousePos = nil --! TEST ONLY: 开启鼠标右键监听事件
-local rawAngle, interpAngle = 0, 0
+local rawAngle
+local rawAnglePrevious
+local interpAngle
+local maxDelta, delta
 
 --* 枚举常量
 -- 事件常量
-local TOUCH_ZONE_PAN_2_NPC_ROT = -0.80 --* 手指滑动位移x转换成NPC转向位移系数
-local TOUCH_ZONE_INPUT_2_NPC_ROT = -0.5 --! TEST 鼠标右键滑动位移x转换成NPC转向位移系数
+local TOUCH_ZONE_PAN_2_NPC_ROT = -0.42 --* 手指滑动位移x转换成NPC转向位移系数
+local TOUCH_ZONE_INPUT_2_NPC_ROT = -0.42 --! TEST 鼠标右键滑动位移x转换成NPC转向位移系数
+-- 普通常量
+local ROTATION_MAXSPEED = 1000.0 -- 旋转最大速度
 
 --- 初始化
 function Init(_root)
@@ -61,6 +65,9 @@ function EventHandler(_event, ...)
     if _event == M.Event.Enum.OPEN then
         rawAngle, interpAngle = 0, 0
         guiAvatar.Enable = true
+        rawAngle = avatar.LocalRotation.Y
+        rawAnglePrevious = rawAngle
+        interpAngle = rawAngle
         world.OnRenderStepped:Connect(UpdateNpcRotationSmooth)
     elseif _event == M.Event.Enum.CLOSE then
         world.OnRenderStepped:Disconnect(UpdateNpcRotationSmooth)
@@ -103,8 +110,18 @@ end
 
 --- 更新玩家旋转
 function UpdateNpcRotationSmooth(_deltaTime)
-    -- print(rawAngle, interpAngle, _deltaTime)
-    interpAngle = Utility.InterpTo(interpAngle, rawAngle, _deltaTime, 5)
+    maxDelta = ROTATION_MAXSPEED * _deltaTime
+    delta = rawAngle - rawAnglePrevious
+
+    if delta > maxDelta then
+        delta = maxDelta
+    elseif delta < -1.0 * maxDelta then
+        delta = -1.0 * maxDelta
+    end
+    rawAngle = rawAnglePrevious + delta
+    rawAnglePrevious = rawAngle
+
+    interpAngle = Utility.InterpTo(interpAngle, rawAngle, _deltaTime, 8.0)
     avatar.LocalRotation = EulerDegree(0, interpAngle, 0)
 end
 
