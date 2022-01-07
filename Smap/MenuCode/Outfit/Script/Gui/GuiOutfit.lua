@@ -64,6 +64,7 @@ local SUBTYPE_BTN_LEFT_MARGIN = 60
 local SUBTYPE_BTN_SPACE_X = 80
 local ITEM_LOADING_CYCLE_TIME = 1 -- second
 local ITEM_COUNTDOWN_TXT_TIMER_OFFSET_X = 10
+local TIPS_IMG_SIZE = Vector2(480, 560)
 local TIPS_IMG_OFFSET_Y = -240
 
 --* 动画相关
@@ -101,6 +102,7 @@ function InitLocalVars()
     sclOutfit = gui.Pnl_Right.Pnl_ListView.Scroller_Outfit
     -- Tips
     imgTips = pnlRight.Img_Tips
+    imgTips.Size = TIPS_IMG_SIZE
 end
 
 --- 事件绑定
