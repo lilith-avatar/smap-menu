@@ -11,16 +11,15 @@ local S = _G.mS
 local M = S.ModuleUtil.New('InGamingImMgr', S.Base)
 
 --* 本地变量
-local sender  -- 发送者
 local enableSub, tarPlayerTab, subPlayerList = false, {}, {}
 
 --- 发送聊天数据
-function SendToChat(_content, _tarTab)
-    if sender.ClassName == 'PlayerInstance' then
+function SendToChat(_content, _tarTab, _sender)
+    if _sender.ClassName == 'PlayerInstance' then
         for _, v in pairs(_tarTab) do
-            M.Kit.Util.Net.Fire_C('NormalImEvent', v, sender, _content)
+            M.Kit.Util.Net.Fire_C('NormalImEvent', v, _sender, _content)
         end
-    elseif sender == 'Developer' then
+    elseif _sender == 'Developer' then
         for _, v in pairs(M.Other.MenuMgr.playerList) do
             M.Kit.Util.Net.Fire_C('NormalImEvent', v, 'OFFICIAL', _content)
         end
@@ -29,15 +28,13 @@ end
 
 function InGamingImEventHandler(_sendPlayer, _imContent)
     local callback = function(_imContent, _msg)
-        SendToChat(_msg, tarPlayerTab)
+        SendToChat(_msg, tarPlayerTab, _sendPlayer)
     end
-
-    sender = _sendPlayer
 
     if enableSub then
         for _, v in pairs(subPlayerList) do
             for i, j in pairs(v) do
-                if sender == j then
+                if _sendPlayer == j then
                     tarPlayerTab = v
                 end
             end
