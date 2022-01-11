@@ -118,6 +118,7 @@ function EventHandler(_event, ...)
     elseif _event == M.Event.Enum.CLOSE then
         booth.Enable = false
         npc.Enable = false
+        gui.Enable = true
         gui.Enable = false
         if localPlayer.Avatar.ShouldCulling ~= nil and cacheShouldCulling ~= nil then
             localPlayer.Avatar.ShouldCulling = cacheShouldCulling
