@@ -23,31 +23,31 @@ local LocalizationTab = {
     TextSetting = {
         Key = 'TextSetting',
         zh_CN = '设置',
-        en = 'Setting',
+        en = 'Graphic Setting',
         id = 'Pengaturan kualitas gambar'
     },
     TextMin = {
         Key = 'TextMin',
         zh_CN = '极低画质',
-        en = 'Min Definition',
+        en = 'Min',
         id = 'Sangat rendah'
     },
     TextLow = {
         Key = 'TextLow',
         zh_CN = '低画质',
-        en = 'Low Definition',
+        en = 'Low',
         id = 'Rendah'
     },
     TextMedium = {
         Key = 'TextMedium',
         zh_CN = '中画质',
-        en = 'Medium Definition',
+        en = 'Medium',
         id = 'Medium'
     },
     TextHigh = {
         Key = 'TextHigh',
         zh_CN = '高画质',
-        en = 'High Definition',
+        en = 'High',
         id = 'Tinggi'
     },
     TextPopUps = {

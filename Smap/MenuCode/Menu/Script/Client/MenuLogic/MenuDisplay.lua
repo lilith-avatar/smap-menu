@@ -625,6 +625,13 @@ end
 
 function QuitBind()
     --todo 安卓返回键
+    Game.OnAndroidBackButtonClick:Connect(
+        function()
+            gui.BtnTouch:SetActive(true)
+            gui.ImgPopUps:SetActive(true)
+            Lua2Native(1)
+        end
+    )
     ---Quit的二级弹窗
     gui.BtnQuit.OnClick:Connect(
         function()
