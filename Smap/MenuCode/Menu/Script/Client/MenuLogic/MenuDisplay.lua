@@ -252,6 +252,7 @@ function OpenAndClose()
             gui.BtnBase.Size = Vector2(132, 0)
             gui.DisplayBase.Size = Vector2(640, 0)
             DisableCtr(isOpen)
+            gui.BtnTouch:SetActive(true)
         end
     )
 
@@ -259,6 +260,7 @@ function OpenAndClose()
         function()
             isOpen = false
             DisableCtr(isOpen)
+            gui.BtnTouch:SetActive(false)
         end
     )
 
@@ -398,6 +400,9 @@ function ImgBaseAni(_isOpen)
         gui.ImgBase.Size = Vector2(824, -150)
         gui.BtnBase.Size = Vector2(132, 0)
         gui.DisplayBase.Size = Vector2(640, 0)
+        for _, v in pairs(gui.DisplayBase:GetChildren()) do
+            v.Size = Vector2(0, 0)
+        end
         gui.DisplayBase:SetActive(_isOpen)
         gui.BtnBase:SetActive(_isOpen)
         gui.ImgBase:SetActive(_isOpen)
@@ -617,6 +622,7 @@ function OutfitBind()
             -- 关闭当前MENU
             isOpen = false
             DisableCtr(isOpen)
+            gui.BtnTouch:SetActive(false)
             gui.PnlMenu:SetActive(false)
         end
     end
@@ -651,6 +657,8 @@ function QuitBind()
                 end
             end
             gui.ImgProfileBg:SetActive(false)
+            isOpen = false
+            DisableCtr(isOpen)
         end
     )
 
@@ -691,6 +699,9 @@ end
 ---游戏内IM
 function PlayerInGameIm(_text)
     local textMessage = _text
+    if #tostring(_text) == 0 then
+        return
+    end
     M.Kit.Util.Net.Fire_S('InGamingImEvent', localPlayer, textMessage)
 
     ---重置输入栏
@@ -878,6 +889,7 @@ function CheckPnlMenu(_boolean, _gui)
     else
         voiceOff = Vector2(196, 0)
         gui.ImgVoiceBg.Offset = voiceOff
+        gui.ImgImBubbleBg:SetActive(false)
     end
 end
 
