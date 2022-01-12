@@ -886,10 +886,11 @@ function CheckPnlMenu(_boolean, _gui)
     if not gui.ImgImBubbleBg.ActiveSelf then
         voiceOff = gui.ImgImBubbleBg.Offset
         gui.ImgVoiceBg.Offset = voiceOff
+        isDisplay = false
+        ImgImAni(isDisplay)
     else
         voiceOff = Vector2(196, 0)
         gui.ImgVoiceBg.Offset = voiceOff
-        gui.ImgImBubbleBg:SetActive(false)
     end
 end
 
