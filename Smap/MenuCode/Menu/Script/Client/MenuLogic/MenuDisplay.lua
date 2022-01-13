@@ -514,6 +514,7 @@ function GamingBind()
                 gui.ImgMuteAll.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
             end
             MuteAll(isMuteAll)
+            gui.ImgProfileBg:SetActive(false)
             M.Kit.Util.Net.Fire_C('MuteAllEvent', localPlayer, isMuteAll)
         end
     )
