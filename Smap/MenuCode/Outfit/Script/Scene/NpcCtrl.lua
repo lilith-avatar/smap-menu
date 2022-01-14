@@ -70,6 +70,8 @@ function InitLocalVars()
 
     -- 状态
     npc.Enable = false
+    booth.Block = false
+    booth.GravityEnable = false
 end
 
 function InitSurfaceGui()
