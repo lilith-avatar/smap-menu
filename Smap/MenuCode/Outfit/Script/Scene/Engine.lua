@@ -233,6 +233,7 @@ function LoadAvatar()
             avatar.BodyType = localPlayer.Avatar.BodyType
             avatar.FaceType = localPlayer.Avatar.FaceType
             avatar.SkinColor = localPlayer.Avatar.SkinColor
+            avatar.Gender = localPlayer.Avatar.Gender
         else
             Debug.LogWarning(string.format('[换装] 下载服装资源, msg: %s', _msg))
         end
@@ -254,6 +255,7 @@ function SaveAvatar()
     localPlayer.Avatar.BodyType = avatar.BodyType
     localPlayer.Avatar.FaceType = avatar.FaceType
     localPlayer.Avatar.SkinColor = avatar.SkinColor
+    localPlayer.Avatar.Gender = avatar.Gender
 
     --- 保存玩家形象回调
     local callback = function(_msg)
