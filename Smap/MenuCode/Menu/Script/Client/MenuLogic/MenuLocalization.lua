@@ -20,11 +20,11 @@ local LocalizationTab = {
         en = 'Mute All',
         id = 'Senyapkan Semua'
     },
-    TextSetting = {
+    TextSetting= {
         Key = 'TextSetting',
         zh_CN = '设置',
-        en = 'Graphic Setting',
-        id = 'Pengaturan kualitas gambar'
+        en = 'Setting',
+        id = 'Pengaturan'
     },
     TextMin = {
         Key = 'TextMin',
@@ -103,11 +103,18 @@ local LocalizationTab = {
         zh_CN = '推荐画质',
         en = 'Recommend',
         id = 'Rekomendasi'
+    },
+    VoiceTextSetting = {
+        Key = 'VoiceTextSetting',
+        zh_CN = '音量设定',
+        en = 'VoiceSetting',
+        id = 'pengaturan volume'
     }
+
 }
 
 local LocalizationTabSp = {
-    TextFriList = {
+    TextFriList= {
         Key = 'TextFriList',
         zh_CN = '好友',
         en = 'Friends',
@@ -124,7 +131,7 @@ local LocalizationTabSp = {
         zh_CN = '说点什么吧',
         en = 'Say Something',
         id = 'Katakan sesuatu'
-    }
+    },
 }
 
 local archTab = {
@@ -190,27 +197,25 @@ end
 
 --- 将本地语言改成对应的
 function Translate(_tab)
-    for k, v in pairs(_tab) do
+    for k,v in pairs(_tab) do
         gui[k].Text = v[currLang]
     end
 end
 
 function TranslateSp(_tab)
-    for _, v in pairs(_tab) do
+    for _,v in pairs(_tab) do
         M.Kit.Util.Net.Fire_C('TranslateTextEvent', localPlayer, v[currLang], v['Key'])
     end
 end
 
 function CreateReadyEventHandler(_tarNode, _type, _invitePlayer)
-    if _tarNode == nil then
-        return
-    end
+    if _tarNode == nil then return end
     if _type == 0 then
         _tarNode.BtnFriInviteOut.TextFriInviteOut.Text = archTab['TextFriInviteOut'][currLang]
         _tarNode.ImgFriMoreBg.BtnFriInvite.TextFriInvite.Text = archTab['TextFriInvite'][currLang]
         _tarNode.ImgFriMoreBg.BtnFriJoin.TextFriJoin.Text = archTab['TextFriJoin'][currLang]
     elseif _type == 1 then
-        _tarNode.TextInvite.Text = tostring(_invitePlayer.Name) .. archTab['TextInvite'][currLang]
+        _tarNode.TextInvite.Text = tostring(_invitePlayer.Name).. archTab['TextInvite'][currLang]
         _tarNode.BtnInviteOk.Text = archTab['BtnInviteOk'][currLang]
     end
 end

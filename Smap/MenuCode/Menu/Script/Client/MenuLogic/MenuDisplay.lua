@@ -8,7 +8,6 @@ local Enum, Vector2, Color = Enum, Vector2, Color
 local world, localPlayer, PlayerHub = world, localPlayer, PlayerHub
 local Debug, ResourceManager, Game, Friends, invoke = Debug, ResourceManager, Game, Friends, invoke
 local C = _G.mC
-
 --* 模块
 local M, this = C.ModuleUtil.New('MenuDisplay', C.Base)
 
@@ -16,7 +15,11 @@ local M, this = C.ModuleUtil.New('MenuDisplay', C.Base)
 local MUTEALL_OFF_COLOR, MUTEALL_ON_COLOR = Color(38, 121, 217, 255), Color(222, 69, 119, 230)
 
 -- 本地变量
-local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, false, false, nil
+local lastLocalMicVolume = 0
+local lastLocalListenVolume = 0;
+local isLocalMicVolume = true
+local isLocalListenVolume = true
+local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, true, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
 local isNone, isReady = true, false
 local gui = {}
@@ -31,6 +34,8 @@ local headColorTab = {
     Color(77, 215, 203, 255),
     Color(81, 155, 72, 255)
 }
+
+local playerList = nil
 
 local resReplaceTab = {
     Gaming = 'games',
@@ -90,7 +95,6 @@ end
 function Init()
     Game.ShowSystemBar(false)
     math.randomseed(os.time())
-
     local co =
         coroutine.create(
         function()
@@ -173,9 +177,104 @@ function InitGui()
     gui.BtnBase.Size = Vector2(132, 0)
     gui.DisplayBase.Size = Vector2(640, 0)
 
+    local info = VoiceManager.GetPlayerAudioInfo(localPlayer.UserId)
+    if info == nil then
+        isOn = true
+    else
+        isOn = not info.MuteSelf
+    end
+    gui.ImgVoiceMask:SetActive(not isOn)
+    SwitchLocalVoiceMicStates()
     M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
     M.Kit.Util.Net.Fire_C('ClientReadyEvent', localPlayer, true)
     isReady = true
+    SwitchOutfitEntranceEventHandler(false)
+end
+
+--remote user voice settings
+function RemoteUserPanelSetting()
+    local panel = gui.RemoteListernerScroll
+    local text = gui.RemoteListenerText
+
+    panel.OnScroll:Connect(function(position,scrollDistance,deltaDistance,scrollSpeed)
+        local v = math.floor(panel.ScrollScale)
+        text.Text = v
+        VoiceManager.SetPlayerVoiceVolume(mutedPlayerId,v)
+    end)
+end
+
+
+function OnMicScrollVolume(volume)
+    if volume == 0 then
+        gui.LocalBtnMicImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
+    else
+        gui.LocalBtnMicImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
+    end
+    lastLocalMicVolume = volume
+end
+
+function OnListenScrollVolume(volume)
+   if volume == 0 then
+        gui.LocalBtnListenerImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
+    else
+        gui.LocalBtnListenerImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeron')
+    end
+    lastLocalListenVolume = volume
+end
+
+function SetRemoteUserInfos()
+    if mutedPlayerTab == nil then
+        return
+    end
+    for pid, v in pairs(mutedPlayerTab) do
+        local info = VoiceManager.GetPlayerAudioInfo(pid)
+        v['isMuted'] = info.MuteOthers
+        gui['ImgMic' .. v['num']]:SetActive(info.MuteOthers)
+        M.Kit.Util.Net.Fire_C(
+            'MuteSpecificPlayerEvent',
+            localPlayer,
+            pid,
+            info.MuteOthers
+        )
+    end
+end
+
+function SetLocalUserInfos()
+    local panelMic = gui.LocalMicScroll
+    local textMic = gui.LocalMicText
+    lastLocalMicVolume = VoiceManager.GetMicrophoneVolume()
+    panelMic.ScrollScale = lastLocalMicVolume
+    VoiceManager.SetMicrophoneVolume(lastLocalMicVolume)
+
+    local panelL = gui.LocalListernerScroll
+    local textL = gui.LocalListenerText
+    lastLocalListenVolume = VoiceManager.GetAllVoiceVolume()
+    panelL.ScrollScale = lastLocalListenVolume
+    VoiceManager.SetAllVoiceVolume(lastLocalListenVolume)
+    OnMicScrollVolume(lastLocalMicVolume)
+    OnListenScrollVolume(lastLocalListenVolume)
+end
+
+--lcoal user voice settings
+function LocalUserPanelSetting()
+    local panelMic = gui.LocalMicScroll
+    local textMic = gui.LocalMicText
+
+    panelMic.OnScroll:Connect(function(position,scrollDistance,deltaDistance,scrollSpeed)
+        local v =  math.floor(panelMic.ScrollScale)
+        textMic.Text = v
+        VoiceManager.SetMicrophoneVolume(v)
+        OnMicScrollVolume(v)
+    end)
+
+    local panelL = gui.LocalListernerScroll
+    local textL = gui.LocalListenerText
+    panelL.OnScroll:Connect(function(position,scrollDistance,deltaDistance,scrollSpeed)
+        local v = math.floor(panelL.ScrollScale)
+        textL.Text = v
+        VoiceManager.SetAllVoiceVolume(v)
+        OnListenScrollVolume(v)
+    end)
 end
 
 --- 事件绑定初始化
@@ -186,6 +285,8 @@ function InitListener()
     -- 顶部三个按钮动画
     OpenAndClose()
     SwitchLocalVoice()
+    InitLocalVolumeButton()
+    SwitchLocalVoiceMicStates()
     InputBind()
 
     -- 左侧功能按钮的底板资源替换
@@ -198,6 +299,8 @@ function InitListener()
 
     DebugOnly()
     GraphicReady()
+    RemoteUserPanelSetting()
+    LocalUserPanelSetting()
 end
 
 function DebugOnly()
@@ -256,6 +359,8 @@ function OpenAndClose()
             gui.BtnTouch.AnchorsY = Vector2(0.001, 0.999)
             gui.BtnTouch.AnchorsX = Vector2(0.001, 0.999)
             gui.BtnTouch:SetActive(true)
+            SetLocalUserInfos()
+            SetRemoteUserInfos()
         end
     )
 
@@ -281,19 +386,62 @@ function OpenAndClose()
     )
 end
 
+function SwitchLocalVoiceMicStates()
+    if isOn then
+        --gui.LocalBtnMicImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
+        gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
+    else
+        --gui.LocalBtnMicImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
+        gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
+    end
+end
+
+function InitLocalVolumeButton()
+    gui.LocalBtnListenerMute.OnClick:Connect(
+        function()
+            if isLocalListenVolume then
+                isLocalListenVolume = false
+                gui.LocalBtnListenerImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
+                lastLocalListenVolume = VoiceManager.GetAllVoiceVolume()
+                VoiceManager.SetAllVoiceVolume(0,false)
+            else
+                isLocalListenVolume = true
+                gui.LocalBtnListenerImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeron')
+                VoiceManager.SetAllVoiceVolume(lastLocalListenVolume,false)
+            end
+        end
+    )
+
+    gui.LocalBtnMicMute.OnClick:Connect(
+          function()
+            if isLocalMicVolume then
+                isLocalMicVolume = false
+                gui.LocalBtnMicImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
+                lastLocalMicVolume = VoiceManager.GetMicrophoneVolume()
+                VoiceManager.SetMicrophoneVolume(0,false)
+            else
+                isLocalMicVolume = true
+                gui.LocalBtnMicImg.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
+                VoiceManager.SetMicrophoneVolume(lastLocalMicVolume,false)
+            end
+        end
+    )
+end
+
 function SwitchLocalVoice()
     gui.BtnVoice.OnClick:Connect(
         function()
             if isOn then
-                gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
+                --gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microoff')
                 gui.ImgVoiceMask:SetActive(false)
                 isOn = false
             else
-                gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
+                --gui.ImgVoice.Texture = ResourceManager.GetTexture('Menu/Gui/svg_microon')
                 gui.ImgVoiceMask:SetActive(true)
                 isOn = true
             end
             M.Kit.Util.Net.Fire_S('MuteLocalEvent', localPlayer, isOn)
+            SwitchLocalVoiceMicStates()
         end
     )
 end
@@ -455,15 +603,15 @@ function ProfileBgFix(_playerId)
     local theGuy = world:GetPlayerByUserId(_playerId)
     if friTab[theGuy.Name] then
         gui.BtnProfileAdd:SetActive(false)
-        gui.BtnProfileMute.Offset = Vector2(-158, -384)
+        --gui.BtnProfileMute.Offset = Vector2(-158, -384)
     else
         gui.BtnProfileAdd:SetActive(true)
-        gui.BtnProfileMute.Offset = Vector2(-50, -384)
+        --gui.BtnProfileMute.Offset = Vector2(-50, -384)
     end
 
     if theGuy == localPlayer then
         gui.BtnProfileAdd:SetActive(false)
-        gui.BtnProfileMute.Offset = Vector2(-158, -384)
+        --gui.BtnProfileMute.Offset = Vector2(-158, -384)
     end
 end
 
@@ -478,6 +626,14 @@ function MuteAll(_isMuteAll)
     end
 end
 
+function UpdateRemotePanel(playerId)
+    local info = VoiceManager.GetPlayerAudioInfo(playerId)
+    local panel = gui.RemoteListernerScroll
+    local text = gui.RemoteListenerText
+    panel.ScrollScale = info.RemoteVolume
+    text.Text = info.RemoteVolume
+end
+
 function GamingBind()
     for i = 1, 12 do
         gui['BtnMic' .. i].OnClick:Connect(
@@ -489,6 +645,15 @@ function GamingBind()
                 gui.ImgProfileBg:SetActive(true)
                 gui.BtnTouch:SetActive(true)
                 mutedPlayerId = gui['FigBg' .. i].PlayerInfo.Value
+
+                -- if local player adjust the menu position
+                if mutedPlayerId == localPlayer.UserId then
+                    gui.RemoteUserBg.Offset = Vector2(140,-384)
+                else
+                    gui.RemoteUserBg.Offset = Vector2(196,-384)
+                    UpdateRemotePanel(mutedPlayerId)
+                end
+                
                 if mutedPlayerTab[mutedPlayerId]['isMuted'] then
                     gui.ImgProfileMute.Texture = ResourceManager.GetTexture('Menu/Gui/svg_speakeroff')
                 else
@@ -607,14 +772,22 @@ function SettingBind()
     gui.GraphicSetBtnTab[2] = gui.BtnMedium
     gui.GraphicSetBtnTab[1] = gui.BtnLow
     gui.GraphicSetBtnTab[0] = gui.BtnMin
-    for _, v in pairs(gui.ImgSettingBg:GetChildren()) do
+
+    for _,v in pairs(gui.GraphicSetBtnTab) do
+       v.OnClick:Connect(
+            function()
+                SettingSwitch(v)
+                SettingGraphics(v)
+            end)
+    end
+    --[[for _, v in pairs(gui.ImgSettingBg:GetChildren()) do
         v.OnClick:Connect(
             function()
                 SettingSwitch(v)
                 SettingGraphics(v)
             end
         )
-    end
+    end--]]
 end
 
 --* 换装事件绑定
@@ -635,13 +808,6 @@ end
 
 function QuitBind()
     --todo 安卓返回键
-    Game.OnAndroidBackButtonClick:Connect(
-        function()
-            gui.BtnTouch:SetActive(true)
-            gui.ImgPopUps:SetActive(true)
-            Lua2Native(1)
-        end
-    )
     ---Quit的二级弹窗
     gui.BtnQuit.OnClick:Connect(
         function()
@@ -809,6 +975,7 @@ function GetFriendsListEventHandler(_list)
 end
 
 function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
+    playerList = _playerList
     Game.ShowSystemBar(false)
     friTab = Friends.GetFriendshipList()
     length = #_playerList
@@ -957,6 +1124,26 @@ function DetectMenuDisplayStateEventHandler(_type)
     end
 end
 
+function AllowExitEventHandler(_boolean)
+    if gui.ImgPopUps.ActiveSelf then
+        gui.ImgPopUps:SetActive(false)
+    end
+
+    gui.BtnQuit.Clickable = _boolean
+    
+    if _boolean then
+        gui.BtnQuit.Color = Color(255,58,58,255)
+        gui.BtnQuit.HoverColor = Color(255,58,58,255)
+        gui.BtnQuit.PressedColor = Color(255,58,58,255)
+        gui.BtnQuit.DisabledColor = Color(255,58,58,255)
+    else
+        gui.BtnQuit.Color = Color(181, 181,181, 255)
+        gui.BtnQuit.HoverColor = Color(181, 181,181, 255)
+        gui.BtnQuit.PressedColor = Color(181, 181,181, 255)
+        gui.BtnQuit.DisabledColor = Color(181, 181,181, 255)
+    end
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -971,5 +1158,6 @@ M.SwitchVoiceEventHandler = SwitchVoiceEventHandler
 M.SwitchInGameMessageEventHandler = SwitchInGameMessageEventHandler
 M.TranslateTextEventHandler = TranslateTextEventHandler
 M.DetectMenuDisplayStateEventHandler = DetectMenuDisplayStateEventHandler
+M.AllowExitEventHandler = AllowExitEventHandler
 
 return M

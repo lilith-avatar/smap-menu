@@ -65,6 +65,10 @@ function IsReady()
     return isReady
 end
 
+function AllowExit(_boolean)
+    M.Kit.Util.Net.Fire_C('AllowExitEvent', localPlayer, _boolean)
+end
+
 -- 初始化换装
 local Outfit = require('Outfit/Script/Main')
 invoke(Outfit.Init)
@@ -80,6 +84,7 @@ M.SwitchInGameMessage = SwitchInGameMessage
 M.DetectMenuDisplayState = DetectMenuDisplayState
 M.EnableSubChannel = EnableSubChannel
 M.IsReady = IsReady
+M.AllowExit = AllowExit
 
 --* 换装相关API
 M.Outfit = {}

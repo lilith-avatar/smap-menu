@@ -26,7 +26,8 @@ M.Events = {
     'TranslateTextEvent',
     'CreateReadyEvent',
     'DetectMenuDisplayStateEvent',
-    'LowQualityWarningEvent'
+    'LowQualityWarningEvent',
+    'AllowExitEvent'
 }
 
 M.Modules = {
