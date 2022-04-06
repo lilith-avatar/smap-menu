@@ -23,10 +23,6 @@ function MenuSwitch(_type, _boolean)
 end
 
 -- @param _boolean 打开还是关闭，下同
-function SwitchOutfitEntrance(_boolean)
-    M.Kit.Util.Net.Fire_C('SwitchOutfitEntranceEvent', localPlayer, _boolean)
-end
-
 function SwitchVoice(_type, _boolean)
     M.Kit.Util.Net.Fire_C('SwitchVoiceEvent', localPlayer, _type, _boolean)
 end
@@ -69,30 +65,17 @@ function AllowExit(_boolean)
     M.Kit.Util.Net.Fire_C('AllowExitEvent', localPlayer, _boolean)
 end
 
--- 初始化换装
-local Outfit = require('Outfit/Script/Main')
-invoke(Outfit.Init)
-
 --! Public methods
 M.ClientReadyEventHandler = ClientReadyEventHandler
 M.LowQualityWarningEventHandler = LowQualityWarningEventHandler
 M.DeveloperOfficialMsg = DeveloperOfficialMsg
 M.MenuSwitch = MenuSwitch
 M.SwitchVoice = SwitchVoice
-M.SwitchOutfitEntrance = SwitchOutfitEntrance
 M.SwitchInGameMessage = SwitchInGameMessage
 M.DetectMenuDisplayState = DetectMenuDisplayState
 M.EnableSubChannel = EnableSubChannel
 M.IsReady = IsReady
 M.AllowExit = AllowExit
-
---* 换装相关API
-M.Outfit = {}
-M.Outfit.Open = Outfit.Open
-M.Outfit.Close = Outfit.Close
-M.Outfit.IsOpen = Outfit.IsOpen
-M.Outfit.Toggle = Outfit.Toggle
-M.Outfit.ToggleEvent = Outfit.ToggleEvent
 
 --! Global Public API
 _G.Menu = M
