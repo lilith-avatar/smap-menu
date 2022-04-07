@@ -896,7 +896,7 @@ function GetFriendsListEventHandler(_list)
     gui.TextFriList.Text = friText .. ' ' .. '(' .. i .. ')'
     ClearChildren(gui.PnlFriList)
     for k, v in pairs(_list) do
-        gui[k] = world:CreateInstance('FigFriInfo', k, gui.PnlFriList)
+        gui[k] = world:CreateInstance('Menu/Archetype/FigFriInfo', k, gui.PnlFriList)
         M.Kit.Util.Net.Fire_C('CreateReadyEvent', localPlayer, gui[k], 0)
 
         gui[k].TextName.Text = v.Name
@@ -1007,7 +1007,7 @@ function SomeoneInviteEventHandler(_invitePlayer, _roomId)
         return
     end
 
-    gui.ImgInviteBg = world:CreateInstance('ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, gui.MenuGui)
+    gui.ImgInviteBg = world:CreateInstance('Menu/Archetype/ImgInviteBg', 'ImgInviteBg' .. _invitePlayer.Name, gui.MenuGui)
     gui.ImgInviteBg.AnchorsY = Vector2(0, 9, 0.9)
 
     local callback = function(_profile)
