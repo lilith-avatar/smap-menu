@@ -226,6 +226,7 @@ function SetRemoteUserInfos()
     end
     for pid, v in pairs(mutedPlayerTab) do
         local info = VoiceManager.GetPlayerAudioInfo(pid)
+        if info == nil then return end
         v['isMuted'] = info.MuteOthers
         gui['ImgMic' .. v['num']]:SetActive(info.MuteOthers)
         M.Kit.Util.Net.Fire_C(
@@ -1110,6 +1111,15 @@ function AllowExitEventHandler(_boolean)
     end
 end
 
+function SwitchVoiceBtnEventHandler(_bool)
+    gui.BtnMuteAll:SetActive(_bool)
+    gui.VoiceTextSetting:SetActive(_bool)
+    for i = 1, 12 do
+        gui['BtnMic' .. i]:SetActive(_bool)
+        gui['ImgMic' .. i]:SetActive(_bool)
+    end
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -1123,5 +1133,6 @@ M.SwitchInGameMessageEventHandler = SwitchInGameMessageEventHandler
 M.TranslateTextEventHandler = TranslateTextEventHandler
 M.DetectMenuDisplayStateEventHandler = DetectMenuDisplayStateEventHandler
 M.AllowExitEventHandler = AllowExitEventHandler
+M.SwitchVoiceBtnEventHandler = SwitchVoiceBtnEventHandler
 
 return M

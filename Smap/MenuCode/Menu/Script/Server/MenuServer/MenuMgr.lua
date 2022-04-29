@@ -35,6 +35,14 @@ end
 ---玩家加入事件
 function OnPlayerAdded(_player)
     SwitchChannel(_player, true)
+
+    if playerList ~= {} then
+        for k,v in pairs(playerList) do
+            if _player == v then
+                goto finished
+            end
+        end
+    end
     -- GetPlayerProfile(_player)
     playerInfoTab[_player] = headPortrait
     table.insert(playerList, _player)
@@ -46,6 +54,7 @@ function OnPlayerAdded(_player)
         isSent = true
     end
     invoke(broadcast, 1)
+    ::finished::
 end
 
 function OnPlayerRemoved(_player)
@@ -99,11 +108,11 @@ function SwitchChannel(_player, _type)
 end
 
 function InitVoiceChannel()
-    VoiceManager.CreateChannel('DefaultVoiceChannel')
+    -- VoiceManager.CreateChannel('DefaultVoiceChannel')
     channel = VoiceManager.GetChannel('DefaultVoiceChannel')
-    channel.SpeakerAdded:Connect(function(_player)
-        channel:MuteSpeaker(_player, true)
-    end)
+    -- channel.SpeakerAdded:Connect(function(_player)
+    --     channel:MuteSpeaker(_player, true)
+    -- end)
 end
 
 function MuteLocalEventHandler(_player, _isOn)

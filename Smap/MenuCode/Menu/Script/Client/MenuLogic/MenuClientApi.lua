@@ -65,6 +65,10 @@ function AllowExit(_boolean)
     M.Kit.Util.Net.Fire_C('AllowExitEvent', localPlayer, _boolean)
 end
 
+function SwitchVoiceRelated(_boolean)
+    M.Kit.Util.Net.Fire_C('SwitchVoiceBtnEvent', localPlayer, _boolean)
+end
+
 --! Public methods
 M.ClientReadyEventHandler = ClientReadyEventHandler
 M.LowQualityWarningEventHandler = LowQualityWarningEventHandler
@@ -76,6 +80,7 @@ M.DetectMenuDisplayState = DetectMenuDisplayState
 M.EnableSubChannel = EnableSubChannel
 M.IsReady = IsReady
 M.AllowExit = AllowExit
+M.SwitchVoiceRelated = SwitchVoiceRelated
 
 --! Global Public API
 _G.Menu = M
