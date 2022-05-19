@@ -52,9 +52,15 @@ local LocalizationTab = {
     },
     TextPopUps = {
         Key = 'TextPopUps',
-        zh_CN = '确定要退出吗？',
-        en = 'Really leave?',
-        id = 'Benar-benar keluar?'
+        zh_CN = '游戏进行中',
+        en = 'Game in progress',
+        id = 'Permainan sedang berlangsung'
+    },
+    TextPopUpsSec = {
+        Key = 'TextPopUpsSec',
+        zh_CN = '此时退出游戏将受到惩罚\n一段时间内不能进行游戏',
+        en = 'Exiting the game at this time will be punished\nand the game cannot be played for a period of time',
+        id = 'Keluar dari permainan saat ini akan dihukum\ndan permainan tidak dapat dimainkan untuk jangka waktu tertentu'
     },
     BtnCancel = {
         Key = 'BtnCancel',
