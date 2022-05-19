@@ -26,7 +26,8 @@ M.Events = {
     'DetectMenuDisplayStateEvent',
     'LowQualityWarningEvent',
     'AllowExitEvent', 
-    'SwitchVoiceBtnEvent'
+    'SwitchVoiceBtnEvent',
+    'SwitchFriendsInteractionEvent'
 }
 
 M.Modules = {

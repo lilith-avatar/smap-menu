@@ -893,7 +893,9 @@ local function showInvite()
     )
 end
 
+local FirendList = nil
 function GetFriendsListEventHandler(_list)
+    FirendList = _list
     if not isReady then
         return
     end
@@ -960,6 +962,31 @@ function GetFriendsListEventHandler(_list)
 
     for k, v in pairs(gui.PnlFriList:GetChildren()) do
         v.Offset = Vector2(0, -130 * k + 130)
+    end
+end
+
+function SwitchFriendsInteractionEventHandler(_boolean)
+    if not _boolean then
+        for _, v in pairs(gui.PnlFriList:GetChildren()) do
+            v.BtnFriInviteOut:SetActive(false)
+            v.BtnFriMore:SetActive(false)
+            v.ImgFriMoreBg:SetActive(false)
+        end
+    else
+        for k, v in pairs(FirendList) do
+            if v.Status == 'PLAYING' then
+                gui[k].BtnFriMore:SetActive(true)
+                gui[k].BtnFriInviteOut:SetActive(false)
+                gui[k].ImgInGame:SetActive(true)
+                gui[k].TextGameName.Text = 'Playing ' .. v.GameName
+                gui[k].TextName.AnchorsY = Vector2(0.7, 0.7)
+            else
+                gui[k].BtnFriMore:SetActive(false)
+                gui[k].BtnFriInviteOut:SetActive(true)
+                gui[k].ImgInGame:SetActive(false)
+                gui[k].TextName.AnchorsY = Vector2(0.5, 0.5)
+            end
+        end
     end
 end
 
@@ -1141,5 +1168,6 @@ M.TranslateTextEventHandler = TranslateTextEventHandler
 M.DetectMenuDisplayStateEventHandler = DetectMenuDisplayStateEventHandler
 M.AllowExitEventHandler = AllowExitEventHandler
 M.SwitchVoiceBtnEventHandler = SwitchVoiceBtnEventHandler
+M.SwitchFriendsInteractionEventHandler = SwitchFriendsInteractionEventHandler
 
 return M

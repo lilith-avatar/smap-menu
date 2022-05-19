@@ -16,6 +16,12 @@ function DeveloperOfficialMsg(_content)
     M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)
 end
 
+---@param _sender PlayerInstance
+---@param _content String
+function SendMsg(_sender, _content)
+    M.Kit.Util.Net.Fire_S('InGamingImEvent', _sender, _content)
+end
+
 -- @param _type 都关 = 0，只关外部三个按钮为1，只关菜单显示为2
 -- @param _boolean 打开还是关闭
 function MenuSwitch(_type, _boolean)
@@ -69,6 +75,10 @@ function SwitchVoiceRelated(_boolean)
     M.Kit.Util.Net.Fire_C('SwitchVoiceBtnEvent', localPlayer, _boolean)
 end
 
+function SwitchFriendsInteraction(_boolean)
+    M.Kit.Util.Net.Fire_C('SwitchFriendsInteractionEvent', localPlayer, _boolean)
+end
+
 --! Public methods
 M.ClientReadyEventHandler = ClientReadyEventHandler
 M.LowQualityWarningEventHandler = LowQualityWarningEventHandler
@@ -81,6 +91,8 @@ M.EnableSubChannel = EnableSubChannel
 M.IsReady = IsReady
 M.AllowExit = AllowExit
 M.SwitchVoiceRelated = SwitchVoiceRelated
+M.SendMsg = SendMsg
+M.SwitchFriendsInteraction = SwitchFriendsInteraction
 
 --! Global Public API
 _G.Menu = M
