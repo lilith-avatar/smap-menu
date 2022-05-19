@@ -524,6 +524,13 @@ function PnlMenuAni(_isOpen)
         v.Duration = 0.4
         v.EaseCurve = Enum.EaseCurve.QuinticInOut
         v:Play()
+        v.OnComplete:Connect(function()
+            if not gui.ImgBase.ActiveSelf then
+                gui.ImgMenuBg.Offset = Vector2(0, 0)
+                gui.ImgImBubbleBg.Offset = Vector2(98, 0)
+                gui.ImgVoiceBg.Offset = voiceOff
+            end
+        end)
     end
 end
 
