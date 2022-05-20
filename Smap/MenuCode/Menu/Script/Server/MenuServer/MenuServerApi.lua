@@ -17,8 +17,17 @@ function EnableSubChannel(_boolean, _tab)
     end
 end
 
+function SwitchOfflineState(_boolean)
+    if _boolean then
+        M.Kit.Util.Net.Fire_S('SwitchOfflineStateEvent', _boolean)
+    else
+        M.Kit.Util.Net.Fire_S('SwitchOfflineStateEvent', _boolean)
+    end
+end
+
 --! Public methods
 M.EnableSubChannel = EnableSubChannel
+M.SwitchOfflineState = SwitchOfflineState
 
 --! Global Public API
 _G.MenuServerApi = M

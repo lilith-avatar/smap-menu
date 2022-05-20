@@ -14,6 +14,7 @@ local M = S.ModuleUtil.New('MenuMgr', S.Base)
 --* 数据
 local playerInfoTab, playerList = {}, {}
 local isSent, isArrived, addedPlayer = false, false
+local isOffLine = false
 
 --玩家头像
 local headPortrait = nil
@@ -124,6 +125,10 @@ function TeleportPlayerToFriendGameEventHandler(_player, _roomId)
         --TODO: 处理回调函数
     end
     Game.TeleportPlayerToRoom(_player, _roomId, {}, callbackTeleport)
+end
+
+function SwitchOfflineStateEventHandler(_boolean)
+    isOffLine = _boolean
 end
 
 --! Public methods

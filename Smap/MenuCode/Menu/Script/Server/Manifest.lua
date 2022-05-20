@@ -10,7 +10,8 @@ Manifest.Events = {
     'MuteLocalEvent',
     'TeleportPlayerToFriendGameEvent',
     'ConfirmNoticeEvent',
-    'EnableSubChannelEvent'
+    'EnableSubChannelEvent',
+    'SwitchOfflineStateEvent'
 }
 
 Manifest.Modules = {
