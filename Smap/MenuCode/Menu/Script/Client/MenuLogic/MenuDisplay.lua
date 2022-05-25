@@ -946,8 +946,7 @@ function AdjustHeadPos(_playerList)
             gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)]
 
             if v.isDisconnected then
-                gui['ImgHead' .. k].Color = Color(192, 192, 192, 255)
-                gui['ImgBg' .. k].Color = Color(192, 192, 192, 255)
+                gui['ImgHead' .. k].Color = Color(84,5, 84.5, 84.5, 255)
             end
         end
 
