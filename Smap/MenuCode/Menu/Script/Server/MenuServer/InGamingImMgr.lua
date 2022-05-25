@@ -6,6 +6,7 @@
 -- Local Caches
 local ChatManager = ChatManager
 local S = _G.mS
+local world = world
 
 --* 模块
 local M = S.ModuleUtil.New('InGamingImMgr', S.Base)
@@ -17,11 +18,7 @@ local enableSub, tarPlayerTab, subPlayerList = false, {}, {}
 function SendToChat(_content, _tarTab, _sender)
     if _sender.ClassName == 'PlayerInstance' then
         for _, v in pairs(_tarTab) do
-            M.Kit.Util.Net.Fire_C('NormalImEvent', v, _sender, _content)
-        end
-    elseif _sender == 'Developer' then
-        for _, v in pairs(M.Other.MenuMgr.playerList) do
-            M.Kit.Util.Net.Fire_C('NormalImEvent', v, 'OFFICIAL', _content)
+            M.Kit.Util.Net.Fire_C('NormalImEvent', world:GetPlayerByUserId(v.id), _sender, _content)
         end
     end
 end
@@ -31,27 +28,11 @@ function InGamingImEventHandler(_sendPlayer, _imContent)
         SendToChat(_msg, tarPlayerTab, _sendPlayer)
     end
 
-    if enableSub then
-        for _, v in pairs(subPlayerList) do
-            for i, j in pairs(v) do
-                if _sendPlayer == j then
-                    tarPlayerTab = v
-                end
-            end
-        end
-    else
-        tarPlayerTab = M.Other.MenuMgr.playerList
-    end
+    tarPlayerTab = M.Other.MenuMgr.playerList
 
     ChatManager.SensitiveWordCheck(_imContent, callback)
 end
 
-function EnableSubChannelEventHandler(_boolean, _list)
-    enableSub = _boolean
-    subPlayerList = _list
-end
-
 --! Public methods
 M.InGamingImEventHandler = InGamingImEventHandler
-M.EnableSubChannelEventHandler = EnableSubChannelEventHandler
 return M

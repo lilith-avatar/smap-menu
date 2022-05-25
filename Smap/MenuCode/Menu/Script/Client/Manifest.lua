@@ -27,7 +27,10 @@ M.Events = {
     'LowQualityWarningEvent',
     'AllowExitEvent', 
     'SwitchVoiceBtnEvent',
-    'SwitchFriendsInteractionEvent'
+    'SwitchFriendsInteractionEvent',
+    'SwitchOfflineStateEvent',
+    'AdjustHeadPosEvent',
+    'ChangeQuitInfoEvent'
 }
 
 M.Modules = {

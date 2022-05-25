@@ -21,7 +21,7 @@ local isLocalMicVolume = true
 local isLocalListenVolume = true
 local isOpen, isMuteAll, isOn, isDisplay, mutedPlayerId = false, false, true, false, nil
 local headImgCache, length, mutedPlayerTab, friTab = {}, nil, {}, {}
-local isNone, isReady = true, false
+local isNone, isReady, isOffline = true, false
 local gui = {}
 local i, headPortrait = 0, nil
 local voiceOff = Vector2(196, 0)
@@ -34,6 +34,9 @@ local headColorTab = {
     Color(77, 215, 203, 255),
     Color(81, 155, 72, 255)
 }
+
+local currentReason = 1
+local currentSelectedPlayerId;
 
 local playerList = nil
 
@@ -606,17 +609,24 @@ end
 
 function ProfileBgFix(_playerId)
     local theGuy = world:GetPlayerByUserId(_playerId)
-    if friTab[theGuy.Name] then
-        gui.BtnProfileAdd:SetActive(false)
-        --gui.BtnProfileMute.Offset = Vector2(-158, -384)
-    else
-        gui.BtnProfileAdd:SetActive(true)
-        --gui.BtnProfileMute.Offset = Vector2(-50, -384)
+    currentSelectedPlayerId = _playerId
+    for k,v in pairs(playerList) do
+        if v.id == _playerId then
+            name = v.name
+        end
     end
 
-    if theGuy == localPlayer then
+    if friTab[name] then
         gui.BtnProfileAdd:SetActive(false)
-        --gui.BtnProfileMute.Offset = Vector2(-158, -384)
+    else
+        gui.BtnProfileAdd:SetActive(true)
+    end
+
+    if _playerId == localPlayer.UserId then
+        gui.BtnProfileAdd:SetActive(false)
+        gui.ImgProfileBg.BtnPlayerReport:SetActive(false)
+    else
+        gui.ImgProfileBg.BtnPlayerReport:SetActive(true)
     end
 end
 
@@ -733,6 +743,61 @@ function GamingBind()
             showAdd()
         end
     )
+
+    local function switchReportReason(isReason1, isReason2, isReason3)
+        gui.ImgPopUpsReport.BtnReportReason1.ImgSelect:SetActive(isReason1)
+        gui.ImgPopUpsReport.BtnReportReason2.ImgSelect:SetActive(isReason2)
+        gui.ImgPopUpsReport.BtnReportReason3.ImgSelect:SetActive(isReason3)
+    end
+
+    gui.BtnPlayerReport.OnClick:Connect(
+        function()
+            print("click BtnPlayerReport")
+            gui.ImgPopUpsReport:SetActive(true)
+            gui.ImgProfileBg:SetActive(false)
+            switchReportReason(true, false, false)
+        end
+    )
+
+    gui.ImgPopUpsReport.BtnReportReason1.OnClick:Connect(
+        function()
+            print("Button1")
+            currentReason = 1
+            switchReportReason(true, false, false)
+        end
+    )
+
+    gui.ImgPopUpsReport.BtnReportReason2.OnClick:Connect(
+        function()
+            print("Button2")
+            currentReason = 2
+            switchReportReason(false, true, false)
+        end
+    )
+
+    gui.ImgPopUpsReport.BtnReportReason3.OnClick:Connect(
+        function()
+            print("Button3")
+            currentReason = 3
+            switchReportReason(false, false, true)
+        end
+    )
+
+    gui.ImgPopUpsReport.BtnReportOk.OnClick:Connect(
+        function()
+            local strMsg = tostring(localPlayer.UserId)..','..tostring(currentSelectedPlayerId)..','..tostring(currentReason)..','..tostring(os.time())
+            M.Kit.Util.Net.Fire_S('ReportInfoEvent', strMsg)
+            gui.ImgPopUpsReport:SetActive(false)
+            gui.ImgProfileBg:SetActive(true)
+        end
+    )
+
+    gui.ImgPopUpsReport.BtnReportCancel.OnClick:Connect(
+        function()
+            gui.ImgPopUpsReport:SetActive(false)
+            gui.ImgProfileBg:SetActive(true)
+        end
+    )
 end
 
 function ClearChildren(_parent)
@@ -830,29 +895,36 @@ function QuitBind()
 
     gui.BtnOk.OnClick:Connect(
         function()
+            M.Kit.Util.Net.Fire_S('ChangeQuitInfoEvent')
+            wait(0.1)
             Game.Quit()
         end
     )
 end
 
-function AdjustHeadPos(_tarTab, _playerTab)
-    for k, v in pairs(_tarTab) do
+function AdjustHeadPos(_playerList)
+    for k, v in pairs(_playerList) do
         local callback = function(_profile)
             gui['ImgHead' .. k].Texture = _profile.HeadPortrait
             gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)]
+
+            if v.isDisconnected then
+                gui['ImgHead' .. k].Color = Color(192, 192, 192, 255)
+                gui['ImgBg' .. k].Color = Color(192, 192, 192, 255)
+            end
         end
 
-        PlayerHub.GetPlayerProfile(v.UserId, callback)
+        PlayerHub.GetPlayerProfile(v.id, callback)
         gui['FigBg' .. k]:SetActive(true)
-        gui['FigBg' .. k].PlayerInfo.Value = v.UserId
-        gui['TextName' .. k].Text = v.Name
+        gui['FigBg' .. k].PlayerInfo.Value = v.id
+        gui['TextName' .. k].Text = v.name
 
-        mutedPlayerTab[v.UserId] = {
+        mutedPlayerTab[v.id] = {
             isMuted = false,
             num = k
         }
     end
-    gui['FigBg' .. (#_tarTab + 1)]:SetActive(false)
+    gui['FigBg' .. (#_playerList + 1)]:SetActive(false)
 end
 
 ---游戏内IM
@@ -1003,17 +1075,8 @@ function NoticeEventHandler(_playerTab, _playerList, _changedPlayer, _isAdded)
     M.Kit.Util.Net.Fire_S('ConfirmNoticeEvent', not isNone)
 
     gui.TextPlayNum.Text = playerText .. ' (' .. length .. ')'
-    if _isAdded then
-        headImgCache = _playerList
-        AdjustHeadPos(headImgCache, _playerTab)
-    else
-        for k, v in pairs(headImgCache) do
-            if v == _changedPlayer then
-                table.remove(headImgCache, k)
-            end
-        end
-        AdjustHeadPos(headImgCache, _playerTab)
-    end
+    headImgCache = _playerList
+    AdjustHeadPos(headImgCache)
 end
 
 ---消息更新
@@ -1154,6 +1217,19 @@ function SwitchVoiceBtnEventHandler(_bool)
     end
 end
 
+function SwitchOfflineStateEventHandler(_bool)
+    isOffLine = _bool
+end
+
+function AdjustHeadPosEventHandler(_playerList)
+    AdjustHeadPos(_playerList)
+end
+
+function ChangeQuitInfoEventHandler()
+    gui.ImgPopUps.TextPopUpsSec:SetActive(false)
+    gui.ImgPopUps.TextPopUpsOther:SetActive(true)
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -1169,5 +1245,7 @@ M.DetectMenuDisplayStateEventHandler = DetectMenuDisplayStateEventHandler
 M.AllowExitEventHandler = AllowExitEventHandler
 M.SwitchVoiceBtnEventHandler = SwitchVoiceBtnEventHandler
 M.SwitchFriendsInteractionEventHandler = SwitchFriendsInteractionEventHandler
+M.SwitchOfflineStateEventHandler = SwitchOfflineStateEventHandler
+M.ChangeQuitInfoEventHandler = ChangeQuitInfoEventHandler
 
 return M

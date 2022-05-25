@@ -12,10 +12,6 @@ local isReady = false
 --* 模块
 local M = C.ModuleUtil.New('MenuClientApi', C.Base)
 
-function DeveloperOfficialMsg(_content)
-    M.Kit.Util.Net.Fire_S('InGamingImEvent', 'Developer', _content)
-end
-
 ---@param _sender PlayerInstance
 ---@param _content String
 function SendMsg(_sender, _content)
@@ -41,14 +37,6 @@ end
 -- @param _type im弹窗为0,菜单显示为1
 function DetectMenuDisplayState(_type)
     M.Kit.Util.Net.Fire_C('DetectMenuDisplayStateEvent', localPlayer, _type)
-end
-
-function EnableSubChannel(_boolean, _tab)
-    if _boolean then
-        M.Kit.Util.Net.Fire_S('EnableSubChannelEvent', _boolean, _tab)
-    else
-        M.Kit.Util.Net.Fire_S('EnableSubChannelEvent', _boolean)
-    end
 end
 
 function ClientReadyEventHandler(_isReady)
@@ -82,12 +70,10 @@ end
 --! Public methods
 M.ClientReadyEventHandler = ClientReadyEventHandler
 M.LowQualityWarningEventHandler = LowQualityWarningEventHandler
-M.DeveloperOfficialMsg = DeveloperOfficialMsg
 M.MenuSwitch = MenuSwitch
 M.SwitchVoice = SwitchVoice
 M.SwitchInGameMessage = SwitchInGameMessage
 M.DetectMenuDisplayState = DetectMenuDisplayState
-M.EnableSubChannel = EnableSubChannel
 M.IsReady = IsReady
 M.AllowExit = AllowExit
 M.SwitchVoiceRelated = SwitchVoiceRelated

@@ -6,12 +6,12 @@ local Manifest = {}
 Manifest.ROOT_PATH = 'Menu/Script/Server/'
 
 Manifest.Events = {
-    'InGamingImEvent',
     'MuteLocalEvent',
     'TeleportPlayerToFriendGameEvent',
     'ConfirmNoticeEvent',
-    'EnableSubChannelEvent',
-    'SwitchOfflineStateEvent'
+    'SwitchOfflineStateEvent',
+    'ReportInfoEvent',
+    'ChangeQuitInfoEvent'
 }
 
 Manifest.Modules = {

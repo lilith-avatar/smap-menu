@@ -14,7 +14,7 @@ local M = S.ModuleUtil.New('MenuMgr', S.Base)
 --* 数据
 local playerInfoTab, playerList = {}, {}
 local isSent, isArrived, addedPlayer = false, false
-local isOffLine = false
+local isOffLine = true
 
 --玩家头像
 local headPortrait = nil
@@ -39,19 +39,29 @@ function OnPlayerAdded(_player)
 
     if playerList ~= {} then
         for k,v in pairs(playerList) do
-            if _player == v then
-                goto finished
+            if _player.UserId == v.id then
+                if v.isDisconnected then
+                     v.isDisconnected = false;
+                     M.Kit.Util.Net.Broadcast('AdjustHeadPosEvent', playerList)
+                else
+                    goto finished
+                end
             end
         end
     end
     -- GetPlayerProfile(_player)
     playerInfoTab[_player] = headPortrait
-    table.insert(playerList, _player)
+    local playerInfo = {
+        id = _player.UserId,
+        name = _player.Name,
+        isDisconnected = false,
+    }
+    table.insert(playerList,playerInfo)
 
     addedPlayer = _player
 
     local broadcast = function()
-        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer, true)
+        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer.UserId, true)
         isSent = true
     end
     invoke(broadcast, 1)
@@ -59,17 +69,21 @@ function OnPlayerAdded(_player)
 end
 
 function OnPlayerRemoved(_player)
+    local userId = _player.userId
     SwitchChannel(_player, false)
     playerInfoTab[_player.UserId] = {}
     for k, v in pairs(playerList) do
-        if v == _player then
-            table.remove(playerList, k)
+        if v.id == _player.UserId then
+            if isOffLine == false then
+                table.remove(playerList, k)
+            else
+                v.isOffline = true;
+            end
         end
     end
 
-    local changedPlayer = _player
     local broadcast = function()
-        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, changedPlayer, false)
+        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, userId, false)
         isSent = true
     end
     invoke(broadcast, 1)
@@ -81,7 +95,9 @@ function Update(_, _dt)
     tt = tt + _dt
     if tt > 1 then
         tt = 0
-        M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer, true)
+        if addedPlayer ~= nil then
+            M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer.UserId, true)
+        end
     end
 end
 
@@ -131,6 +147,14 @@ function SwitchOfflineStateEventHandler(_boolean)
     isOffLine = _boolean
 end
 
+function ReportInfoEventHandler(info)
+    world.MenuNode.Server.ReportInfo.Value = tostring(info)
+end
+
+function ChangeQuitInfoEventHandler()
+    M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -138,5 +162,7 @@ M.playerList = playerList
 M.MuteLocalEventHandler = MuteLocalEventHandler
 M.TeleportPlayerToFriendGameEventHandler = TeleportPlayerToFriendGameEventHandler
 M.ConfirmNoticeEventHandler = ConfirmNoticeEventHandler
+M.ReportInfoEventHandler = ReportInfoEventHandler
+M.ChangeQuitInfoEventHandler = ChangeQuitInfoEventHandler
 
 return M

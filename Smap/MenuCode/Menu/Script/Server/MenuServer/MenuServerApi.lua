@@ -9,24 +9,17 @@ local S = _G.mS
 --* 模块
 local M = S.ModuleUtil.New('MenuServerApi', S.Base)
 
-function EnableSubChannel(_boolean, _tab)
-    if _boolean then
-        M.Kit.Util.Net.Fire_S('EnableSubChannelEvent', _boolean, _tab)
-    else
-        M.Kit.Util.Net.Fire_S('EnableSubChannelEvent', _boolean)
-    end
+function SwitchOfflineState(_boolean)
+        M.Kit.Util.Net.Fire_S('SwitchOfflineStateEvent', _boolean)
+        M.Kit.Util.Net.Broadcast('SwitchOfflineStateEvent', _boolean)
 end
 
-function SwitchOfflineState(_boolean)
-    if _boolean then
-        M.Kit.Util.Net.Fire_S('SwitchOfflineStateEvent', _boolean)
-    else
-        M.Kit.Util.Net.Fire_S('SwitchOfflineStateEvent', _boolean)
-    end
+function ChangeQuitInfo()
+    print('change quit event server')
+    M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
 end
 
 --! Public methods
-M.EnableSubChannel = EnableSubChannel
 M.SwitchOfflineState = SwitchOfflineState
 
 --! Global Public API

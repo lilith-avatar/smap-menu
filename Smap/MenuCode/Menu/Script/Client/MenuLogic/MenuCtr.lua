@@ -77,8 +77,8 @@ end
 function MuteAllEventHandler(_isMuted)
     if playerList == nil then return end
     for _, v in pairs(playerList) do
-        if v ~= localPlayer then
-            VoiceManager.MuteDesignatedPlayer(v.UserId, _isMuted)
+        if v.id ~= localPlayer.UserId then
+            VoiceManager.MuteDesignatedPlayer(v.id, _isMuted)
         end
     end
 end
