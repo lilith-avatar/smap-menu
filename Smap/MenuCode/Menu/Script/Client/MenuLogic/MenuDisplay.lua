@@ -36,7 +36,8 @@ local headColorTab = {
 }
 
 local currentReason = 1
-local currentSelectedPlayerId;
+local currentSelectedPlayerId
+local currentSelectedPlayerName
 
 local playerList = nil
 
@@ -45,6 +46,9 @@ local resReplaceTab = {
     FriList = 'friends',
     Setting = 'settings',
 }
+
+local selectTexture = ResourceManager.GetTexture('Menu/MenuGui/Common_Bg_select')
+local unselectTexture = ResourceManager.GetTexture('Menu/MenuGui/Common_Bg_unselect')
 
 local GAME_TAG = 'avatar_menu'
 local MSG_NATIVE_TO_LUA = 'msg_native_exterior_mgr'
@@ -609,12 +613,13 @@ end
 
 function ProfileBgFix(_playerId)
     local theGuy = world:GetPlayerByUserId(_playerId)
-    currentSelectedPlayerId = _playerId
     for k,v in pairs(playerList) do
         if v.id == _playerId then
             name = v.name
         end
     end
+    currentSelectedPlayerId = _playerId
+    currentSelectedPlayerName = name
 
     if friTab[name] then
         gui.BtnProfileAdd:SetActive(false)
@@ -624,9 +629,9 @@ function ProfileBgFix(_playerId)
 
     if _playerId == localPlayer.UserId then
         gui.BtnProfileAdd:SetActive(false)
-        gui.ImgProfileBg.BtnPlayerReport:SetActive(false)
+        gui.ImgProfileBg.TextProfileName.BtnPlayerReport:SetActive(false)
     else
-        gui.ImgProfileBg.BtnPlayerReport:SetActive(true)
+        gui.ImgProfileBg.TextProfileName.BtnPlayerReport:SetActive(true)
     end
 end
 
@@ -744,42 +749,50 @@ function GamingBind()
         end
     )
 
-    local function switchReportReason(isReason1, isReason2, isReason3)
-        gui.ImgPopUpsReport.BtnReportReason1.ImgSelect:SetActive(isReason1)
-        gui.ImgPopUpsReport.BtnReportReason2.ImgSelect:SetActive(isReason2)
-        gui.ImgPopUpsReport.BtnReportReason3.ImgSelect:SetActive(isReason3)
+    local function switchReportReason(isReason, selectButton, reasonButton)
+        selectButton:SetActive(isReason)
+        if isReason then
+            reasonButton.Texture = selectTexture
+        else
+            reasonButton.Texture = unselectTexture
+        end
+    end
+
+    local function switchReportReasons(isReason1, isReason2, isReason3)
+        switchReportReason(isReason1, gui.ImgPopUpsReport.BtnReportReason1.ImgSelect, gui.ImgPopUpsReport.BtnReportReason1)
+        switchReportReason(isReason2, gui.ImgPopUpsReport.BtnReportReason2.ImgSelect, gui.ImgPopUpsReport.BtnReportReason2)
+        switchReportReason(isReason3, gui.ImgPopUpsReport.BtnReportReason3.ImgSelect, gui.ImgPopUpsReport.BtnReportReason3)
     end
 
     gui.BtnPlayerReport.OnClick:Connect(
         function()
-            print("click BtnPlayerReport")
             gui.ImgPopUpsReport:SetActive(true)
             gui.ImgProfileBg:SetActive(false)
-            switchReportReason(true, false, false)
+            switchReportReasons(true, false, false)
+
+            -- replace playerName
+            gui.ImgPopUpsReport.TextPlayerName.Text = currentSelectedPlayerName
         end
     )
 
     gui.ImgPopUpsReport.BtnReportReason1.OnClick:Connect(
         function()
-            print("Button1")
             currentReason = 1
-            switchReportReason(true, false, false)
+            switchReportReasons(true, false, false)
         end
     )
 
     gui.ImgPopUpsReport.BtnReportReason2.OnClick:Connect(
         function()
-            print("Button2")
             currentReason = 2
-            switchReportReason(false, true, false)
+            switchReportReasons(false, true, false)
         end
     )
 
     gui.ImgPopUpsReport.BtnReportReason3.OnClick:Connect(
         function()
-            print("Button3")
             currentReason = 3
-            switchReportReason(false, false, true)
+            switchReportReasons(false, false, true)
         end
     )
 

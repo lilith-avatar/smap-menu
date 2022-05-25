@@ -11,7 +11,8 @@ Manifest.Events = {
     'ConfirmNoticeEvent',
     'SwitchOfflineStateEvent',
     'ReportInfoEvent',
-    'ChangeQuitInfoEvent'
+    'ChangeQuitInfoEvent',
+    'InGamingImEvent'
 }
 
 Manifest.Modules = {
