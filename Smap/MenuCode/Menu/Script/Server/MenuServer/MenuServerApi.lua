@@ -15,7 +15,6 @@ function SwitchOfflineState(_boolean)
 end
 
 function ChangeQuitInfo()
-    print('change quit event server')
     M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
 end
 

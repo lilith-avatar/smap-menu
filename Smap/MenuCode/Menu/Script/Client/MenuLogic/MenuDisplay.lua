@@ -753,8 +753,10 @@ function GamingBind()
         selectButton:SetActive(isReason)
         if isReason then
             reasonButton.Texture = selectTexture
+            reasonButton.FontStyle = 2
         else
             reasonButton.Texture = unselectTexture
+            reasonButton.FontStyle = 1
         end
     end
 
@@ -772,6 +774,13 @@ function GamingBind()
 
             -- replace playerName
             gui.ImgPopUpsReport.TextPlayerName.Text = currentSelectedPlayerName
+            
+            -- replace player headshot
+            local callback = function(_profile)
+                gui.ImgPopUpsReport.ImgHead.Texture = _profile.headPortrait
+            end
+            
+            PlayerHub.GetPlayerProfile(currentSelectedPlayerId, callback)
         end
     )
 
@@ -796,12 +805,27 @@ function GamingBind()
         end
     )
 
+    local function showReportFeedback()
+        gui.ImgReportFb:SetActive(true)
+        invoke(
+            function()
+                gui.ImgReportFb:SetActive(false)
+            end,
+            3
+        )
+    end
+
     gui.ImgPopUpsReport.BtnReportOk.OnClick:Connect(
         function()
-            local strMsg = tostring(localPlayer.UserId)..','..tostring(currentSelectedPlayerId)..','..tostring(currentReason)..','..tostring(os.time())
+            -- string.gsub(mainString,findString,replaceString,num)
+            local strMsg = 'UserId'..':'..string.gsub(tostring(localPlayer.UserId), 'pid:', '')..','..
+                            'ReportedUserId'..':'..string.gsub(tostring(currentSelectedPlayerId), 'pid:', '')..','..
+                            'ReportReason'..':'..tostring(currentReason)..','..
+                            'TimeStamp'..':'..tostring(os.time())
             M.Kit.Util.Net.Fire_S('ReportInfoEvent', strMsg)
             gui.ImgPopUpsReport:SetActive(false)
             gui.ImgProfileBg:SetActive(true)
+            showReportFeedback()
         end
     )
 
@@ -894,6 +918,7 @@ function QuitBind()
                 end
             end
             gui.ImgProfileBg:SetActive(false)
+            gui.ImgPopUpsReport:SetActive(false)
             isOpen = false
             DisableCtr(isOpen)
         end
@@ -1260,5 +1285,6 @@ M.SwitchVoiceBtnEventHandler = SwitchVoiceBtnEventHandler
 M.SwitchFriendsInteractionEventHandler = SwitchFriendsInteractionEventHandler
 M.SwitchOfflineStateEventHandler = SwitchOfflineStateEventHandler
 M.ChangeQuitInfoEventHandler = ChangeQuitInfoEventHandler
+M.AdjustHeadPosEventHandler = AdjustHeadPosEventHandler
 
 return M

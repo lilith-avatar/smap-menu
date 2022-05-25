@@ -82,6 +82,8 @@ function OnPlayerRemoved(_player)
         end
     end
 
+    M.Kit.Util.Net.Broadcast('AdjustHeadPosEvent', playerList)
+
     local broadcast = function()
         M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, userId, false)
         isSent = true
