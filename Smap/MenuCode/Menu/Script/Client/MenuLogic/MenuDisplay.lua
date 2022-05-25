@@ -817,7 +817,6 @@ function GamingBind()
 
     gui.ImgPopUpsReport.BtnReportOk.OnClick:Connect(
         function()
-            -- string.gsub(mainString,findString,replaceString,num)
             local strMsg = 'UserId'..':'..string.gsub(tostring(localPlayer.UserId), 'pid:', '')..','..
                             'ReportedUserId'..':'..string.gsub(tostring(currentSelectedPlayerId), 'pid:', '')..','..
                             'ReportReason'..':'..tostring(currentReason)..','..
