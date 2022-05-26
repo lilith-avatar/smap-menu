@@ -52,10 +52,6 @@ function OnPlayerAdded(_player)
         end
     end
 
-    if isQuit then
-        M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
-    end
-
     -- GetPlayerProfile(_player)
     playerInfoTab[_player] = headPortrait
     local playerInfo = {
@@ -71,7 +67,6 @@ function OnPlayerAdded(_player)
         M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer.UserId, true)
         isSent = true
     end
-    invoke(broadcast, 1)
     ::finished::
 end
 
@@ -106,6 +101,9 @@ function Update(_, _dt)
         tt = 0
         if addedPlayer ~= nil then
             M.Kit.Util.Net.Broadcast('NoticeEvent', playerInfoTab, playerList, addedPlayer.UserId, true)
+            if isQuit then
+                M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
+            end
         end
     end
 end

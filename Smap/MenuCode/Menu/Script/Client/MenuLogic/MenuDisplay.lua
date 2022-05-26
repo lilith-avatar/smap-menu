@@ -947,7 +947,9 @@ function AdjustHeadPos(_playerList)
 
         PlayerHub.GetPlayerProfile(v.id, callback)
         if v.isDisconnected then
-            gui['ImgHead' .. k].Color = Color(84.5, 84.5, 84.5, 255)
+            gui['ImgOffiline' .. k]:SetActive(true)
+        else
+            gui['ImgOffiline' .. k]:SetActive(false)
         end
         gui['FigBg' .. k]:SetActive(true)
         gui['FigBg' .. k].PlayerInfo.Value = v.id
