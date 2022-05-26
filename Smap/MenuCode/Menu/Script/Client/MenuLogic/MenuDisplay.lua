@@ -949,6 +949,7 @@ function AdjustHeadPos(_playerList)
             gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)] 
         end
 
+        PlayerHub.GetPlayerProfile(v.id, callback)
         if v.isDisconnected then
             gui['ImgOffline' .. k]:SetActive(true)
             gui['ImgMic' .. k].Color = Color(255, 255, 255, 0)
