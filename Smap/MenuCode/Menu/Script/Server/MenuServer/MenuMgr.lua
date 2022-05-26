@@ -45,6 +45,7 @@ function OnPlayerAdded(_player)
             if _player.UserId == v.id then
                 if v.isDisconnected then
                      v.isDisconnected = false;
+                     addedPlayer = _player
                 end
                 goto finished
             end
