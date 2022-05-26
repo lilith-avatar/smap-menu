@@ -38,6 +38,7 @@ local headColorTab = {
 local currentReason = 1
 local currentSelectedPlayerId
 local currentSelectedPlayerName
+local reportedPlayerBg
 
 local playerList = nil
 
@@ -616,10 +617,12 @@ function ProfileBgFix(_playerId)
     for k,v in pairs(playerList) do
         if v.id == _playerId then
             name = v.name
+            reportedPlayerBg = gui['ImgBg'..k].Color
         end
     end
     currentSelectedPlayerId = _playerId
     currentSelectedPlayerName = name
+   
 
     if friTab[name] then
         gui.BtnProfileAdd:SetActive(false)
@@ -777,6 +780,7 @@ function GamingBind()
             
             local callback = function(_profile)
                 gui.ImgPopUpsReport.ImgHead.Texture = _profile.HeadPortrait
+                gui.ImgPopUpsReport.ImgHead.ImgBg = reportedPlayerBg
             end
         
             PlayerHub.GetPlayerProfile(currentSelectedPlayerId, callback)
