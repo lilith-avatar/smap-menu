@@ -779,8 +779,8 @@ function GamingBind()
             gui.ImgPopUpsReport.TextPlayerName.Text = currentSelectedPlayerName
             
             local callback = function(_profile)
-                gui.ImgPopUpsReport.ImgHead.Texture = _profile.HeadPortrait
-                gui.ImgPopUpsReport.ImgHead.ImgBg = reportedPlayerBg
+                gui.ImgPopUpsReport.ImgBg.ImgHead.Texture = _profile.HeadPortrait
+                gui.ImgPopUpsReport.ImgBg = reportedPlayerBg
             end
         
             PlayerHub.GetPlayerProfile(currentSelectedPlayerId, callback)
@@ -949,7 +949,6 @@ function AdjustHeadPos(_playerList)
             gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)] 
         end
 
-        PlayerHub.GetPlayerProfile(v.id, callback)
         if v.isDisconnected then
             gui['ImgOffline' .. k]:SetActive(true)
             gui['ImgMic' .. k].Color = Color(255, 255, 255, 0)
