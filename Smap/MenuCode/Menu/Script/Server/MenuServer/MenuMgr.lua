@@ -77,7 +77,7 @@ function OnPlayerRemoved(_player)
             if isOffLine == false then
                 table.remove(playerList, k)
             else
-                v.isOffline = true;
+                v.isDisconnected = true;
             end
         end
     end
