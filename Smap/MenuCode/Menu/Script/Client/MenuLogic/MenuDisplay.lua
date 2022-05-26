@@ -780,7 +780,7 @@ function GamingBind()
             
             local callback = function(_profile)
                 gui.ImgPopUpsReport.ImgBg.ImgHead.Texture = _profile.HeadPortrait
-                gui.ImgPopUpsReport.ImgBg = reportedPlayerBg
+                gui.ImgPopUpsReport.ImgBg.Color = reportedPlayerBg
             end
         
             PlayerHub.GetPlayerProfile(currentSelectedPlayerId, callback)
