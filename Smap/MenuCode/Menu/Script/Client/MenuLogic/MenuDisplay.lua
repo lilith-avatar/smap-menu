@@ -775,11 +775,10 @@ function GamingBind()
             -- replace playerName
             gui.ImgPopUpsReport.TextPlayerName.Text = currentSelectedPlayerName
             
-            -- replace player headshot
             local callback = function(_profile)
-                gui.ImgPopUpsReport.ImgHead.Texture = _profile.headPortrait
+                gui.ImgPopUpsReport.ImgHead.Texture = _profile.HeadPortrait
             end
-            
+        
             PlayerHub.GetPlayerProfile(currentSelectedPlayerId, callback)
         end
     )
@@ -943,14 +942,13 @@ function AdjustHeadPos(_playerList)
     for k, v in pairs(_playerList) do
         local callback = function(_profile)
             gui['ImgHead' .. k].Texture = _profile.HeadPortrait
-            gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)]
-
-            if v.isDisconnected then
-                gui['ImgHead' .. k].Color = Color(84.5, 84.5, 84.5, 255)
-            end
+            gui['ImgBg' .. k].Color = headColorTab[math.fmod(k, #headColorTab)] 
         end
 
         PlayerHub.GetPlayerProfile(v.id, callback)
+        if v.isDisconnected then
+            gui['ImgHead' .. k].Color = Color(84.5, 84.5, 84.5, 255)
+        end
         gui['FigBg' .. k]:SetActive(true)
         gui['FigBg' .. k].PlayerInfo.Value = v.id
         gui['TextName' .. k].Text = v.name
