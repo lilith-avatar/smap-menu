@@ -19,6 +19,8 @@ local isOffLine = true
 --玩家头像
 local headPortrait = nil
 
+local isQuit = false;
+
 ---初始化
 function Init()
     InitEvents()
@@ -36,19 +38,24 @@ end
 ---玩家加入事件
 function OnPlayerAdded(_player)
     SwitchChannel(_player, true)
+    print('')
 
     if playerList ~= {} then
         for k,v in pairs(playerList) do
             if _player.UserId == v.id then
                 if v.isDisconnected then
                      v.isDisconnected = false;
-                     M.Kit.Util.Net.Broadcast('AdjustHeadPosEvent', playerList)
                 else
                     goto finished
                 end
             end
         end
     end
+
+    if isQuit then
+        M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
+    end
+
     -- GetPlayerProfile(_player)
     playerInfoTab[_player] = headPortrait
     local playerInfo = {
@@ -154,6 +161,7 @@ function ReportInfoEventHandler(info)
 end
 
 function ChangeQuitInfoEventHandler()
+    isQuit = true
     M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
 end
 

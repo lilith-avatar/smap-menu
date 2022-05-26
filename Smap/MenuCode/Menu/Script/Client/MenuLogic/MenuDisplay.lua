@@ -1255,10 +1255,6 @@ function SwitchOfflineStateEventHandler(_bool)
     isOffLine = _bool
 end
 
-function AdjustHeadPosEventHandler(_playerList)
-    AdjustHeadPos(_playerList)
-end
-
 function ChangeQuitInfoEventHandler()
     gui.ImgPopUps.TextPopUpsSec:SetActive(false)
     gui.ImgPopUps.TextPopUpsOther:SetActive(true)
@@ -1281,6 +1277,5 @@ M.SwitchVoiceBtnEventHandler = SwitchVoiceBtnEventHandler
 M.SwitchFriendsInteractionEventHandler = SwitchFriendsInteractionEventHandler
 M.SwitchOfflineStateEventHandler = SwitchOfflineStateEventHandler
 M.ChangeQuitInfoEventHandler = ChangeQuitInfoEventHandler
-M.AdjustHeadPosEventHandler = AdjustHeadPosEventHandler
 
 return M
