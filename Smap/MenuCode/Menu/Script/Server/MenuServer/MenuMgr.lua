@@ -161,6 +161,10 @@ function ChangeQuitInfoEventHandler()
     M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
 end
 
+function SetCurrentChannelEventHandler(channelName)
+    channel = VoiceManager.GetChannel(channelName)
+end
+
 --! Public methods
 M.Init = Init
 M.Update = Update
@@ -170,5 +174,6 @@ M.TeleportPlayerToFriendGameEventHandler = TeleportPlayerToFriendGameEventHandle
 M.ConfirmNoticeEventHandler = ConfirmNoticeEventHandler
 M.ReportInfoEventHandler = ReportInfoEventHandler
 M.ChangeQuitInfoEventHandler = ChangeQuitInfoEventHandler
+M.SetCurrentChannelEventHandler = SetCurrentChannelEventHandler
 
 return M

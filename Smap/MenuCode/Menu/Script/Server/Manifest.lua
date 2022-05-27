@@ -12,7 +12,8 @@ Manifest.Events = {
     'SwitchOfflineStateEvent',
     'ReportInfoEvent',
     'ChangeQuitInfoEvent',
-    'InGamingImEvent'
+    'InGamingImEvent',
+    'SetCurrentChannelEvent'
 }
 
 Manifest.Modules = {

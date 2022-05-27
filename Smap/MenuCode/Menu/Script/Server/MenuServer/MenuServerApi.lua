@@ -18,6 +18,10 @@ function ChangeQuitInfo()
     M.Kit.Util.Net.Broadcast('ChangeQuitInfoEvent')
 end
 
+function SetCurrentChannel(ChannelName)
+    M.Kit.Util.Net.Fire_S('SetCurrentChannelEvent', ChannelName)
+end
+
 --! Public methods
 M.SwitchOfflineState = SwitchOfflineState
 
