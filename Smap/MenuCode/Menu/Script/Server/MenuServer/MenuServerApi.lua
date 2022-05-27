@@ -24,6 +24,7 @@ end
 
 --! Public methods
 M.SwitchOfflineState = SwitchOfflineState
+M.SetCurrentChannel = SetCurrentChannel
 
 --! Global Public API
 _G.MenuServerApi = M
